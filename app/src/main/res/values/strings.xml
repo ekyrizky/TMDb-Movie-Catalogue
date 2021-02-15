@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">MovieCatalogue</string>
+    <string name="image_poster">Image Poster</string>
+    <string name="tv_title">Title</string>
+    <string name="tv_release_year">Release Year</string>
+    <string name="tv_runtime">%d min</string>
+    <string name="movie">Movie</string>
+    <string name="tv_show">TV Show</string>
+    <string name="share">Share</string>
+    <string name="logo">The Movie DB Logo</string>
+    <string name="image_backdrop">Image Backdrop</string>
+    <string name="vote_average">9.8</string>
+    <string name="tagline">Tagline</string>
+    <string name="description">Description</string>
+    <string name="share_title">Bagikan Sekarang</string>
+    <!-- TODO: Remove or change this placeholder text -->
+</resources>
