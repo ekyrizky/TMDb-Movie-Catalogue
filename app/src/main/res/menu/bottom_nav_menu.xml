@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<!--    <item-->
+<!--        android:id="@+id/nav_movie"-->
+<!--        android:icon="@drawable/ic_movie"-->
+<!--        android:title="@string/movie" />-->
+
+<!--    <item-->
+<!--        android:id="@+id/nav_tvshow"-->
+<!--        android:icon="@drawable/ic_tvshow"-->
+<!--        android:title="@string/tv_show" />-->
+
+<!--    <item-->
+<!--        android:id="@+id/nav_favorite"-->
+<!--        android:icon="@drawable/ic_favorite"-->
+<!--        android:title="@string/favorite" />-->
+
+    <item
+        android:id="@+id/nav_movie"
+        android:enabled="true"
+        android:icon="@drawable/ic_movie"
+        android:title="@string/movie"
+        app:cnb_backgroundColor="@color/light_green_alpha"
+        app:cnb_iconColor="@color/white"
+        app:cnb_textColor="@color/white" />
+
+    <item
+        android:id="@+id/nav_tvshow"
+        android:enabled="true"
+        android:icon="@drawable/ic_tvshow"
+        android:title="@string/tv_show"
+        app:cnb_backgroundColor="@color/light_green_alpha"
+        app:cnb_iconColor="@color/white"
+        app:cnb_textColor="@color/white" />
+
+    <item
+        android:id="@+id/nav_favorite"
+        android:enabled="true"
+        android:icon="@drawable/ic_favorite"
+        android:title="@string/favorite"
+        app:cnb_backgroundColor="@color/light_green_alpha"
+        app:cnb_iconColor="@color/white"
+        app:cnb_textColor="@color/white" />
+</menu>

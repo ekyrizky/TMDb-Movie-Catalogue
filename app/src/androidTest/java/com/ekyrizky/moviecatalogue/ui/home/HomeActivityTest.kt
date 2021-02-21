@@ -4,11 +4,13 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.pressBack
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.ekyrizky.moviecatalogue.R
+import com.ekyrizky.moviecatalogue.utils.DataDummy
 import com.ekyrizky.moviecatalogue.utils.EspressoIdlingResource
 import org.junit.After
 import org.junit.Before
@@ -16,6 +18,7 @@ import org.junit.Test
 
 class HomeActivityTest {
 
+    private val dummySize = DataDummy.generateDummyMovies().size
     @Before
     fun setUp() {
         ActivityScenario.launch(HomeActivity::class.java)
@@ -29,8 +32,9 @@ class HomeActivityTest {
 
     @Test
     fun loadMovies() {
+        onView(withId(R.id.nav_movie)).perform(click())
         onView(withId(R.id.rv_movie)).check(matches(isDisplayed()))
-        onView(withId(R.id.rv_movie)).perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(10))
+        onView(withId(R.id.rv_movie)).perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(dummySize))
     }
 
     @Test
@@ -44,18 +48,20 @@ class HomeActivityTest {
         onView(withId(R.id.tv_description)).check(matches(isDisplayed()))
         onView(withId(R.id.img_poster)).check(matches(isDisplayed()))
         onView(withId(R.id.img_backdrop)).check(matches(isDisplayed()))
+        onView(withId(R.id.fab_favorite)).check(matches(isDisplayed()))
+        onView(withId(R.id.share)).check(matches(isDisplayed()))
     }
 
     @Test
     fun loadTvShows() {
-        onView(withText("TV SHOW")).perform(click())
+        onView(withId(R.id.nav_tvshow)).perform(click())
         onView(withId(R.id.rv_tv_show)).check(matches(isDisplayed()))
-        onView(withId(R.id.rv_tv_show)).perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(10))
+        onView(withId(R.id.rv_tv_show)).perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(dummySize))
     }
 
     @Test
     fun loadTvShowDetail() {
-        onView(withText("TV SHOW")).perform(click())
+        onView(withId(R.id.nav_tvshow)).perform(click())
         onView(withId(R.id.rv_tv_show)).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
         onView(withId(R.id.tv_title)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_tagline)).check(matches(isDisplayed()))
@@ -65,19 +71,40 @@ class HomeActivityTest {
         onView(withId(R.id.tv_description)).check(matches(isDisplayed()))
         onView(withId(R.id.img_poster)).check(matches(isDisplayed()))
         onView(withId(R.id.img_backdrop)).check(matches(isDisplayed()))
+        onView(withId(R.id.fab_favorite)).check(matches(isDisplayed()))
+        onView(withId(R.id.share)).check(matches(isDisplayed()))
     }
 
     @Test
-    fun backButton() {
-        onView(withId(R.id.view_pager)).perform(swipeLeft())
-        onView(withId(R.id.view_pager)).perform(swipeRight())
+    fun loadFavoriteMovies() {
+        onView(withId(R.id.nav_movie)).perform(click())
         onView(withId(R.id.rv_movie)).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
+        onView(withId(R.id.fab_favorite)).perform(click())
         onView(isRoot()).perform(pressBack())
-        onView(withId(R.id.rv_movie)).check(matches(isDisplayed()))
+        onView(withId(R.id.nav_favorite)).perform(click())
+        onView(withId(R.id.rv_favorite_movie)).check(matches(isDisplayed()))
+        onView(withId(R.id.rv_favorite_movie)).perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(dummySize))
+        onView(withId(R.id.rv_favorite_movie)).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
+        onView(withId(R.id.fab_favorite)).perform(click())
+    }
+
+    @Test
+    fun loadFavoriteTvShows() {
+        onView(withId(R.id.nav_tvshow)).perform(click())
+        onView(withId(R.id.rv_tv_show)).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
+        onView(withId(R.id.fab_favorite)).perform(click())
+        onView(isRoot()).perform(pressBack())
+        onView(withId(R.id.nav_favorite)).perform(click())
+        onView(withText("TV SHOWS")).perform(click())
+        onView(withId(R.id.rv_favorite_tvshow)).check(matches(isDisplayed()))
+        onView(withId(R.id.rv_favorite_tvshow)).perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(dummySize))
+        onView(withId(R.id.rv_favorite_tvshow)).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
+        onView(withId(R.id.fab_favorite)).perform(click())
     }
 
     @Test
     fun shareButton() {
+        onView(withId(R.id.nav_movie)).perform(click())
         onView(withId(R.id.rv_movie)).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
         onView(withId(R.id.share)).perform(click())
     }

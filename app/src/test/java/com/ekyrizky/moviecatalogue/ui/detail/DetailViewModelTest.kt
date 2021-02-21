@@ -4,27 +4,27 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.ekyrizky.moviecatalogue.data.source.ContentRepository
-import com.ekyrizky.moviecatalogue.data.source.local.entity.ContentEntity
-import com.ekyrizky.moviecatalogue.data.source.remote.response.MovieResponse
-import com.ekyrizky.moviecatalogue.data.source.remote.response.TvShowResponse
+import com.ekyrizky.moviecatalogue.data.source.local.entity.MovieEntity
+import com.ekyrizky.moviecatalogue.data.source.local.entity.TvShowEntity
+import com.ekyrizky.moviecatalogue.ui.detail.DetailActivity.Companion.EXTRA_MOVIE
+import com.ekyrizky.moviecatalogue.ui.detail.DetailActivity.Companion.EXTRA_TVSHOW
 import com.ekyrizky.moviecatalogue.utils.DataDummy
+import com.ekyrizky.moviecatalogue.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
-import org.junit.Test
-
-import org.junit.Assert.*
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
 class DetailViewModelTest {
     private lateinit var viewModel: DetailViewModel
-    private val dummyMovie = DataDummy.generateRemoteDummyMovies()[0]
-    private val dummyTvShow = DataDummy.generateRemoteDummyTvShows()[0]
+    private val dummyMovie = DataDummy.generateDummyMovieDetail()
+    private val dummyTvShow = DataDummy.generateDummyTvShowDetail()
     private val movieId = dummyMovie.id
     private val tvShowId = dummyTvShow.id
 
@@ -35,10 +35,10 @@ class DetailViewModelTest {
     private lateinit var contentRepository: ContentRepository
 
     @Mock
-    private lateinit var movieObserver: Observer<MovieResponse>
+    private lateinit var movieObserver: Observer<Resource<MovieEntity>>
 
     @Mock
-    private lateinit var tvShowObserver: Observer<TvShowResponse>
+    private lateinit var tvShowObserver: Observer<Resource<TvShowEntity>>
 
     @Before
     fun setUp() {
@@ -47,45 +47,55 @@ class DetailViewModelTest {
 
     @Test
     fun getDetailMovie() {
-        val movie = MutableLiveData<MovieResponse>()
+        val dummyMovie = Resource.success(DataDummy.generateDummyMovieDetail())
+        val movie = MutableLiveData<Resource<MovieEntity>>()
         movie.value = dummyMovie
 
-        `when`(contentRepository.getMovieDetail(movieId)).thenReturn(movie)
-        val movieEntity = viewModel.getDetailMovie(movieId).value
-        assertNotNull(movieEntity)
-        assertEquals(dummyMovie.id, movieEntity?.id)
-        assertEquals(dummyMovie.originalTitle, movieEntity?.originalTitle)
-        assertEquals(dummyMovie.tagline, movieEntity?.tagline)
-        assertEquals(dummyMovie.releaseDate, movieEntity?.releaseDate)
-        assertEquals(dummyMovie.runtime, movieEntity?.runtime)
-        assertEquals(dummyMovie.voteAverage, movieEntity?.voteAverage)
-        assertEquals(dummyMovie.overview, movieEntity?.overview)
-        assertEquals(dummyMovie.posterPath, movieEntity?.posterPath)
-        assertEquals(dummyMovie.backdropPath, movieEntity?.backdropPath)
+        `when`(movieId?.let { contentRepository.getMovieDetail(it) }).thenReturn(movie)
 
-        viewModel.getDetailMovie(movieId).observeForever(movieObserver)
+        viewModel.setContent(movieId.toString(), EXTRA_MOVIE)
+        viewModel.getMovieDetail().observeForever(movieObserver)
         verify(movieObserver).onChanged(dummyMovie)
     }
 
     @Test
+    fun setFavoriteMovie() {
+        val dummyMovie = Resource.success(DataDummy.generateDummyMovieDetail())
+        val movie = MutableLiveData<Resource<MovieEntity>>()
+        movie.value = dummyMovie
+
+        `when`(movieId?.let { contentRepository.getMovieDetail(it) }).thenReturn(movie)
+
+        viewModel.setContent(movieId.toString(), EXTRA_MOVIE)
+        viewModel.setFavoriteMovie()
+        movie.value!!.data?.let { verify(contentRepository).setFavoriteMovie(it, true) }
+        verifyNoMoreInteractions(movieObserver)
+    }
+
+    @Test
     fun getDetailTvShow() {
-        val tvShow = MutableLiveData<TvShowResponse>()
+        val dummyTvShow = Resource.success(DataDummy.generateDummyTvShowDetail())
+        val tvShow = MutableLiveData<Resource<TvShowEntity>>()
         tvShow.value = dummyTvShow
 
-        `when`(contentRepository.getTvShowDetail(tvShowId)).thenReturn(tvShow)
-        val tvShowEntity = viewModel.getDetailTvShow(tvShowId).value
-        assertNotNull(tvShowEntity)
-        assertEquals(dummyTvShow.id, tvShowEntity?.id)
-        assertEquals(dummyTvShow.originalName, tvShowEntity?.originalName)
-        assertEquals(dummyTvShow.tagline, tvShowEntity?.tagline)
-        assertEquals(dummyTvShow.firstAirDate, tvShowEntity?.firstAirDate)
-        assertEquals(dummyTvShow.episodeRunTime, tvShowEntity?.episodeRunTime)
-        assertEquals(dummyTvShow.voteAverage, tvShowEntity?.voteAverage)
-        assertEquals(dummyTvShow.overview, tvShowEntity?.overview)
-        assertEquals(dummyTvShow.posterPath, tvShowEntity?.posterPath)
-        assertEquals(dummyTvShow.backdropPath, tvShowEntity?.backdropPath)
+        `when`(tvShowId?.let { contentRepository.getTvShowDetail(it) }).thenReturn(tvShow)
 
-        viewModel.getDetailTvShow(tvShowId).observeForever(tvShowObserver)
+        viewModel.setContent(tvShowId.toString(), EXTRA_TVSHOW)
+        viewModel.getTvShowDetail().observeForever(tvShowObserver)
         verify(tvShowObserver).onChanged(dummyTvShow)
+    }
+
+    @Test
+    fun setFavoriteTvShow() {
+        val dummyTvShow = Resource.success(DataDummy.generateDummyTvShowDetail())
+        val tvShow = MutableLiveData<Resource<TvShowEntity>>()
+        tvShow.value = dummyTvShow
+
+        `when`(tvShowId?.let { contentRepository.getTvShowDetail(it) }).thenReturn(tvShow)
+
+        viewModel.setContent(tvShowId.toString(), EXTRA_TVSHOW)
+        viewModel.setFavoriteTvShow()
+        tvShow.value!!.data?.let { verify(contentRepository).setFavoriteTvShow(it, true) }
+        verifyNoMoreInteractions(tvShowObserver)
     }
 }

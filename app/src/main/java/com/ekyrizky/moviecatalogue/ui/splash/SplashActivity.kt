@@ -1,10 +1,10 @@
 package com.ekyrizky.moviecatalogue.ui.splash
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import androidx.appcompat.app.AppCompatActivity
 import com.ekyrizky.moviecatalogue.R
 import com.ekyrizky.moviecatalogue.ui.home.HomeActivity
 

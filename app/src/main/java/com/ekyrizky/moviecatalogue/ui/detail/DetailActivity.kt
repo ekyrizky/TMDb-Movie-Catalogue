@@ -1,78 +1,68 @@
 package com.ekyrizky.moviecatalogue.ui.detail
 
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ShareCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.ekyrizky.moviecatalogue.BuildConfig
+import com.ekyrizky.moviecatalogue.BuildConfig.BASE_IMG
 import com.ekyrizky.moviecatalogue.R
-import com.ekyrizky.moviecatalogue.data.source.remote.response.MovieResponse
-import com.ekyrizky.moviecatalogue.data.source.remote.response.TvShowResponse
+import com.ekyrizky.moviecatalogue.data.source.local.entity.MovieEntity
+import com.ekyrizky.moviecatalogue.data.source.local.entity.TvShowEntity
 import com.ekyrizky.moviecatalogue.databinding.ActivityDetailBinding
+import com.ekyrizky.moviecatalogue.utils.ConvertUtils.getDateConverted
+import com.ekyrizky.moviecatalogue.utils.ConvertUtils.getRuntimeConverted
 import com.ekyrizky.moviecatalogue.viewmodel.ViewModelFactory
-import java.text.SimpleDateFormat
-import java.util.*
+import com.ekyrizky.moviecatalogue.vo.Status
+import com.google.android.material.snackbar.Snackbar
 
 class DetailActivity : AppCompatActivity() {
+
     companion object {
+        const val EXTRA_ID = "extra_id"
         const val EXTRA_CONTENT = "extra_content"
-        const val EXTRA_TYPE = "extra_type"
         const val EXTRA_MOVIE = "extra_movie"
         const val EXTRA_TVSHOW = "extra_tvshow"
     }
 
     private lateinit var detailBinding: ActivityDetailBinding
-    private val imgSize = "w500"
-    private val imgUrl = BuildConfig.BASE_IMG
+    private lateinit var viewModel: DetailViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         detailBinding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(detailBinding.root)
 
-        initActionBar()
         showLoading(true)
 
-        val factory = ViewModelFactory.getInstance()
-        val viewModel = ViewModelProvider(this@DetailActivity, factory)[DetailViewModel::class.java]
+        initActionBar()
 
-        val id = intent.getIntExtra(EXTRA_CONTENT, 0)
-        val type = intent.getStringExtra(EXTRA_TYPE)
-        when  (type.equals(EXTRA_MOVIE, ignoreCase = true)) {
-            true -> {
-                viewModel.getDetailMovie(id).observe(this, {
-                    it?.let {
-                        loadMovie(it)
-                        showLoading(false)
-                    }
-                })
-            }
-            false -> {
-                viewModel.getDetailTvShow(id).observe(this, {
-                    it?.let {
-                        loadTvShow(it)
-                        showLoading(false)
-                    }
-                })
-            }
-        }
-    }
+        val factory = ViewModelFactory.getInstance(this)
+        viewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
 
-    private fun showLoading(state: Boolean) {
-        if (state) {
-            detailBinding.progresBar.visibility = View.VISIBLE
-            detailBinding.scrollLayout.visibility = View.GONE
-            detailBinding.appbar.visibility = View.GONE
-        } else {
-            detailBinding.progresBar.visibility = View.GONE
-            detailBinding.scrollLayout.visibility = View.VISIBLE
-            detailBinding.appbar.visibility = View.VISIBLE
+        val extras = intent.extras
+        if (extras != null) {
+            val dataId = extras.getString(EXTRA_ID)
+            val dataCategory = extras.getString(EXTRA_CONTENT)
+
+            if (dataId != null && dataCategory != null) {
+                viewModel.setContent(dataId, dataCategory.toString())
+
+                when (dataCategory) {
+                    EXTRA_MOVIE  -> {
+                        observeMovie()
+                    }
+                    EXTRA_TVSHOW -> {
+                        observeTvShow()
+                    }
+                }
+            }
         }
     }
 
@@ -84,51 +74,130 @@ class DetailActivity : AppCompatActivity() {
         detailBinding.collapsingToolbar.setExpandedTitleColor(Color.TRANSPARENT)
     }
 
-    private fun dateConverter(date: String): String{
-        val apiDate = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-        val formatDate = SimpleDateFormat("yyyy", Locale.getDefault())
-        val year = apiDate.parse(date)
-        return formatDate.format(year!!)
+    private fun observeMovie() {
+        viewModel.getMovieDetail().observe(this, { detail ->
+            when (detail.status) {
+                Status.LOADING -> showLoading(true)
+                Status.SUCCESS -> {
+                    if (detail.data != null) {
+                        showLoading(false)
+                        loadMovie(detail.data)
+                        setFavoriteState(detail.data.favorited)
+                    }
+                }
+                Status.ERROR -> {
+                    showLoading(false)
+                    Toast.makeText(applicationContext, "Terjadi kesalahan", Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
     }
 
-    private fun loadMovie(movieResponse: MovieResponse) {
-        detailBinding.toolbar.title = movieResponse.originalTitle
-        detailBinding.tvTitle.text = movieResponse.originalTitle
-        detailBinding.tvReleaseYear.text = dateConverter(movieResponse.releaseDate)
-        detailBinding.tvRuntime.text = getString(R.string.tv_runtime, movieResponse.runtime)
-        detailBinding.tvTagline.text = movieResponse.tagline
-        detailBinding.tvVoteAverage.text = movieResponse.voteAverage.toString()
-        detailBinding.tvDescription.text = movieResponse.overview
+    private fun observeTvShow() {
+        viewModel.getTvShowDetail().observe(this, { detail ->
+            when (detail.status) {
+                Status.LOADING -> showLoading(true)
+                Status.SUCCESS -> {
+                    if (detail.data != null) {
+                        showLoading(false)
+                        loadTvShow(detail.data)
+                        setFavoriteState(detail.data.favorited)
+                    }
+                }
+                Status.ERROR -> {
+                    showLoading(false)
+                    Toast.makeText(applicationContext, "Terjadi kesalahan", Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
+    }
+
+    private fun loadMovie(movie: MovieEntity) {
+        detailBinding.collapsingToolbar.title = movie.title
+        detailBinding.tvTitle.text = movie.title
+        detailBinding.tvReleaseYear.text = getDateConverted(movie.releaseYear.toString())
+        detailBinding.tvRuntime.text = movie.runtime?.let { getRuntimeConverted(it) }
+        detailBinding.tvTagline.text = movie.tagline
+        detailBinding.tvVoteAverage.text = movie.voteAverage.toString()
+        detailBinding.tvDescription.text = movie.description
         Glide.with(this)
-                .load("$imgUrl$imgSize${movieResponse.posterPath}")
+                .load("$BASE_IMG${movie.posterPath}")
                 .apply(RequestOptions.placeholderOf(R.drawable.ic_loading)
                         .error(R.drawable.ic_error))
                 .into(detailBinding.imgPoster)
         Glide.with(this)
-                .load("$imgUrl$imgSize${movieResponse.backdropPath}")
+                .load("$BASE_IMG${movie.backdropPath}")
                 .apply(RequestOptions.placeholderOf(R.drawable.ic_loading)
                         .error(R.drawable.ic_error))
                 .into(detailBinding.imgBackdrop)
+
+        showLoading(false)
+        detailBinding.fabFavorite.setOnClickListener {
+            setFavoriteMovie(movie)
+        }
     }
 
-    private fun loadTvShow(tvShowResponse: TvShowResponse) {
-        detailBinding.toolbar.title = tvShowResponse.originalName
-        detailBinding.tvTitle.text = tvShowResponse.originalName
-        detailBinding.tvReleaseYear.text = dateConverter(tvShowResponse.firstAirDate.toString())
-        detailBinding.tvRuntime.text = getString(R.string.tv_runtime, tvShowResponse.episodeRunTime?.get(0))
-        detailBinding.tvTagline.text = tvShowResponse.tagline
-        detailBinding.tvVoteAverage.text = tvShowResponse.voteAverage.toString()
-        detailBinding.tvDescription.text = tvShowResponse.overview
+    private fun loadTvShow(tvShow: TvShowEntity) {
+        detailBinding.collapsingToolbar.title = tvShow.title
+        detailBinding.tvTitle.text = tvShow.title
+        detailBinding.tvReleaseYear.text = getDateConverted(tvShow.releaseYear.toString())
+        detailBinding.tvRuntime.text = tvShow.runtime?.let { getRuntimeConverted(it) }
+        detailBinding.tvTagline.text = tvShow.tagline
+        detailBinding.tvVoteAverage.text = tvShow.voteAverage.toString()
+        detailBinding.tvDescription.text = tvShow.description
         Glide.with(this)
-                .load("$imgUrl$imgSize${tvShowResponse.posterPath}")
+                .load("$BASE_IMG${tvShow.posterPath}")
                 .apply(RequestOptions.placeholderOf(R.drawable.ic_loading)
                         .error(R.drawable.ic_error))
                 .into(detailBinding.imgPoster)
         Glide.with(this)
-                .load("$imgUrl$imgSize${tvShowResponse.backdropPath}")
+                .load("$BASE_IMG${tvShow.backdropPath}")
                 .apply(RequestOptions.placeholderOf(R.drawable.ic_loading)
                         .error(R.drawable.ic_error))
                 .into(detailBinding.imgBackdrop)
+
+        showLoading(false)
+        detailBinding.fabFavorite.setOnClickListener {
+            setFavoriteTvShow(tvShow)
+        }
+    }
+
+    private fun setFavoriteState(state: Boolean) {
+        val fab = detailBinding.fabFavorite
+        if (state) {
+            fab.setImageResource(R.drawable.ic_favorite)
+        } else {
+            fab.setImageResource(R.drawable.ic_favorite_border)
+        }
+    }
+
+    private fun setFavoriteMovie(movie: MovieEntity?) {
+        if (movie != null) {
+            if (movie.favorited) {
+                showSnackBar("${movie.title} Removed from favorite")
+            } else {
+                showSnackBar("${movie.title} Added to favorite")
+            }
+            viewModel.setFavoriteMovie()
+        }
+    }
+
+    private fun setFavoriteTvShow(tvShow: TvShowEntity?) {
+        if (tvShow != null) {
+            if (tvShow.favorited){
+                showSnackBar("${tvShow.title} Removed from favorite")
+            } else {
+                showSnackBar("${tvShow.title} Added to favorite")
+            }
+            viewModel.setFavoriteTvShow()
+        }
+    }
+
+    private fun showLoading(state: Boolean) {
+        detailBinding.progresBar.isVisible = state
+        detailBinding.scrollLayout.isVisible = !state
+        detailBinding.appbar.isVisible = !state
+        detailBinding.fabFavorite.isVisible = !state
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -153,4 +222,9 @@ class DetailActivity : AppCompatActivity() {
         onBackPressed()
         return super.onSupportNavigateUp()
     }
+
+    private fun showSnackBar(msg: String) {
+        Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_SHORT).show()
+    }
 }
+

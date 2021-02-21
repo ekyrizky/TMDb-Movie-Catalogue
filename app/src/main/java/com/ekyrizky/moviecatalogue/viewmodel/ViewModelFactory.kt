@@ -1,12 +1,15 @@
 package com.ekyrizky.moviecatalogue.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ekyrizky.moviecatalogue.data.source.ContentRepository
 import com.ekyrizky.moviecatalogue.di.Injection
-import com.ekyrizky.moviecatalogue.ui.content.movie.MovieViewModel
-import com.ekyrizky.moviecatalogue.ui.content.tvshow.TvShowViewModel
 import com.ekyrizky.moviecatalogue.ui.detail.DetailViewModel
+import com.ekyrizky.moviecatalogue.ui.home.favorite.movie.FavoriteMovieViewModel
+import com.ekyrizky.moviecatalogue.ui.home.favorite.tvshow.FavoriteTvShowViewModel
+import com.ekyrizky.moviecatalogue.ui.home.movie.MovieViewModel
+import com.ekyrizky.moviecatalogue.ui.home.tvshow.TvShowViewModel
 
 class ViewModelFactory private constructor(private val mContentRepository: ContentRepository):
     ViewModelProvider.NewInstanceFactory() {
@@ -15,9 +18,9 @@ class ViewModelFactory private constructor(private val mContentRepository: Conte
         @Volatile
         private var instance: ViewModelFactory? = null
 
-        fun getInstance(): ViewModelFactory =
+        fun getInstance(context: Context): ViewModelFactory =
             instance ?: synchronized(this) {
-                instance ?: ViewModelFactory(Injection.provideContentRepository())
+                instance ?: ViewModelFactory(Injection.provideContentRepository(context))
             }
     }
 
@@ -32,6 +35,12 @@ class ViewModelFactory private constructor(private val mContentRepository: Conte
             }
             modelClass.isAssignableFrom(DetailViewModel::class.java) -> {
                 DetailViewModel(mContentRepository) as T
+            }
+            modelClass.isAssignableFrom(FavoriteMovieViewModel::class.java) -> {
+                FavoriteMovieViewModel(mContentRepository) as T
+            }
+            modelClass.isAssignableFrom(FavoriteTvShowViewModel::class.java) -> {
+                FavoriteTvShowViewModel(mContentRepository) as T
             }
             else -> throw Throwable("Unknown ViewModel Class ${modelClass.name}")
         }
