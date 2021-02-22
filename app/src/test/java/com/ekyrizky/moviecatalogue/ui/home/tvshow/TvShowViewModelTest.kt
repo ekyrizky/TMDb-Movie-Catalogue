@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer
 import androidx.paging.PagedList
 import com.ekyrizky.moviecatalogue.data.source.ContentRepository
 import com.ekyrizky.moviecatalogue.data.source.local.entity.TvShowEntity
+import com.ekyrizky.moviecatalogue.utils.SortUtils.NEWEST
 import com.ekyrizky.moviecatalogue.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert.assertEquals
@@ -47,13 +48,13 @@ class TvShowViewModelTest {
         val tvShows = MutableLiveData<Resource<PagedList<TvShowEntity>>>()
         tvShows.value = dummyTvShow
 
-        `when`(contentRepository.getTvShows()).thenReturn(tvShows)
-        val tvShow = viewModel.getTvShows().value?.data
-        verify(contentRepository).getTvShows()
+        `when`(contentRepository.getTvShows(NEWEST)).thenReturn(tvShows)
+        val tvShow = viewModel.getTvShows(NEWEST).value?.data
+        verify(contentRepository).getTvShows(NEWEST)
         assertNotNull(tvShow)
         assertEquals(dummySize, tvShow?.size)
 
-        viewModel.getTvShows().observeForever(observer)
+        viewModel.getTvShows(NEWEST).observeForever(observer)
         verify(observer).onChanged(dummyTvShow)
     }
 }

@@ -11,6 +11,7 @@ import com.ekyrizky.moviecatalogue.utils.AppExecutors
 import com.ekyrizky.moviecatalogue.utils.DataDummy
 import com.ekyrizky.moviecatalogue.utils.LiveDataTestUtil
 import com.ekyrizky.moviecatalogue.utils.PagedListUtil
+import com.ekyrizky.moviecatalogue.utils.SortUtils.NEWEST
 import com.ekyrizky.moviecatalogue.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
@@ -43,11 +44,11 @@ class ContentRepositoryTest {
     @Test
     fun getMovies() {
         val dataSource = mock(DataSource.Factory::class.java)as DataSource.Factory<Int, MovieEntity>
-        `when`(localDataSource.getMovies()).thenReturn(dataSource)
-        contentRepository.getMovies()
+        `when`(localDataSource.getMovies(NEWEST)).thenReturn(dataSource)
+        contentRepository.getMovies(NEWEST)
 
         val movieEntities = Resource.success(PagedListUtil.mockPagedList((DataDummy.generateDummyMovies())))
-        verify(localDataSource).getMovies()
+        verify(localDataSource).getMovies(NEWEST)
         assertNotNull(movieEntities)
         assertEquals(moviesResponse.size, movieEntities.data?.size)
     }
@@ -86,11 +87,11 @@ class ContentRepositoryTest {
     @Test
     fun getTvShows() {
         val dataSource = mock(DataSource.Factory::class.java) as DataSource.Factory<Int, TvShowEntity>
-        `when`(localDataSource.getTvShows()).thenReturn(dataSource)
-        contentRepository.getTvShows()
+        `when`(localDataSource.getTvShows(NEWEST)).thenReturn(dataSource)
+        contentRepository.getTvShows(NEWEST)
 
         val tvShowEntities = Resource.success(PagedListUtil.mockPagedList(DataDummy.generateDummyTvShows()))
-        verify(localDataSource).getTvShows()
+        verify(localDataSource).getTvShows(NEWEST)
         assertNotNull(tvShowEntities)
         assertEquals(tvShowsResponse.size, tvShowEntities.data?.size)
     }

@@ -8,7 +8,7 @@ import com.ekyrizky.moviecatalogue.vo.Resource
 
 interface ContentDataSource {
 
-    fun getMovies(): LiveData<Resource<PagedList<MovieEntity>>>
+    fun getMovies(sort: String): LiveData<Resource<PagedList<MovieEntity>>>
 
     fun getMovieDetail(movieId: Int): LiveData<Resource<MovieEntity>>
 
@@ -16,7 +16,7 @@ interface ContentDataSource {
 
     fun setFavoriteMovie(movie: MovieEntity, state: Boolean)
 
-    fun getTvShows(): LiveData<Resource<PagedList<TvShowEntity>>>
+    fun getTvShows(sort: String): LiveData<Resource<PagedList<TvShowEntity>>>
 
     fun getTvShowDetail(tvShowId: Int): LiveData<Resource<TvShowEntity>>
 

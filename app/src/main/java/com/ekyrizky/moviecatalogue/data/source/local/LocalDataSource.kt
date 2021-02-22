@@ -5,6 +5,9 @@ import androidx.paging.DataSource
 import com.ekyrizky.moviecatalogue.data.source.local.entity.MovieEntity
 import com.ekyrizky.moviecatalogue.data.source.local.entity.TvShowEntity
 import com.ekyrizky.moviecatalogue.data.source.local.room.ContentDao
+import com.ekyrizky.moviecatalogue.utils.SortUtils.MOVIE
+import com.ekyrizky.moviecatalogue.utils.SortUtils.TV_SHOW
+import com.ekyrizky.moviecatalogue.utils.SortUtils.getSortedQuery
 
 class LocalDataSource (private val mContentDao: ContentDao) {
 
@@ -15,7 +18,7 @@ class LocalDataSource (private val mContentDao: ContentDao) {
                 INSTANCE ?: LocalDataSource(contentDao)
     }
 
-    fun getMovies(): DataSource.Factory<Int, MovieEntity> = mContentDao.getMovies()
+    fun getMovies(sort: String): DataSource.Factory<Int, MovieEntity> = mContentDao.getMovies(getSortedQuery(sort, MOVIE))
 
     fun getMovieById(id: Int): LiveData<MovieEntity> = mContentDao.getMovieById(id)
 
@@ -28,7 +31,7 @@ class LocalDataSource (private val mContentDao: ContentDao) {
         mContentDao.updateMovie(movie)
     }
 
-    fun getTvShows(): DataSource.Factory<Int, TvShowEntity> = mContentDao.getTvShows()
+    fun getTvShows(sort: String): DataSource.Factory<Int, TvShowEntity> = mContentDao.getTvShows(getSortedQuery(sort, TV_SHOW))
 
     fun getTvShowById(id: Int): LiveData<TvShowEntity> = mContentDao.getTvShowById(id)
 

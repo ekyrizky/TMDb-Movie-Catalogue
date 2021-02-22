@@ -20,4 +20,10 @@
     <string name="undo">Undo to remove %s</string>
     <string name="ok">OK</string>
     <string name="empty_favorite">Favorite is Empty</string>
+    <string name="highest_vote">Highest Vote</string>
+    <string name="newest">Newest</string>
+    <string name="popular_movies">Popular Movies</string>
+    <string name="popular_tvshows">Popular Tv Shows</string>
+    <string name="my_favorite">My Favorite</string>
+    <string name="longest_duration">Longest Duration</string>
 </resources>

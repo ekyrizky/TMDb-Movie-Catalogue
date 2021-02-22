@@ -21,6 +21,8 @@ class HomeActivity : AppCompatActivity() {
 
         _activityMainBinding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding?.root)
+        setSupportActionBar(binding?.toolbar)
+        supportActionBar?.title = null
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
@@ -33,13 +35,20 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setBottomNav() {
-
-
         binding?.bottomChip?.setOnItemSelectedListener { id ->
             when (id) {
-                R.id.nav_movie -> fragment = MovieFragment()
-                R.id.nav_tvshow -> fragment = TvShowFragment()
-                R.id.nav_favorite -> fragment = FavoriteFragment()
+                R.id.nav_movie -> {
+                    fragment = MovieFragment()
+                    setToolbarTitle(getString(R.string.popular_movies))
+                }
+                R.id.nav_tvshow -> {
+                    fragment = TvShowFragment()
+                    setToolbarTitle(getString(R.string.popular_tvshows))
+                }
+                R.id.nav_favorite -> {
+                    fragment = FavoriteFragment()
+                    setToolbarTitle(getString(R.string.my_favorite))
+                }
             }
 
             fragment.let {
@@ -47,5 +56,9 @@ class HomeActivity : AppCompatActivity() {
                         .commit()
             }
         }
+    }
+
+    private fun setToolbarTitle(title: String) {
+        binding?.titleToolbar?.text = title
     }
 }
