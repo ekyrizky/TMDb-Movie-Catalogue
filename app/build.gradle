@@ -77,6 +77,9 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3Version"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navFragmentVersion"
+    implementation "androidx.navigation:navigation-ui-ktx:$navFragmentVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$liveDataVersion"
 
 //    room
     kapt "androidx.room:room-compiler:$roomVersion"

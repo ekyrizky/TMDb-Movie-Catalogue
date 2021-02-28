@@ -3,10 +3,10 @@ package com.ekyrizky.moviecatalogue.ui.home.favorite.movie
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.paging.PagedList
-import com.ekyrizky.moviecatalogue.data.source.ContentRepository
-import com.ekyrizky.moviecatalogue.data.source.local.entity.MovieEntity
-import com.ekyrizky.moviecatalogue.utils.DataDummy
+import com.ekyrizky.moviecatalogue.core.domain.model.movie.MovieDomain
+import com.ekyrizky.moviecatalogue.core.domain.usecase.ContentUseCase
+import com.ekyrizky.moviecatalogue.core.utils.DataDummy
+import com.ekyrizky.moviecatalogue.favorite.movie.FavoriteMovieViewModel
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Assert.assertEquals
@@ -28,13 +28,13 @@ class FavoriteMovieViewModelTest {
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Mock
-    private lateinit var contentRepository: ContentRepository
+    private lateinit var contentRepository: ContentUseCase
 
     @Mock
-    private lateinit var observer: Observer<PagedList<MovieEntity>>
+    private lateinit var observer: Observer<List<MovieDomain>>
 
     @Mock
-    private lateinit var pagedList: PagedList<MovieEntity>
+    private lateinit var pagedList: List<MovieDomain>
 
     @Before
     fun setUp() {
@@ -45,7 +45,7 @@ class FavoriteMovieViewModelTest {
     fun getFavoriteMovies() {
         val dummyMovie = pagedList
         Mockito.`when`(dummyMovie.size).thenReturn(dummySize)
-        val movies = MutableLiveData<PagedList<MovieEntity>>()
+        val movies = MutableLiveData<List<MovieDomain>>()
         movies.value = dummyMovie
 
         Mockito.`when`(contentRepository.getFavoriteMovies()).thenReturn(movies)
@@ -60,8 +60,8 @@ class FavoriteMovieViewModelTest {
 
     @Test
     fun setFavoriteMovie() {
-        viewModel.setFavoriteMovie(DataDummy.generateDummyMovieDetail())
-        verify(contentRepository).setFavoriteMovie(DataDummy.generateDummyMovieDetail(), true)
+        viewModel.setFavoriteMovie(DataDummy.generateDummyMovieDomain())
+        verify(contentRepository).setFavoriteMovie(DataDummy.generateDummyMovieDomain(), true)
         verifyNoMoreInteractions(contentRepository)
     }
 }

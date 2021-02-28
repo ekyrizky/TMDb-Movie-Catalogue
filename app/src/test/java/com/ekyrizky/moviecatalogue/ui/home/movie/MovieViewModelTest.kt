@@ -3,11 +3,11 @@ package com.ekyrizky.moviecatalogue.ui.home.movie
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.paging.PagedList
-import com.ekyrizky.moviecatalogue.data.source.ContentRepository
-import com.ekyrizky.moviecatalogue.data.source.local.entity.MovieEntity
-import com.ekyrizky.moviecatalogue.utils.SortUtils.NEWEST
-import com.ekyrizky.moviecatalogue.vo.Resource
+import com.ekyrizky.moviecatalogue.core.data.Resource
+import com.ekyrizky.moviecatalogue.core.domain.model.movie.MovieDomain
+import com.ekyrizky.moviecatalogue.core.domain.usecase.ContentUseCase
+import com.ekyrizky.moviecatalogue.core.utils.SortUtils.NEWEST
+import com.ekyrizky.moviecatalogue.movie.MovieViewModel
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -28,13 +28,13 @@ class MovieViewModelTest {
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Mock
-    private lateinit var contentRepository: ContentRepository
+    private lateinit var contentRepository: ContentUseCase
 
     @Mock
-    private lateinit var observer: Observer<Resource<PagedList<MovieEntity>>>
+    private lateinit var observer: Observer<Resource<List<MovieDomain>>>
 
     @Mock
-    private lateinit var pagedList: PagedList<MovieEntity>
+    private lateinit var pagedList: List<MovieDomain>
 
     @Before
     fun setUp() {
@@ -43,9 +43,9 @@ class MovieViewModelTest {
 
     @Test
     fun getMovies() {
-        val dummyMovies = Resource.success(pagedList)
+        val dummyMovies = Resource.Success(pagedList)
         `when`(dummyMovies.data?.size).thenReturn(dummySize)
-        val movies = MutableLiveData<Resource<PagedList<MovieEntity>>>()
+        val movies = MutableLiveData<Resource<List<MovieDomain>>>()
         movies.value = dummyMovies
 
         `when`(contentRepository.getMovies(NEWEST)).thenReturn(movies)

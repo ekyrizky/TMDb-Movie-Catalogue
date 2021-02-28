@@ -3,10 +3,10 @@ package com.ekyrizky.moviecatalogue.ui.home.favorite.tvshow
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.paging.PagedList
-import com.ekyrizky.moviecatalogue.data.source.ContentRepository
-import com.ekyrizky.moviecatalogue.data.source.local.entity.TvShowEntity
-import com.ekyrizky.moviecatalogue.utils.DataDummy
+import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.TvShowDomain
+import com.ekyrizky.moviecatalogue.core.domain.usecase.ContentUseCase
+import com.ekyrizky.moviecatalogue.core.utils.DataDummy
+import com.ekyrizky.moviecatalogue.favorite.tvshow.FavoriteTvShowViewModel
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Assert.assertEquals
@@ -28,13 +28,13 @@ class FavoriteTvShowViewModelTest {
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Mock
-    private lateinit var contentRepository: ContentRepository
+    private lateinit var contentRepository: ContentUseCase
 
     @Mock
-    private lateinit var observer: Observer<PagedList<TvShowEntity>>
+    private lateinit var observer: Observer<List<TvShowDomain>>
 
     @Mock
-    private lateinit var pagedList: PagedList<TvShowEntity>
+    private lateinit var pagedList: List<TvShowDomain>
 
     @Before
     fun setUp() {
@@ -43,15 +43,15 @@ class FavoriteTvShowViewModelTest {
     @Test
     fun getFavoriteTvShow() {
         val dummyTvShow = pagedList
-        Mockito.`when`(dummyTvShow.size).thenReturn(3)
-        val tvShows = MutableLiveData<PagedList<TvShowEntity>>()
+        Mockito.`when`(dummyTvShow.size).thenReturn(dummySize)
+        val tvShows = MutableLiveData<List<TvShowDomain>>()
         tvShows.value = dummyTvShow
 
         Mockito.`when`(contentRepository.getFavoriteTvShows()).thenReturn(tvShows)
         val tvShow = viewModel.getFavoriteTvShow().value
         verify(contentRepository).getFavoriteTvShows()
         assertNotNull(tvShow)
-        assertEquals(3, tvShow?.size)
+        assertEquals(dummySize, tvShow?.size)
 
         viewModel.getFavoriteTvShow().observeForever(observer)
         verify(observer).onChanged(dummyTvShow)
@@ -59,8 +59,8 @@ class FavoriteTvShowViewModelTest {
 
     @Test
     fun setFavoriteTvShow() {
-        viewModel.setFavoriteTvShow(DataDummy.generateDummyTvShowDetail())
-        verify(contentRepository).setFavoriteTvShow(DataDummy.generateDummyTvShowDetail(), true)
+        viewModel.setFavoriteTvShow(DataDummy.generateDummyTvShowDomain())
+        verify(contentRepository).setFavoriteTvShow(DataDummy.generateDummyTvShowDomain(), true)
         verifyNoMoreInteractions(contentRepository)
     }
 }

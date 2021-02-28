@@ -3,13 +3,14 @@ package com.ekyrizky.moviecatalogue.ui.detail
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.ekyrizky.moviecatalogue.data.source.ContentRepository
-import com.ekyrizky.moviecatalogue.data.source.local.entity.MovieEntity
-import com.ekyrizky.moviecatalogue.data.source.local.entity.TvShowEntity
-import com.ekyrizky.moviecatalogue.ui.detail.DetailActivity.Companion.EXTRA_MOVIE
-import com.ekyrizky.moviecatalogue.ui.detail.DetailActivity.Companion.EXTRA_TVSHOW
-import com.ekyrizky.moviecatalogue.utils.DataDummy
-import com.ekyrizky.moviecatalogue.vo.Resource
+import com.ekyrizky.moviecatalogue.core.data.Resource
+import com.ekyrizky.moviecatalogue.core.domain.model.movie.MovieDomain
+import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.TvShowDomain
+import com.ekyrizky.moviecatalogue.core.domain.usecase.ContentUseCase
+import com.ekyrizky.moviecatalogue.core.utils.DataDummy
+import com.ekyrizky.moviecatalogue.detail.DetailActivity.Companion.EXTRA_MOVIE
+import com.ekyrizky.moviecatalogue.detail.DetailActivity.Companion.EXTRA_TVSHOW
+import com.ekyrizky.moviecatalogue.detail.DetailViewModel
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Before
@@ -32,13 +33,13 @@ class DetailViewModelTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Mock
-    private lateinit var contentRepository: ContentRepository
+    private lateinit var contentRepository: ContentUseCase
 
     @Mock
-    private lateinit var movieObserver: Observer<Resource<MovieEntity>>
+    private lateinit var movieObserver: Observer<Resource<MovieDomain>>
 
     @Mock
-    private lateinit var tvShowObserver: Observer<Resource<TvShowEntity>>
+    private lateinit var tvShowObserver: Observer<Resource<TvShowDomain>>
 
     @Before
     fun setUp() {
@@ -47,11 +48,11 @@ class DetailViewModelTest {
 
     @Test
     fun getDetailMovie() {
-        val dummyMovie = Resource.success(DataDummy.generateDummyMovieDetail())
-        val movie = MutableLiveData<Resource<MovieEntity>>()
+        val dummyMovie = Resource.Success(DataDummy.generateDummyMovieDomain())
+        val movie = MutableLiveData<Resource<MovieDomain>>()
         movie.value = dummyMovie
 
-        `when`(movieId?.let { contentRepository.getMovieDetail(it) }).thenReturn(movie)
+        `when`(contentRepository.getMovieDetail(movieId)).thenReturn(movie)
 
         viewModel.setContent(movieId.toString(), EXTRA_MOVIE)
         viewModel.getMovieDetail().observeForever(movieObserver)
@@ -60,11 +61,11 @@ class DetailViewModelTest {
 
     @Test
     fun setFavoriteMovie() {
-        val dummyMovie = Resource.success(DataDummy.generateDummyMovieDetail())
-        val movie = MutableLiveData<Resource<MovieEntity>>()
+        val dummyMovie = Resource.Success(DataDummy.generateDummyMovieDomain())
+        val movie = MutableLiveData<Resource<MovieDomain>>()
         movie.value = dummyMovie
 
-        `when`(movieId?.let { contentRepository.getMovieDetail(it) }).thenReturn(movie)
+        `when`(contentRepository.getMovieDetail(movieId)).thenReturn(movie)
 
         viewModel.setContent(movieId.toString(), EXTRA_MOVIE)
         viewModel.setFavoriteMovie()
@@ -74,11 +75,11 @@ class DetailViewModelTest {
 
     @Test
     fun getDetailTvShow() {
-        val dummyTvShow = Resource.success(DataDummy.generateDummyTvShowDetail())
-        val tvShow = MutableLiveData<Resource<TvShowEntity>>()
+        val dummyTvShow = Resource.Success(DataDummy.generateDummyTvShowDomain())
+        val tvShow = MutableLiveData<Resource<TvShowDomain>>()
         tvShow.value = dummyTvShow
 
-        `when`(tvShowId?.let { contentRepository.getTvShowDetail(it) }).thenReturn(tvShow)
+        `when`(contentRepository.getTvShowDetail(tvShowId)).thenReturn(tvShow)
 
         viewModel.setContent(tvShowId.toString(), EXTRA_TVSHOW)
         viewModel.getTvShowDetail().observeForever(tvShowObserver)
@@ -87,11 +88,11 @@ class DetailViewModelTest {
 
     @Test
     fun setFavoriteTvShow() {
-        val dummyTvShow = Resource.success(DataDummy.generateDummyTvShowDetail())
-        val tvShow = MutableLiveData<Resource<TvShowEntity>>()
+        val dummyTvShow = Resource.Success(DataDummy.generateDummyTvShowDomain())
+        val tvShow = MutableLiveData<Resource<TvShowDomain>>()
         tvShow.value = dummyTvShow
 
-        `when`(tvShowId?.let { contentRepository.getTvShowDetail(it) }).thenReturn(tvShow)
+        `when`(contentRepository.getTvShowDetail(tvShowId)).thenReturn(tvShow)
 
         viewModel.setContent(tvShowId.toString(), EXTRA_TVSHOW)
         viewModel.setFavoriteTvShow()

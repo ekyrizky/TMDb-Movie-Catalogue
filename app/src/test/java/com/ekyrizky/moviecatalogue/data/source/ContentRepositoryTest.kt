@@ -2,19 +2,17 @@ package com.ekyrizky.moviecatalogue.data.source
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import androidx.paging.DataSource
-import com.ekyrizky.moviecatalogue.data.source.local.LocalDataSource
-import com.ekyrizky.moviecatalogue.data.source.local.entity.MovieEntity
-import com.ekyrizky.moviecatalogue.data.source.local.entity.TvShowEntity
-import com.ekyrizky.moviecatalogue.data.source.remote.RemoteDataSource
-import com.ekyrizky.moviecatalogue.utils.AppExecutors
-import com.ekyrizky.moviecatalogue.utils.DataDummy
+import com.ekyrizky.moviecatalogue.core.data.Resource
+import com.ekyrizky.moviecatalogue.core.data.source.local.LocalDataSource
+import com.ekyrizky.moviecatalogue.core.data.source.local.entity.MovieEntity
+import com.ekyrizky.moviecatalogue.core.data.source.local.entity.TvShowEntity
+import com.ekyrizky.moviecatalogue.core.data.source.remote.RemoteDataSource
+import com.ekyrizky.moviecatalogue.core.utils.AppExecutors
+import com.ekyrizky.moviecatalogue.core.utils.DataDummy
+import com.ekyrizky.moviecatalogue.core.utils.SortUtils.NEWEST
 import com.ekyrizky.moviecatalogue.utils.LiveDataTestUtil
 import com.ekyrizky.moviecatalogue.utils.PagedListUtil
-import com.ekyrizky.moviecatalogue.utils.SortUtils.NEWEST
-import com.ekyrizky.moviecatalogue.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Rule
@@ -43,11 +41,12 @@ class ContentRepositoryTest {
 
     @Test
     fun getMovies() {
-        val dataSource = mock(DataSource.Factory::class.java)as DataSource.Factory<Int, MovieEntity>
-        `when`(localDataSource.getMovies(NEWEST)).thenReturn(dataSource)
+        val dummyMovies = MutableLiveData<List<MovieEntity>>()
+        dummyMovies.value = DataDummy.generateDummyMovies()
+        `when`(localDataSource.getMovies(NEWEST)).thenReturn(dummyMovies)
         contentRepository.getMovies(NEWEST)
 
-        val movieEntities = Resource.success(PagedListUtil.mockPagedList((DataDummy.generateDummyMovies())))
+        val movieEntities = Resource.Success(PagedListUtil.mockPagedList((DataDummy.generateDummyMovies())))
         verify(localDataSource).getMovies(NEWEST)
         assertNotNull(movieEntities)
         assertEquals(moviesResponse.size, movieEntities.data?.size)
@@ -66,19 +65,13 @@ class ContentRepositoryTest {
     }
 
     @Test
-    fun setFavoriteMovie() {
-        contentRepository.setFavoriteMovie(DataDummy.generateDummyMovieDetail(), true)
-        verify(localDataSource).updateMovie(DataDummy.generateDummyMovieDetail(), true)
-        verifyNoMoreInteractions(localDataSource)
-    }
-
-    @Test
     fun getFavoriteMovie() {
-        val dataSourceFactory = mock(DataSource.Factory::class.java) as DataSource.Factory<Int, MovieEntity>
-        `when`(localDataSource.getFavoriteMovies()).thenReturn(dataSourceFactory)
+        val dummyMovies = MutableLiveData<List<MovieEntity>>()
+        dummyMovies.value = DataDummy.generateDummyMovies()
+        `when`(localDataSource.getFavoriteMovies()).thenReturn(dummyMovies)
         contentRepository.getFavoriteMovies()
 
-        val movieEntities = Resource.success(PagedListUtil.mockPagedList(DataDummy.generateDummyMovies()))
+        val movieEntities = Resource.Success(PagedListUtil.mockPagedList(DataDummy.generateDummyMovies()))
         verify(localDataSource).getFavoriteMovies()
         assertNotNull(movieEntities)
         assertEquals(moviesResponse.size, movieEntities.data?.size)
@@ -86,11 +79,12 @@ class ContentRepositoryTest {
 
     @Test
     fun getTvShows() {
-        val dataSource = mock(DataSource.Factory::class.java) as DataSource.Factory<Int, TvShowEntity>
-        `when`(localDataSource.getTvShows(NEWEST)).thenReturn(dataSource)
+        val dummyTvShows = MutableLiveData<List<TvShowEntity>>()
+        dummyTvShows.value = DataDummy.generateDummyTvShows()
+        `when`(localDataSource.getTvShows(NEWEST)).thenReturn(dummyTvShows)
         contentRepository.getTvShows(NEWEST)
 
-        val tvShowEntities = Resource.success(PagedListUtil.mockPagedList(DataDummy.generateDummyTvShows()))
+        val tvShowEntities = Resource.Success(PagedListUtil.mockPagedList(DataDummy.generateDummyTvShows()))
         verify(localDataSource).getTvShows(NEWEST)
         assertNotNull(tvShowEntities)
         assertEquals(tvShowsResponse.size, tvShowEntities.data?.size)
@@ -100,30 +94,22 @@ class ContentRepositoryTest {
     fun getTvShowDetail() {
         val dummyTvShow = MutableLiveData<TvShowEntity>()
         dummyTvShow.value = DataDummy.generateDummyTvShowDetail()
-        if (tvShowId != null) {
-            `when`(localDataSource.getTvShowById(tvShowId)).thenReturn(dummyTvShow)
+        `when`(localDataSource.getTvShowById(tvShowId)).thenReturn(dummyTvShow)
 
-            val tvShowDetailEntity = LiveDataTestUtil.getValue(contentRepository.getTvShowDetail(tvShowId))
-            verify(localDataSource).getTvShowById(tvShowId)
-            assertNotNull(tvShowDetailEntity)
-            assertEquals(tvShowDetailResponse.id, tvShowDetailEntity.data?.id)
-        }
-    }
-
-    @Test
-    fun setFavoriteTvShow() {
-        contentRepository.setFavoriteTvShow(DataDummy.generateDummyTvShowDetail(), true)
-        verify(localDataSource).updateTvShow(DataDummy.generateDummyTvShowDetail(), true)
-        verifyNoMoreInteractions(localDataSource)
+        val tvShowDetailEntity = LiveDataTestUtil.getValue(contentRepository.getTvShowDetail(tvShowId))
+        verify(localDataSource).getTvShowById(tvShowId)
+        assertNotNull(tvShowDetailEntity)
+        assertEquals(tvShowDetailResponse.id, tvShowDetailEntity.data?.id)
     }
 
     @Test
     fun getFavoriteTvShows() {
-        val dataSourceFactory = mock(DataSource.Factory::class.java) as DataSource.Factory<Int, TvShowEntity>
-        `when`(localDataSource.getFavoriteTvShows()).thenReturn(dataSourceFactory)
+        val dummyTvShows = MutableLiveData<List<TvShowEntity>>()
+        dummyTvShows.value = DataDummy.generateDummyTvShows()
+        `when`(localDataSource.getFavoriteTvShows()).thenReturn(dummyTvShows)
         contentRepository.getFavoriteTvShows()
 
-        val tvShowEntities = Resource.success(PagedListUtil.mockPagedList(DataDummy.generateDummyTvShows()))
+        val tvShowEntities = Resource.Success(PagedListUtil.mockPagedList(DataDummy.generateDummyTvShows()))
         verify(localDataSource).getFavoriteTvShows()
         assertNotNull(tvShowEntities)
         assertEquals(tvShowsResponse.size, tvShowEntities.data?.size)

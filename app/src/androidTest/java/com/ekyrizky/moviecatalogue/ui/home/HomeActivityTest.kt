@@ -9,9 +9,10 @@ import androidx.test.espresso.action.ViewActions.pressBack
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
+import com.ekyrizky.moviecatalogue.MainActivity
 import com.ekyrizky.moviecatalogue.R
-import com.ekyrizky.moviecatalogue.utils.DataDummy
-import com.ekyrizky.moviecatalogue.utils.EspressoIdlingResource
+import com.ekyrizky.moviecatalogue.core.utils.DataDummy
+import com.ekyrizky.moviecatalogue.core.utils.EspressoIdlingResource
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -21,7 +22,7 @@ class HomeActivityTest {
     private val dummySize = DataDummy.generateDummyMovies().size
     @Before
     fun setUp() {
-        ActivityScenario.launch(HomeActivity::class.java)
+        ActivityScenario.launch(MainActivity::class.java)
         IdlingRegistry.getInstance().register(EspressoIdlingResource.espressoTestIdlingResource)
     }
 
