@@ -1,25 +1,49 @@
 package com.ekyrizky.moviecatalogue.core.domain.usecase
 
-import androidx.lifecycle.LiveData
 import com.ekyrizky.moviecatalogue.core.data.Resource
+import com.ekyrizky.moviecatalogue.core.data.source.local.entity.movie.FavoriteMovieEntity
+import com.ekyrizky.moviecatalogue.core.data.source.local.entity.tvshow.FavoriteTvShowEntity
+import com.ekyrizky.moviecatalogue.core.domain.model.movie.FavoriteMovieDomain
+import com.ekyrizky.moviecatalogue.core.domain.model.movie.MovieDetailDomain
 import com.ekyrizky.moviecatalogue.core.domain.model.movie.MovieDomain
+import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.FavoriteTvShowDomain
+import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.TvShowDetailDomain
 import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.TvShowDomain
+import kotlinx.coroutines.flow.Flow
 
 interface ContentUseCase {
 
-    fun getMovies(sort: String): LiveData<Resource<List<MovieDomain>>>
+    fun getMovies(sort: String): Flow<Resource<List<MovieDomain>>>
 
-    fun getMovieDetail(movieId: Int): LiveData<Resource<MovieDomain>>
+    fun getMovieDetail(movieId: Int): Flow<Resource<MovieDetailDomain>>
 
-    fun getFavoriteMovies(): LiveData<List<MovieDomain>>
+    fun getFavoriteMovies(): Flow<List<FavoriteMovieDomain>>
 
-    fun setFavoriteMovie(movie: MovieDomain, state: Boolean)
+    suspend fun insertFavoriteMovie(favoriteMovies: FavoriteMovieEntity)
 
-    fun getTvShows(sort: String): LiveData<Resource<List<TvShowDomain>>>
+    suspend fun checkFavoriteMovie(id: Int): Boolean
 
-    fun getTvShowDetail(tvShowId: Int): LiveData<Resource<TvShowDomain>>
+    suspend fun deleteFavoriteMovieById(id: Int)
 
-    fun getFavoriteTvShows(): LiveData<List<TvShowDomain>>
+    suspend fun deleteFavoriteMovie(favoriteMovies: FavoriteMovieEntity)
 
-    fun setFavoriteTvShow(tvShow: TvShowDomain, state: Boolean)
+    suspend fun deleteAllFavoriteMovies()
+
+    fun getTvShows(sort: String): Flow<Resource<List<TvShowDomain>>>
+
+    fun getTvShowDetail(tvShowId: Int): Flow<Resource<TvShowDetailDomain>>
+
+    fun getFavoriteTvShows(): Flow<List<FavoriteTvShowDomain>>
+
+    suspend fun insertFavoriteTvShow(favoriteTvShow: FavoriteTvShowEntity)
+
+    suspend fun checkFavoriteTvShow(id: Int): Boolean
+
+    suspend fun deleteFavoriteTvShowById(id: Int)
+
+    suspend fun deleteFavoriteTvShow(favoriteTvShow: FavoriteTvShowEntity)
+
+    suspend fun deleteAllFavoriteTvShows()
+
+
 }

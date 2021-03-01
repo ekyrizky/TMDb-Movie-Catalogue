@@ -10,21 +10,20 @@ import com.bumptech.glide.request.RequestOptions
 import com.ekyrizky.moviecatalogue.BuildConfig
 import com.ekyrizky.moviecatalogue.ContentCallback
 import com.ekyrizky.moviecatalogue.R
-import com.ekyrizky.moviecatalogue.core.domain.model.movie.MovieDomain
-import com.ekyrizky.moviecatalogue.core.utils.ConvertUtils
+import com.ekyrizky.moviecatalogue.core.domain.model.movie.FavoriteMovieDomain
 import com.ekyrizky.moviecatalogue.core.utils.ConvertUtils.getDateConverted
 import com.ekyrizky.moviecatalogue.core.utils.ConvertUtils.getRuntimeConverted
 import com.ekyrizky.moviecatalogue.databinding.ItemsListBinding
 
-class FavoriteMovieAdapter : ListAdapter<MovieDomain, FavoriteMovieAdapter.ListViewHolder>(DIFF_CALLBACK) {
+class FavoriteMovieAdapter : ListAdapter<FavoriteMovieDomain, FavoriteMovieAdapter.ListViewHolder>(DIFF_CALLBACK) {
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<MovieDomain>() {
-            override fun areItemsTheSame(oldItem: MovieDomain, newItem: MovieDomain): Boolean {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<FavoriteMovieDomain>() {
+            override fun areItemsTheSame(oldItem: FavoriteMovieDomain, newItem: FavoriteMovieDomain): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: MovieDomain, newItem: MovieDomain): Boolean {
+            override fun areContentsTheSame(oldItem: FavoriteMovieDomain, newItem: FavoriteMovieDomain): Boolean {
                 return oldItem == newItem
             }
         }
@@ -36,14 +35,14 @@ class FavoriteMovieAdapter : ListAdapter<MovieDomain, FavoriteMovieAdapter.ListV
         this.onItemClickCallback = onItemClickCallback
     }
 
-    fun getSwipedData(swipedPosition: Int): MovieDomain? = getItem(swipedPosition)
+    fun getSwipedData(swipedPosition: Int): FavoriteMovieDomain? = getItem(swipedPosition)
 
     inner class ListViewHolder(private val binding: ItemsListBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(movieItems: MovieDomain) {
+        fun bind(movieItems: FavoriteMovieDomain) {
             with(binding) {
                 tvTitle.text = movieItems.title
-                tvReleaseYear.text = getDateConverted(movieItems.releaseYear)
-                tvRuntime.text = getRuntimeConverted(movieItems.runtime)
+                tvReleaseYear.text = movieItems.releaseYear?.let { getDateConverted(it) }
+                tvRuntime.text = movieItems.runtime?.let { getRuntimeConverted(it) }
                 tvVoteAverage.text = movieItems.voteAverage.toString()
                 Glide.with(itemView.context)
                     .load("${BuildConfig.BASE_IMG}${movieItems.posterPath}")

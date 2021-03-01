@@ -10,20 +10,20 @@ import com.bumptech.glide.request.RequestOptions
 import com.ekyrizky.moviecatalogue.BuildConfig
 import com.ekyrizky.moviecatalogue.ContentCallback
 import com.ekyrizky.moviecatalogue.R
-import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.TvShowDomain
+import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.FavoriteTvShowDomain
 import com.ekyrizky.moviecatalogue.core.utils.ConvertUtils.getDateConverted
 import com.ekyrizky.moviecatalogue.core.utils.ConvertUtils.getRuntimeConverted
 import com.ekyrizky.moviecatalogue.databinding.ItemsListBinding
 
-class FavoriteTvShowAdapter : ListAdapter<TvShowDomain, FavoriteTvShowAdapter.ListViewHolder>(DIFF_CALLBACK) {
+class FavoriteTvShowAdapter : ListAdapter<FavoriteTvShowDomain, FavoriteTvShowAdapter.ListViewHolder>(DIFF_CALLBACK) {
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<TvShowDomain>() {
-            override fun areItemsTheSame(oldItem: TvShowDomain, newItem: TvShowDomain): Boolean {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<FavoriteTvShowDomain>() {
+            override fun areItemsTheSame(oldItem: FavoriteTvShowDomain, newItem: FavoriteTvShowDomain): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: TvShowDomain, newItem: TvShowDomain): Boolean {
+            override fun areContentsTheSame(oldItem: FavoriteTvShowDomain, newItem: FavoriteTvShowDomain): Boolean {
                 return oldItem == newItem
             }
         }
@@ -35,14 +35,14 @@ class FavoriteTvShowAdapter : ListAdapter<TvShowDomain, FavoriteTvShowAdapter.Li
         this.onItemClickCallback = onItemClickCallback
     }
 
-    fun getSwipedData(swipedPosition: Int): TvShowDomain? = getItem(swipedPosition)
+    fun getSwipedData(swipedPosition: Int): FavoriteTvShowDomain? = getItem(swipedPosition)
 
     inner class ListViewHolder(private val binding: ItemsListBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(tvShowItems: TvShowDomain) {
+        fun bind(tvShowItems: FavoriteTvShowDomain) {
             with(binding) {
                 tvTitle.text = tvShowItems.title
-                tvReleaseYear.text = getDateConverted(tvShowItems.releaseYear)
-                tvRuntime.text = getRuntimeConverted(tvShowItems.runtime)
+                tvReleaseYear.text = tvShowItems.releaseYear?.let { getDateConverted(it) }
+                tvRuntime.text = tvShowItems.runtime?.let { getRuntimeConverted(it) }
                 tvVoteAverage.text = tvShowItems.voteAverage.toString()
                 Glide.with(itemView.context)
                         .load("${BuildConfig.BASE_IMG}${tvShowItems.posterPath}")

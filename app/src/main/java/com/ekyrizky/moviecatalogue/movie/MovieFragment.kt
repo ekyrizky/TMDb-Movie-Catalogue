@@ -16,7 +16,6 @@ import com.ekyrizky.moviecatalogue.core.domain.model.movie.MovieDomain
 import com.ekyrizky.moviecatalogue.core.ui.ViewModelFactory
 import com.ekyrizky.moviecatalogue.core.ui.movie.MovieAdapter
 import com.ekyrizky.moviecatalogue.core.utils.SortUtils.HIGHEST_VOTE
-import com.ekyrizky.moviecatalogue.core.utils.SortUtils.LONGEST_DURATION
 import com.ekyrizky.moviecatalogue.core.utils.SortUtils.NEWEST
 import com.ekyrizky.moviecatalogue.databinding.FragmentMovieBinding
 import com.ekyrizky.moviecatalogue.detail.DetailActivity
@@ -25,17 +24,19 @@ import com.ekyrizky.moviecatalogue.detail.DetailActivity.Companion.EXTRA_MOVIE
 
 class MovieFragment : Fragment(), ContentCallback {
 
-    private lateinit var movieBinding: FragmentMovieBinding
+    private var _fragmentMovieBinding: FragmentMovieBinding? = null
+    private val binding get() = _fragmentMovieBinding
+
     private lateinit var viewModel: MovieViewModel
     private lateinit var movieAdapter: MovieAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        movieBinding = FragmentMovieBinding.inflate(layoutInflater, container, false)
+    ): View? {
+        _fragmentMovieBinding = FragmentMovieBinding.inflate(layoutInflater, container, false)
         setHasOptionsMenu(true)
-        return movieBinding.root
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -80,10 +81,10 @@ class MovieFragment : Fragment(), ContentCallback {
     }
 
     private fun initRecyclerView() {
-        with(movieBinding.rvMovie) {
-            layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-            setHasFixedSize(true)
-            adapter = movieAdapter
+        with(binding?.rvMovie) {
+            this?.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+            this?.setHasFixedSize(true)
+            this?.adapter = movieAdapter
         }
     }
 
@@ -103,10 +104,6 @@ class MovieFragment : Fragment(), ContentCallback {
                 sort = HIGHEST_VOTE
                 Toast.makeText(context, "Sorted by highest vote", Toast.LENGTH_SHORT).show()
             }
-            R.id.action_longest_duration -> {
-                sort = LONGEST_DURATION
-                Toast.makeText(context, "Sorted by longest duration", Toast.LENGTH_SHORT).show()
-            }
         }
 
         viewModel.getMovies(sort).observe(viewLifecycleOwner, movieObserver)
@@ -116,7 +113,7 @@ class MovieFragment : Fragment(), ContentCallback {
     }
 
     private fun showLoading(state: Boolean) {
-        movieBinding.progressBar.isVisible = state
-        movieBinding.rvMovie.isVisible = !state
+        binding?.progressBar?.isVisible = state
+        binding?.rvMovie?.isVisible = !state
     }
 }

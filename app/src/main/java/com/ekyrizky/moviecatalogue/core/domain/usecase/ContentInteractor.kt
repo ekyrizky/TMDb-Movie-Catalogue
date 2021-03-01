@@ -1,34 +1,64 @@
 package com.ekyrizky.moviecatalogue.core.domain.usecase
 
-import androidx.lifecycle.LiveData
 import com.ekyrizky.moviecatalogue.core.data.Resource
+import com.ekyrizky.moviecatalogue.core.data.source.local.entity.movie.FavoriteMovieEntity
+import com.ekyrizky.moviecatalogue.core.data.source.local.entity.tvshow.FavoriteTvShowEntity
+import com.ekyrizky.moviecatalogue.core.domain.model.movie.FavoriteMovieDomain
+import com.ekyrizky.moviecatalogue.core.domain.model.movie.MovieDetailDomain
 import com.ekyrizky.moviecatalogue.core.domain.model.movie.MovieDomain
+import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.FavoriteTvShowDomain
+import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.TvShowDetailDomain
 import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.TvShowDomain
 import com.ekyrizky.moviecatalogue.core.domain.repository.IContentRepository
+import kotlinx.coroutines.flow.Flow
 
 class ContentInteractor(private val contentRepository: IContentRepository): ContentUseCase {
-
-    override fun getMovies(sort: String): LiveData<Resource<List<MovieDomain>>> =
+    override fun getMovies(sort: String): Flow<Resource<List<MovieDomain>>> =
             contentRepository.getMovies(sort)
 
-    override fun getMovieDetail(movieId: Int): LiveData<Resource<MovieDomain>> =
+    override fun getMovieDetail(movieId: Int): Flow<Resource<MovieDetailDomain>> =
             contentRepository.getMovieDetail(movieId)
 
-    override fun getFavoriteMovies(): LiveData<List<MovieDomain>> =
+    override fun getFavoriteMovies(): Flow<List<FavoriteMovieDomain>> =
             contentRepository.getFavoriteMovies()
 
-    override fun setFavoriteMovie(movie: MovieDomain, state: Boolean) =
-            contentRepository.setFavoriteMovie(movie, state)
+    override suspend fun insertFavoriteMovie(favoriteMovies: FavoriteMovieEntity) =
+            contentRepository.insertFavoriteMovie(favoriteMovies)
 
-    override fun getTvShows(sort: String): LiveData<Resource<List<TvShowDomain>>> =
+    override suspend fun checkFavoriteMovie(id: Int): Boolean =
+            contentRepository.checkFavoriteMovie(id)
+
+    override suspend fun deleteFavoriteMovieById(id: Int) =
+            contentRepository.deleteFavoriteMovieById(id)
+
+    override suspend fun deleteFavoriteMovie(favoriteMovies: FavoriteMovieEntity) =
+            contentRepository.deleteFavoriteMovie(favoriteMovies)
+
+    override suspend fun deleteAllFavoriteMovies() =
+            contentRepository.deleteAllFavoriteMovies()
+
+    override fun getTvShows(sort: String): Flow<Resource<List<TvShowDomain>>> =
             contentRepository.getTvShows(sort)
 
-    override fun getTvShowDetail(tvShowId: Int): LiveData<Resource<TvShowDomain>> =
+    override fun getTvShowDetail(tvShowId: Int): Flow<Resource<TvShowDetailDomain>> =
             contentRepository.getTvShowDetail(tvShowId)
 
-    override fun getFavoriteTvShows(): LiveData<List<TvShowDomain>> =
+    override fun getFavoriteTvShows(): Flow<List<FavoriteTvShowDomain>> =
             contentRepository.getFavoriteTvShows()
 
-    override fun setFavoriteTvShow(tvShow: TvShowDomain, state: Boolean) =
-            contentRepository.setFavoriteTvShow(tvShow, state)
+
+    override suspend fun insertFavoriteTvShow(favoriteTvShow: FavoriteTvShowEntity) =
+            contentRepository.insertFavoriteTvShow(favoriteTvShow)
+
+    override suspend fun checkFavoriteTvShow(id: Int): Boolean =
+            contentRepository.checkFavoriteTvShow(id)
+
+    override suspend fun deleteFavoriteTvShowById(id: Int) =
+            contentRepository.deleteFavoriteTvShowById(id)
+
+    override suspend fun deleteFavoriteTvShow(favoriteTvShow: FavoriteTvShowEntity) =
+            contentRepository.deleteFavoriteTvShow(favoriteTvShow)
+
+    override suspend fun deleteAllFavoriteTvShows() =
+            contentRepository.deleteAllFavoriteTvShows()
 }

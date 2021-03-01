@@ -12,18 +12,18 @@ object ApiConfig {
     private fun provideOkHttpClient(): OkHttpClient {
         val timeOut = 120L
         return OkHttpClient.Builder()
-                .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                .connectTimeout(timeOut, TimeUnit.SECONDS)
-                .readTimeout(timeOut, TimeUnit.SECONDS)
-                .build()
+            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+            .connectTimeout(timeOut, TimeUnit.SECONDS)
+            .readTimeout(timeOut, TimeUnit.SECONDS)
+            .build()
     }
 
     fun provideApiService(): ApiService {
         val retrofit = Retrofit.Builder()
-                .baseUrl(BuildConfig.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(provideOkHttpClient())
-                .build()
+            .baseUrl(BuildConfig.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(provideOkHttpClient())
+            .build()
         return retrofit.create(ApiService::class.java)
     }
 }

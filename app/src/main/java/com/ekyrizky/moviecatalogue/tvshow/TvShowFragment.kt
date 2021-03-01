@@ -16,24 +16,25 @@ import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.TvShowDomain
 import com.ekyrizky.moviecatalogue.core.ui.ViewModelFactory
 import com.ekyrizky.moviecatalogue.core.ui.tvshow.TvShowAdapter
 import com.ekyrizky.moviecatalogue.core.utils.SortUtils.HIGHEST_VOTE
-import com.ekyrizky.moviecatalogue.core.utils.SortUtils.LONGEST_DURATION
 import com.ekyrizky.moviecatalogue.core.utils.SortUtils.NEWEST
 import com.ekyrizky.moviecatalogue.databinding.FragmentTvShowBinding
 import com.ekyrizky.moviecatalogue.detail.DetailActivity
 import com.ekyrizky.moviecatalogue.detail.DetailActivity.Companion.EXTRA_TVSHOW
 
 class TvShowFragment : Fragment(), ContentCallback {
-    private lateinit var tvShowBinding: FragmentTvShowBinding
+    private var _fragmentTvShowFavoriteBinding: FragmentTvShowBinding? = null
+    private val binding get() = _fragmentTvShowFavoriteBinding
+
     private lateinit var viewModel: TvShowViewModel
     private lateinit var tvShowAdapter: TvShowAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        tvShowBinding = FragmentTvShowBinding.inflate(layoutInflater, container, false)
+    ): View? {
+        _fragmentTvShowFavoriteBinding = FragmentTvShowBinding.inflate(layoutInflater, container, false)
         setHasOptionsMenu(true)
-        return tvShowBinding.root
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -79,10 +80,10 @@ class TvShowFragment : Fragment(), ContentCallback {
     }
 
     private fun initRecyclerView() {
-        with(tvShowBinding.rvTvShow) {
-            layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-            setHasFixedSize(true)
-            adapter = tvShowAdapter
+        with(binding?.rvTvShow) {
+            this?.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+            this?.setHasFixedSize(true)
+            this?.adapter = tvShowAdapter
         }
     }
 
@@ -102,10 +103,6 @@ class TvShowFragment : Fragment(), ContentCallback {
                 sort = HIGHEST_VOTE
                 Toast.makeText(context, "Sorted by highest vote", Toast.LENGTH_SHORT).show()
             }
-            R.id.action_longest_duration -> {
-                sort = LONGEST_DURATION
-                Toast.makeText(context, "Sorted by longest duration", Toast.LENGTH_SHORT).show()
-            }
         }
 
         viewModel.getTvShows(sort).observe(viewLifecycleOwner, tvShowObserver)
@@ -115,7 +112,7 @@ class TvShowFragment : Fragment(), ContentCallback {
     }
 
     private fun showLoading(state: Boolean) {
-        tvShowBinding.progressBar.isVisible = state
-        tvShowBinding.rvTvShow.isVisible = !state
+        binding?.progressBar?.isVisible = state
+        binding?.rvTvShow?.isVisible = !state
     }
 }

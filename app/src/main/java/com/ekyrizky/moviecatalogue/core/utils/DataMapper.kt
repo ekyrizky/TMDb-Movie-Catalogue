@@ -1,12 +1,20 @@
 package com.ekyrizky.moviecatalogue.core.utils
 
-import com.ekyrizky.moviecatalogue.core.data.source.local.entity.MovieEntity
-import com.ekyrizky.moviecatalogue.core.data.source.local.entity.TvShowEntity
+import com.ekyrizky.moviecatalogue.core.data.source.local.entity.movie.FavoriteMovieEntity
+import com.ekyrizky.moviecatalogue.core.data.source.local.entity.movie.MovieDetailEntity
+import com.ekyrizky.moviecatalogue.core.data.source.local.entity.movie.MovieEntity
+import com.ekyrizky.moviecatalogue.core.data.source.local.entity.tvshow.FavoriteTvShowEntity
+import com.ekyrizky.moviecatalogue.core.data.source.local.entity.tvshow.TvShowDetailEntity
+import com.ekyrizky.moviecatalogue.core.data.source.local.entity.tvshow.TvShowEntity
 import com.ekyrizky.moviecatalogue.core.data.source.remote.response.movie.MovieDetailResponse
 import com.ekyrizky.moviecatalogue.core.data.source.remote.response.movie.PopularMoviesResponse
 import com.ekyrizky.moviecatalogue.core.data.source.remote.response.tvshow.PopularTvShowsResponse
 import com.ekyrizky.moviecatalogue.core.data.source.remote.response.tvshow.TvShowDetailResponse
+import com.ekyrizky.moviecatalogue.core.domain.model.movie.FavoriteMovieDomain
+import com.ekyrizky.moviecatalogue.core.domain.model.movie.MovieDetailDomain
 import com.ekyrizky.moviecatalogue.core.domain.model.movie.MovieDomain
+import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.FavoriteTvShowDomain
+import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.TvShowDetailDomain
 import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.TvShowDomain
 
 object DataMapper {
@@ -18,43 +26,37 @@ object DataMapper {
             val movies = MovieEntity(
                     id = it.id,
                     title = it.originalTitle,
-                    tagline = "",
                     releaseYear = it.releaseDate,
-                    runtime = 0,
                     voteAverage = it.voteAverage,
                     description = it.overview,
                     posterPath = it.posterPath,
                     backdropPath = it.backdropPath,
-                    isFavorite = false
             )
             movieList.add(movies)
         }
         return movieList
     }
 
-    fun mapMTvShowsResponseToEntity(input: List<PopularTvShowsResponse>):List<TvShowEntity> {
+    fun mapTvShowsResponseToEntity(input: List<PopularTvShowsResponse>):List<TvShowEntity> {
         val tvShowList = ArrayList<TvShowEntity>()
 
         input.map {
             val tvShow = TvShowEntity(
                     id = it.id,
                     title = it.originalName,
-                    tagline = "",
                     releaseYear = it.firstAirDate,
-                    runtime = 0,
                     voteAverage = it.voteAverage,
                     description = it.overview,
                     posterPath = it.posterPath,
                     backdropPath = it.backdropPath,
-                    isFavorite = false
             )
             tvShowList.add(tvShow)
         }
         return tvShowList
     }
 
-    fun mapMovieDetailResponseToEntity(input: MovieDetailResponse): MovieEntity =
-            MovieEntity(
+    fun mapMovieDetailResponseToEntity(input: MovieDetailResponse): MovieDetailEntity =
+            MovieDetailEntity(
                     id = input.id,
                     title = input.originalTitle,
                     tagline = input.tagline,
@@ -64,12 +66,11 @@ object DataMapper {
                     description = input.overview,
                     posterPath = input.posterPath,
                     backdropPath = input.backdropPath,
-                    isFavorite = false
             )
 
 
-    fun mapTvShowDetailResponseToEntity(input: TvShowDetailResponse): TvShowEntity =
-            TvShowEntity(
+    fun mapTvShowDetailResponseToEntity(input: TvShowDetailResponse): TvShowDetailEntity =
+            TvShowDetailEntity(
                     id = input.id,
                     title = input.originalName,
                     tagline = input.tagline,
@@ -79,7 +80,6 @@ object DataMapper {
                     description = input.overview,
                     posterPath = input.posterPath,
                     backdropPath = input.backdropPath,
-                    isFavorite = false
             )
 
     fun mapMovieEntityToDomain(input: List<MovieEntity>): List<MovieDomain> =
@@ -87,14 +87,11 @@ object DataMapper {
                 MovieDomain(
                         id = it.id,
                         title = it.title,
-                        tagline = it.tagline,
                         releaseYear = it.releaseYear,
-                        runtime = it.runtime,
                         voteAverage = it.voteAverage,
                         description = it.description,
                         posterPath = it.posterPath,
                         backdropPath = it.backdropPath,
-                        isFavorite = it.isFavorite
                 )
             }
 
@@ -103,6 +100,45 @@ object DataMapper {
                 TvShowDomain(
                         id = it.id,
                         title = it.title,
+                        releaseYear = it.releaseYear,
+                        voteAverage = it.voteAverage,
+                        description = it.description,
+                        posterPath = it.posterPath,
+                        backdropPath = it.backdropPath,
+                )
+            }
+
+    fun mapMovieDetailEntityToDomain(input: MovieDetailEntity?): MovieDetailDomain =
+            MovieDetailDomain(
+                    id = input?.id,
+                    title = input?.title,
+                    tagline = input?.tagline,
+                    releaseYear = input?.releaseYear,
+                    runtime = input?.runtime,
+                    voteAverage = input?.voteAverage,
+                    description = input?.description,
+                    posterPath = input?.posterPath,
+                    backdropPath = input?.backdropPath,
+            )
+
+    fun mapTvShowDetailEntityToDomain(input: TvShowDetailEntity?): TvShowDetailDomain =
+            TvShowDetailDomain(
+                    id = input?.id,
+                    title = input?.title,
+                    tagline = input?.tagline,
+                    releaseYear = input?.releaseYear,
+                    runtime = input?.runtime,
+                    voteAverage = input?.voteAverage,
+                    description = input?.description,
+                    posterPath = input?.posterPath,
+                    backdropPath = input?.backdropPath,
+            )
+
+    fun mapFavoriteMovieEntityToDomain(input: List<FavoriteMovieEntity>): List<FavoriteMovieDomain> =
+            input.map {
+                FavoriteMovieDomain(
+                        id = it.id,
+                        title = it.title,
                         tagline = it.tagline,
                         releaseYear = it.releaseYear,
                         runtime = it.runtime,
@@ -110,12 +146,26 @@ object DataMapper {
                         description = it.description,
                         posterPath = it.posterPath,
                         backdropPath = it.backdropPath,
-                        isFavorite = it.isFavorite
                 )
             }
 
-    fun mapMovieEntityDetailToDomain(input: MovieEntity): MovieDomain =
-            MovieDomain(
+    fun mapFavoriteTvShowEntityToDomain(input: List<FavoriteTvShowEntity>): List<FavoriteTvShowDomain> =
+            input.map {
+                FavoriteTvShowDomain(
+                        id = it.id,
+                        title = it.title,
+                        tagline = it.tagline,
+                        releaseYear = it.releaseYear,
+                        runtime = it.runtime,
+                        voteAverage = it.voteAverage,
+                        description = it.description,
+                        posterPath = it.posterPath,
+                        backdropPath = it.backdropPath,
+                )
+            }
+
+    fun mapDetailMovieDomainToFavoriteEntity(input: MovieDetailDomain): FavoriteMovieEntity =
+            FavoriteMovieEntity(
                     id = input.id,
                     title = input.title,
                     tagline = input.tagline,
@@ -125,11 +175,10 @@ object DataMapper {
                     description = input.description,
                     posterPath = input.posterPath,
                     backdropPath = input.backdropPath,
-                    isFavorite = input.isFavorite
-            )
+        )
 
-    fun mapTvShowEntityDetailToDomain(input: TvShowEntity): TvShowDomain =
-            TvShowDomain(
+    fun mapDetailTvShowDomainToFavoriteEntity(input: TvShowDetailDomain): FavoriteTvShowEntity =
+            FavoriteTvShowEntity(
                     id = input.id,
                     title = input.title,
                     tagline = input.tagline,
@@ -139,34 +188,31 @@ object DataMapper {
                     description = input.description,
                     posterPath = input.posterPath,
                     backdropPath = input.backdropPath,
-                    isFavorite = input.isFavorite
             )
 
+    fun mapFavoriteMovieDomainToEntity(input: FavoriteMovieDomain): FavoriteMovieEntity =
+            FavoriteMovieEntity(
+                    id = input.id,
+                    title = input.title,
+                    tagline = input.tagline,
+                    releaseYear = input.releaseYear,
+                    runtime = input.runtime,
+                    voteAverage = input.voteAverage,
+                    description = input.description,
+                    posterPath = input.posterPath,
+                    backdropPath = input.backdropPath,
+            )
 
-    fun mapMovieDomainToEntity(input: MovieDomain) = MovieEntity(
-            id = input.id,
-            title = input.title,
-            tagline = input.tagline,
-            releaseYear = input.releaseYear,
-            runtime = input.runtime,
-            voteAverage = input.voteAverage,
-            description = input.description,
-            posterPath = input.posterPath,
-            backdropPath = input.backdropPath,
-            isFavorite = input.isFavorite
-    )
-
-    fun mapTvShowDomainToEntity(input: TvShowDomain) = TvShowEntity(
-            id = input.id,
-            title = input.title,
-            tagline = input.tagline,
-            releaseYear = input.releaseYear,
-            runtime = input.runtime,
-            voteAverage = input.voteAverage,
-            description = input.description,
-            posterPath = input.posterPath,
-            backdropPath = input.backdropPath,
-            isFavorite = input.isFavorite
-    )
-
+    fun mapFavoriteTvShowDomainToEntity(input: FavoriteTvShowDomain): FavoriteTvShowEntity =
+            FavoriteTvShowEntity(
+                    id = input.id,
+                    title = input.title,
+                    tagline = input.tagline,
+                    releaseYear = input.releaseYear,
+                    runtime = input.runtime,
+                    voteAverage = input.voteAverage,
+                    description = input.description,
+                    posterPath = input.posterPath,
+                    backdropPath = input.backdropPath,
+            )
 }

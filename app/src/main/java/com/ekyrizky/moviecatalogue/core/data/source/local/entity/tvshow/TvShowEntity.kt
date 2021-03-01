@@ -1,12 +1,12 @@
-package com.ekyrizky.moviecatalogue.core.data.source.local.entity
+package com.ekyrizky.moviecatalogue.core.data.source.local.entity.tvshow
 
 import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "movie_entities")
-data class MovieEntity(
+@Entity(tableName = "tv_shows")
+data class TvShowEntity(
 
     @PrimaryKey
     @NonNull
@@ -16,14 +16,8 @@ data class MovieEntity(
     @ColumnInfo(name = "title")
     var title: String,
 
-    @ColumnInfo(name = "tagline")
-    var tagline: String,
-
     @ColumnInfo(name = "release_year")
     var releaseYear: String,
-
-    @ColumnInfo(name = "runtime")
-    var runtime: Int,
 
     @ColumnInfo(name = "vote_average")
     var voteAverage: Double,
@@ -36,7 +30,4 @@ data class MovieEntity(
 
     @ColumnInfo(name = "backdrop_path")
     var backdropPath: String,
-
-    @ColumnInfo(name = "favorited")
-    var isFavorite: Boolean
 )

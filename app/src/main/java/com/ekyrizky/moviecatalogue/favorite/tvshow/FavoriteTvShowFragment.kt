@@ -83,11 +83,11 @@ class FavoriteTvShowFragment : Fragment(), ContentCallback {
             if (view != null) {
                 val swipedPosition = viewHolder.adapterPosition
                 val tvShowDomain = tvShowFavAdapter.getSwipedData(swipedPosition)
-                tvShowDomain?.let { viewModel.setFavoriteTvShow(it) }
+                tvShowDomain?.let { viewModel.deleteFavoriteTvShow(it) }
 
                 val snackBar = Snackbar.make(requireView(), getString(R.string.undo, tvShowDomain?.title), Snackbar.LENGTH_LONG)
                 snackBar.setAction(R.string.ok) { _ ->
-                    tvShowDomain?.let { viewModel.setFavoriteTvShow(it) }
+                    tvShowDomain?.let { viewModel.insertFavoriteTvShow(it) }
                 }
                 snackBar.show()
             }

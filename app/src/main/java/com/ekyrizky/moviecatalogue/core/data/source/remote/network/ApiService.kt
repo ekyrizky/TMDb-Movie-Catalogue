@@ -5,7 +5,6 @@ import com.ekyrizky.moviecatalogue.core.data.source.remote.response.movie.MovieD
 import com.ekyrizky.moviecatalogue.core.data.source.remote.response.movie.MoviesResponse
 import com.ekyrizky.moviecatalogue.core.data.source.remote.response.tvshow.TvShowDetailResponse
 import com.ekyrizky.moviecatalogue.core.data.source.remote.response.tvshow.TvShowResponse
-import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -13,24 +12,24 @@ import retrofit2.http.Query
 interface ApiService {
 
     @GET("movie/popular")
-    fun getPopularMovies(
+    suspend fun getPopularMovies(
         @Query("api_key") apiKey: String = BuildConfig.API_KEY
-    ) : Call<MoviesResponse>
+    ) : MoviesResponse
 
     @GET("movie/{movie_id}")
-    fun getMovieDetail(
+    suspend fun getMovieDetail(
         @Path("movie_id") movieId: Int,
         @Query("api_key") apiKey: String = BuildConfig.API_KEY
-    ) : Call<MovieDetailResponse>
+    ) : MovieDetailResponse
 
     @GET("tv/popular")
-    fun getPopularTvShows(
+    suspend fun getPopularTvShows(
         @Query("api_key") apiKey: String = BuildConfig.API_KEY
-    ) : Call<TvShowResponse>
+    ) : TvShowResponse
 
     @GET("tv/{tv_id}")
-    fun getTvShowDetail(
+    suspend fun getTvShowDetail(
         @Path("tv_id") tvShowId: Int,
         @Query("api_key") apiKey: String = BuildConfig.API_KEY
-    ) : Call<TvShowDetailResponse>
+    ) : TvShowDetailResponse
 }

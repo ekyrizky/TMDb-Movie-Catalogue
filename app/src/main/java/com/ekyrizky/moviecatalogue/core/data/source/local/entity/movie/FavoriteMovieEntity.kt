@@ -1,42 +1,38 @@
-package com.ekyrizky.moviecatalogue.core.data.source.local.entity
+package com.ekyrizky.moviecatalogue.core.data.source.local.entity.movie
 
 import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "tv_show_entities")
-data class TvShowEntity(
-
+@Entity(tableName = "favorite_movies")
+class FavoriteMovieEntity(
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "id")
-    var id: Int,
+    var id: Int?,
 
     @ColumnInfo(name = "title")
-    var title: String,
+    var title: String?,
 
     @ColumnInfo(name = "tagline")
-    var tagline: String,
+    var tagline: String?,
 
     @ColumnInfo(name = "release_year")
-    var releaseYear: String,
+    var releaseYear: String?,
 
     @ColumnInfo(name = "runtime")
-    var runtime: Int,
+    var runtime: Int?,
 
     @ColumnInfo(name = "vote_average")
-    var voteAverage: Double,
+    var voteAverage: Double?,
 
     @ColumnInfo(name = "description")
-    var description: String,
+    var description: String?,
 
     @ColumnInfo(name = "poster_path")
-    var posterPath: String,
+    var posterPath: String?,
 
     @ColumnInfo(name = "backdrop_path")
-    var backdropPath: String,
-
-    @ColumnInfo(name = "favorited")
-    var isFavorite: Boolean
-)
+    var backdropPath: String?,
+    )

@@ -49,10 +49,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            fragment.let {
-                supportFragmentManager.beginTransaction().replace(R.id.frame_container, fragment)
-                        .commit()
-            }
+            supportFragmentManager.beginTransaction().replace(R.id.frame_container, fragment)
+                    .commit()
         }
     }
 

@@ -82,12 +82,12 @@ class FavoriteMovieFragment : Fragment(), ContentCallback {
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             if (view != null) {
                 val swipedPosition = viewHolder.adapterPosition
-                val movieDomain = movieFavAdapter.getSwipedData(swipedPosition)
-                movieDomain?.let { viewModel.setFavoriteMovie(it) }
+                val favoriteMovieDomain = movieFavAdapter.getSwipedData(swipedPosition)
+                favoriteMovieDomain?.let { viewModel.deleteFavoriteMovie(it) }
 
-                val snackBar = Snackbar.make(requireView(), getString(R.string.undo, movieDomain?.title), Snackbar.LENGTH_LONG)
+                val snackBar = Snackbar.make(requireView(), getString(R.string.undo, favoriteMovieDomain?.title), Snackbar.LENGTH_LONG)
                 snackBar.setAction(R.string.ok) { _ ->
-                    movieDomain?.let { viewModel.setFavoriteMovie(it) }
+                    favoriteMovieDomain?.let { viewModel.insertFavoriteMovie(it) }
                 }
                 snackBar.show()
             }

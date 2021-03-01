@@ -1,20 +1,17 @@
 package com.ekyrizky.moviecatalogue.core.data.source.remote
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.ekyrizky.moviecatalogue.core.data.source.remote.network.ApiResponse
 import com.ekyrizky.moviecatalogue.core.data.source.remote.network.ApiService
 import com.ekyrizky.moviecatalogue.core.data.source.remote.response.movie.MovieDetailResponse
-import com.ekyrizky.moviecatalogue.core.data.source.remote.response.movie.MoviesResponse
 import com.ekyrizky.moviecatalogue.core.data.source.remote.response.movie.PopularMoviesResponse
 import com.ekyrizky.moviecatalogue.core.data.source.remote.response.tvshow.PopularTvShowsResponse
 import com.ekyrizky.moviecatalogue.core.data.source.remote.response.tvshow.TvShowDetailResponse
-import com.ekyrizky.moviecatalogue.core.data.source.remote.response.tvshow.TvShowResponse
 import com.ekyrizky.moviecatalogue.core.utils.EspressoIdlingResource
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 class RemoteDataSource private constructor(private val apiService: ApiService) {
 
@@ -27,92 +24,73 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
         }
     }
 
-    fun getMovies(): LiveData<ApiResponse<List<PopularMoviesResponse>>> {
-        EspressoIdlingResource.increment()
-        val resultMovies = MutableLiveData<ApiResponse<List<PopularMoviesResponse>>>()
-        val client = apiService.getPopularMovies()
-
-        client.enqueue(object : Callback<MoviesResponse> {
-            override fun onResponse(
-                    call: Call<MoviesResponse>,
-                    response: Response<MoviesResponse>
-            ) {
-                resultMovies.value = ApiResponse.Success(response.body()?.results as List<PopularMoviesResponse>)
+    suspend fun getMovies(): Flow<ApiResponse<List<PopularMoviesResponse>>> {
+        return flow {
+            try {
+                EspressoIdlingResource.increment()
+                val response = apiService.getPopularMovies()
+                val dataArray = response.results
+                if (dataArray.isNotEmpty()) {
+                    emit(ApiResponse.Success(response.results))
+                } else {
+                    emit(ApiResponse.Empty)
+                }
+                EspressoIdlingResource.decrement()
+            } catch (e: Exception) {
+                emit(ApiResponse.Error(e.toString()))
+                Log.e("RemoteDataSource ", e.toString())
                 EspressoIdlingResource.decrement()
             }
-
-            override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {
-                Log.d("RemoteDataSource", "onFailure: ${t.message}")
-                EspressoIdlingResource.decrement()
-            }
-        })
-
-        return resultMovies
+        }.flowOn(Dispatchers.IO)
     }
 
-    fun getMovieDetail(movieId: Int): LiveData<ApiResponse<MovieDetailResponse>> {
-        EspressoIdlingResource.increment()
-        val resultMovie = MutableLiveData<ApiResponse<MovieDetailResponse>>()
-        val client = apiService.getMovieDetail(movieId)
-
-        client.enqueue(object : Callback<MovieDetailResponse> {
-            override fun onResponse(call: Call<MovieDetailResponse>, response: Response<MovieDetailResponse>) {
-                resultMovie.value = ApiResponse.Success(response.body() as MovieDetailResponse)
+    suspend fun getMovieDetail(movieId: Int): Flow<ApiResponse<MovieDetailResponse>> {
+        return flow {
+            try {
+                EspressoIdlingResource.increment()
+                val response = apiService.getMovieDetail(movieId)
+                emit(ApiResponse.Success(response))
+                EspressoIdlingResource.decrement()
+            } catch (e: java.lang.Exception) {
+                emit(ApiResponse.Error(e.toString()))
+                Log.e("RemoteDataSource ", e.toString())
                 EspressoIdlingResource.decrement()
             }
-
-            override fun onFailure(call: Call<MovieDetailResponse>, t: Throwable) {
-                Log.d("RemoteDataSource ", "onFailure: ${t.message}")
-                EspressoIdlingResource.decrement()
-            }
-        })
-
-        return resultMovie
+        }.flowOn(Dispatchers.IO)
     }
 
-    fun getTvShows(): LiveData<ApiResponse<List<PopularTvShowsResponse>>> {
-        EspressoIdlingResource.increment()
-        val resultTvShows = MutableLiveData<ApiResponse<List<PopularTvShowsResponse>>>()
-        val client = apiService.getPopularTvShows()
-
-        client.enqueue(object : Callback<TvShowResponse> {
-            override fun onResponse(
-                    call: Call<TvShowResponse>,
-                    response: Response<TvShowResponse>
-            ) {
-                resultTvShows.value = ApiResponse.Success(response.body()?.results as List<PopularTvShowsResponse>)
+    suspend fun getTvShows(): Flow<ApiResponse<List<PopularTvShowsResponse>>> {
+        return flow {
+            try {
+                EspressoIdlingResource.increment()
+                val response = apiService.getPopularTvShows()
+                val dataArray = response.results
+                if (dataArray.isNotEmpty()) {
+                    emit(ApiResponse.Success(response.results))
+                } else {
+                    emit(ApiResponse.Empty)
+                }
+                EspressoIdlingResource.decrement()
+            } catch (e: Exception) {
+                emit(ApiResponse.Error(e.toString()))
+                Log.e("RemoteDataSource ", e.toString())
                 EspressoIdlingResource.decrement()
             }
-
-            override fun onFailure(call: Call<TvShowResponse>, t: Throwable) {
-                Log.d("RemoteDataSource ", "onFailure: ${t.message}")
-                EspressoIdlingResource.decrement()
-            }
-        })
-
-        return resultTvShows
+        }.flowOn(Dispatchers.IO)
     }
 
-    fun getTvShowDetail(tvShowId: Int): LiveData<ApiResponse<TvShowDetailResponse>> {
-        EspressoIdlingResource.increment()
-        val resultTvShow = MutableLiveData<ApiResponse<TvShowDetailResponse>>()
-        val client = apiService.getTvShowDetail(tvShowId)
-
-       client.enqueue(object : Callback<TvShowDetailResponse> {
-            override fun onResponse(
-                    call: Call<TvShowDetailResponse>,
-                    response: Response<TvShowDetailResponse>
-            ) {
-                resultTvShow.value = ApiResponse.Success(response.body() as TvShowDetailResponse)
+    suspend fun getTvShowDetail(tvShowId: Int): Flow<ApiResponse<TvShowDetailResponse>> {
+        return flow {
+            try {
+                EspressoIdlingResource.increment()
+                val response = apiService.getTvShowDetail(tvShowId)
+                emit(ApiResponse.Success(response))
+                EspressoIdlingResource.decrement()
+            } catch (e: java.lang.Exception) {
+                emit(ApiResponse.Error(e.toString()))
+                Log.e("RemoteDataSource ", e.toString())
                 EspressoIdlingResource.decrement()
             }
-
-            override fun onFailure(call: Call<TvShowDetailResponse>, t: Throwable) {
-                Log.d("RemoteDataSource ", "onFailure: ${t.message}")
-                EspressoIdlingResource.decrement()
-            }
-        })
-
-        return resultTvShow
+        }.flowOn(Dispatchers.IO)
     }
 }
