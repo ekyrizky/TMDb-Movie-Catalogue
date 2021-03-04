@@ -4,9 +4,9 @@ import android.util.Log
 import com.ekyrizky.moviecatalogue.core.data.source.remote.network.ApiResponse
 import com.ekyrizky.moviecatalogue.core.data.source.remote.network.ApiService
 import com.ekyrizky.moviecatalogue.core.data.source.remote.response.movie.MovieDetailResponse
-import com.ekyrizky.moviecatalogue.core.data.source.remote.response.movie.PopularMoviesResponse
-import com.ekyrizky.moviecatalogue.core.data.source.remote.response.tvshow.PopularTvShowsResponse
+import com.ekyrizky.moviecatalogue.core.data.source.remote.response.movie.MovieResultResponse
 import com.ekyrizky.moviecatalogue.core.data.source.remote.response.tvshow.TvShowDetailResponse
+import com.ekyrizky.moviecatalogue.core.data.source.remote.response.tvshow.TvShowResultResponse
 import com.ekyrizky.moviecatalogue.core.utils.EspressoIdlingResource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -24,14 +24,14 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
         }
     }
 
-    suspend fun getMovies(): Flow<ApiResponse<List<PopularMoviesResponse>>> {
+    suspend fun getMovies(): Flow<ApiResponse<List<MovieResultResponse>>> {
         return flow {
             try {
                 EspressoIdlingResource.increment()
                 val response = apiService.getPopularMovies()
                 val dataArray = response.results
                 if (dataArray.isNotEmpty()) {
-                    emit(ApiResponse.Success(response.results))
+                    emit(ApiResponse.Success(dataArray))
                 } else {
                     emit(ApiResponse.Empty)
                 }
@@ -59,14 +59,14 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
         }.flowOn(Dispatchers.IO)
     }
 
-    suspend fun getTvShows(): Flow<ApiResponse<List<PopularTvShowsResponse>>> {
+    suspend fun getTvShows(): Flow<ApiResponse<List<TvShowResultResponse>>> {
         return flow {
             try {
                 EspressoIdlingResource.increment()
                 val response = apiService.getPopularTvShows()
                 val dataArray = response.results
                 if (dataArray.isNotEmpty()) {
-                    emit(ApiResponse.Success(response.results))
+                    emit(ApiResponse.Success(dataArray))
                 } else {
                     emit(ApiResponse.Empty)
                 }
@@ -86,6 +86,44 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
                 val response = apiService.getTvShowDetail(tvShowId)
                 emit(ApiResponse.Success(response))
                 EspressoIdlingResource.decrement()
+            } catch (e: java.lang.Exception) {
+                emit(ApiResponse.Error(e.toString()))
+                Log.e("RemoteDataSource ", e.toString())
+                EspressoIdlingResource.decrement()
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun getSearchMovie(query: String): Flow<ApiResponse<List<MovieResultResponse>>> {
+        return flow {
+            try {
+                EspressoIdlingResource.increment()
+                val response = apiService.searchMovies(query)
+                val dataArray = response.results
+                if (response.results.isNotEmpty()) {
+                    emit(ApiResponse.Success(dataArray))
+                } else {
+                    emit(ApiResponse.Empty)
+                }
+            } catch (e: java.lang.Exception) {
+                emit(ApiResponse.Error(e.toString()))
+                Log.e("RemoteDataSource ", e.toString())
+                EspressoIdlingResource.decrement()
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun getSearchTvShow(query: String): Flow<ApiResponse<List<TvShowResultResponse>>> {
+        return flow {
+            try {
+                EspressoIdlingResource.increment()
+                val response = apiService.searchTvShows(query)
+                val dataArray = response.results
+                if (response.results.isNotEmpty()) {
+                    emit(ApiResponse.Success(dataArray))
+                } else {
+                    emit(ApiResponse.Empty)
+                }
             } catch (e: java.lang.Exception) {
                 emit(ApiResponse.Error(e.toString()))
                 Log.e("RemoteDataSource ", e.toString())

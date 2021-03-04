@@ -11,23 +11,23 @@ data class TvShowEntity(
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "id")
-    var id: Int,
+    var id: Int?,
 
     @ColumnInfo(name = "title")
-    var title: String,
+    var title: String?,
 
     @ColumnInfo(name = "release_year")
-    var releaseYear: String,
+    var releaseYear: String?,
 
     @ColumnInfo(name = "vote_average")
-    var voteAverage: Double,
+    var voteAverage: Double?,
 
     @ColumnInfo(name = "description")
-    var description: String,
+    var description: String?,
 
     @ColumnInfo(name = "poster_path")
-    var posterPath: String,
+    var posterPath: String?,
 
     @ColumnInfo(name = "backdrop_path")
-    var backdropPath: String,
+    var backdropPath: String?,
 )

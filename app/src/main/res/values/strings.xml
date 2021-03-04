@@ -26,4 +26,7 @@
     <string name="popular_tvshows">Popular Tv Shows</string>
     <string name="my_favorite">My Favorite</string>
     <string name="longest_duration">Longest Duration</string>
+    <string name="tv_search">Search</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search_yours">Search Movie / TvShow</string>
 </resources>

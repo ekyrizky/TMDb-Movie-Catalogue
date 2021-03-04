@@ -36,7 +36,7 @@ class TvShowAdapter : ListAdapter<TvShowDomain, TvShowAdapter.TvShowViewHolder>(
         fun bind(tvShowItems: TvShowDomain) {
             with(binding) {
                 tvTitle.text = tvShowItems.title
-                tvReleaseYear.text = getDateConverted(tvShowItems.releaseYear)
+                tvReleaseYear.text = tvShowItems.releaseYear?.let { getDateConverted(it) }
                 Glide.with(itemView.context)
                         .load("$BASE_IMG${tvShowItems.posterPath}")
                         .apply(RequestOptions.placeholderOf(R.drawable.ic_loading)

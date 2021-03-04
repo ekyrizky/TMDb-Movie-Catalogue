@@ -6,8 +6,13 @@ import androidx.fragment.app.Fragment
 import com.ekyrizky.moviecatalogue.databinding.ActivityMainBinding
 import com.ekyrizky.moviecatalogue.favorite.FavoriteFragment
 import com.ekyrizky.moviecatalogue.movie.MovieFragment
+import com.ekyrizky.moviecatalogue.search.SearchFragment
 import com.ekyrizky.moviecatalogue.tvshow.TvShowFragment
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 class MainActivity : AppCompatActivity() {
 
     private var _activityMainBinding: ActivityMainBinding? = null
@@ -46,6 +51,10 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_favorite -> {
                     fragment = FavoriteFragment()
                     setToolbarTitle(getString(R.string.my_favorite))
+                }
+                R.id.nav_search -> {
+                    fragment = SearchFragment()
+                    setToolbarTitle(getString(R.string.search_yours))
                 }
             }
 

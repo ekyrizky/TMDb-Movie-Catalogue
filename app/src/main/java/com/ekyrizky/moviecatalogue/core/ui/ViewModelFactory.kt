@@ -9,7 +9,10 @@ import com.ekyrizky.moviecatalogue.detail.DetailViewModel
 import com.ekyrizky.moviecatalogue.favorite.movie.FavoriteMovieViewModel
 import com.ekyrizky.moviecatalogue.favorite.tvshow.FavoriteTvShowViewModel
 import com.ekyrizky.moviecatalogue.movie.MovieViewModel
+import com.ekyrizky.moviecatalogue.search.SearchViewModel
 import com.ekyrizky.moviecatalogue.tvshow.TvShowViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
 class ViewModelFactory private constructor(private val contentUseCase: ContentUseCase):
     ViewModelProvider.NewInstanceFactory() {
@@ -24,6 +27,8 @@ class ViewModelFactory private constructor(private val contentUseCase: ContentUs
             }
     }
 
+    @ExperimentalCoroutinesApi
+    @FlowPreview
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
@@ -41,6 +46,9 @@ class ViewModelFactory private constructor(private val contentUseCase: ContentUs
             }
             modelClass.isAssignableFrom(FavoriteTvShowViewModel::class.java) -> {
                 FavoriteTvShowViewModel(contentUseCase) as T
+            }
+            modelClass.isAssignableFrom(SearchViewModel::class.java) -> {
+                SearchViewModel(contentUseCase) as T
             }
             else -> throw Throwable("Unknown ViewModel Class ${modelClass.name}")
         }

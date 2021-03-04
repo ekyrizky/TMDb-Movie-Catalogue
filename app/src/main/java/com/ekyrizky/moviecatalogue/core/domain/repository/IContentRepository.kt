@@ -19,6 +19,8 @@ interface IContentRepository {
 
     fun getFavoriteMovies(): Flow<List<FavoriteMovieDomain>>
 
+    suspend fun getSearchMovies(query: String): Resource<List<MovieDomain>>
+
     suspend fun insertFavoriteMovie(favoriteMovies: FavoriteMovieEntity)
 
     suspend fun checkFavoriteMovie(id: Int): Boolean
@@ -27,13 +29,13 @@ interface IContentRepository {
 
     suspend fun deleteFavoriteMovie(favoriteMovies: FavoriteMovieEntity)
 
-    suspend fun deleteAllFavoriteMovies()
-
     fun getTvShows(sort: String): Flow<Resource<List<TvShowDomain>>>
 
     fun getTvShowDetail(tvShowId: Int): Flow<Resource<TvShowDetailDomain>>
 
     fun getFavoriteTvShows(): Flow<List<FavoriteTvShowDomain>>
+
+    suspend fun getSearchTvShows(query: String): Resource<List<TvShowDomain>>
 
     suspend fun insertFavoriteTvShow(favoriteTvShow: FavoriteTvShowEntity)
 
@@ -42,7 +44,4 @@ interface IContentRepository {
     suspend fun deleteFavoriteTvShowById(id: Int)
 
     suspend fun deleteFavoriteTvShow(favoriteTvShow: FavoriteTvShowEntity)
-
-    suspend fun deleteAllFavoriteTvShows()
-
 }

@@ -19,6 +19,8 @@ interface ContentUseCase {
 
     fun getFavoriteMovies(): Flow<List<FavoriteMovieDomain>>
 
+    suspend fun getSearchMovie(query: String): Resource<List<MovieDomain>>
+
     suspend fun insertFavoriteMovie(favoriteMovies: FavoriteMovieEntity)
 
     suspend fun checkFavoriteMovie(id: Int): Boolean
@@ -27,13 +29,13 @@ interface ContentUseCase {
 
     suspend fun deleteFavoriteMovie(favoriteMovies: FavoriteMovieEntity)
 
-    suspend fun deleteAllFavoriteMovies()
-
     fun getTvShows(sort: String): Flow<Resource<List<TvShowDomain>>>
 
     fun getTvShowDetail(tvShowId: Int): Flow<Resource<TvShowDetailDomain>>
 
     fun getFavoriteTvShows(): Flow<List<FavoriteTvShowDomain>>
+
+    suspend fun getSearchTvShow(query: String): Resource<List<TvShowDomain>>
 
     suspend fun insertFavoriteTvShow(favoriteTvShow: FavoriteTvShowEntity)
 
@@ -42,8 +44,5 @@ interface ContentUseCase {
     suspend fun deleteFavoriteTvShowById(id: Int)
 
     suspend fun deleteFavoriteTvShow(favoriteTvShow: FavoriteTvShowEntity)
-
-    suspend fun deleteAllFavoriteTvShows()
-
 
 }

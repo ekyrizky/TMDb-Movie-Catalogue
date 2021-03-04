@@ -6,9 +6,9 @@ import com.ekyrizky.moviecatalogue.core.data.source.local.entity.tvshow.Favorite
 import com.ekyrizky.moviecatalogue.core.data.source.remote.RemoteDataSource
 import com.ekyrizky.moviecatalogue.core.data.source.remote.network.ApiResponse
 import com.ekyrizky.moviecatalogue.core.data.source.remote.response.movie.MovieDetailResponse
-import com.ekyrizky.moviecatalogue.core.data.source.remote.response.movie.PopularMoviesResponse
-import com.ekyrizky.moviecatalogue.core.data.source.remote.response.tvshow.PopularTvShowsResponse
+import com.ekyrizky.moviecatalogue.core.data.source.remote.response.movie.MovieResultResponse
 import com.ekyrizky.moviecatalogue.core.data.source.remote.response.tvshow.TvShowDetailResponse
+import com.ekyrizky.moviecatalogue.core.data.source.remote.response.tvshow.TvShowResultResponse
 import com.ekyrizky.moviecatalogue.core.domain.model.movie.FavoriteMovieDomain
 import com.ekyrizky.moviecatalogue.core.domain.model.movie.MovieDetailDomain
 import com.ekyrizky.moviecatalogue.core.domain.model.movie.MovieDomain
@@ -19,6 +19,7 @@ import com.ekyrizky.moviecatalogue.core.domain.repository.IContentRepository
 import com.ekyrizky.moviecatalogue.core.utils.AppExecutors
 import com.ekyrizky.moviecatalogue.core.utils.DataMapper
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 class ContentRepository private constructor(
@@ -41,7 +42,7 @@ class ContentRepository private constructor(
     }
 
     override fun getMovies(sort: String): Flow<Resource<List<MovieDomain>>> {
-        return object : NetworkBoundResource<List<MovieDomain>, List<PopularMoviesResponse>>() {
+        return object : NetworkBoundResource<List<MovieDomain>, List<MovieResultResponse>>() {
             override fun loadFromDB(): Flow<List<MovieDomain>> {
                 return localDataSource.getMovies(sort).map { DataMapper.mapMovieEntityToDomain(it) }
             }
@@ -49,10 +50,10 @@ class ContentRepository private constructor(
             override fun shouldFetch(data: List<MovieDomain>?): Boolean =
                     data.isNullOrEmpty()
 
-            override suspend fun createCall(): Flow<ApiResponse<List<PopularMoviesResponse>>> =
+            override suspend fun createCall(): Flow<ApiResponse<List<MovieResultResponse>>> =
                     remoteDataSource.getMovies()
 
-            override suspend fun saveCallResult(data: List<PopularMoviesResponse>) {
+            override suspend fun saveCallResult(data: List<MovieResultResponse>) {
                 val movieList = DataMapper.mapMoviesResponseToEntity(data)
                 localDataSource.insertMovies(movieList)
             }
@@ -81,6 +82,16 @@ class ContentRepository private constructor(
     override fun getFavoriteMovies(): Flow<List<FavoriteMovieDomain>> =
             localDataSource.getFavoriteMovies().map { DataMapper.mapFavoriteMovieEntityToDomain(it) }
 
+    override suspend fun getSearchMovies(query: String): Resource<List<MovieDomain>> {
+        return when (val apiResponse = remoteDataSource.getSearchMovie(query).first()) {
+            is ApiResponse.Success -> {
+                val result = DataMapper.mapMoviesResponseToDomain(apiResponse.data)
+                Resource.Success(result)
+            }
+            is ApiResponse.Empty -> Resource.Error(apiResponse.toString())
+            is ApiResponse.Error -> Resource.Error(apiResponse.errorMessage)
+        }
+    }
 
     override suspend fun insertFavoriteMovie(favoriteMovies: FavoriteMovieEntity) =
             localDataSource.insertFavoriteMovie(favoriteMovies)
@@ -97,13 +108,8 @@ class ContentRepository private constructor(
     override suspend fun deleteFavoriteMovie(favoriteMovies: FavoriteMovieEntity) =
             localDataSource.deleteFavoriteMovie(favoriteMovies)
 
-
-    override suspend fun deleteAllFavoriteMovies() =
-            localDataSource.deleteAllFavoriteMovies()
-
-
     override fun getTvShows(sort: String): Flow<Resource<List<TvShowDomain>>> {
-        return object : NetworkBoundResource<List<TvShowDomain>, List<PopularTvShowsResponse>>() {
+        return object : NetworkBoundResource<List<TvShowDomain>, List<TvShowResultResponse>>() {
             override fun loadFromDB(): Flow<List<TvShowDomain>> {
                 return localDataSource.getTvShows(sort).map { DataMapper.mapTvShowEntityToDomain(it) }
             }
@@ -111,10 +117,10 @@ class ContentRepository private constructor(
             override fun shouldFetch(data: List<TvShowDomain>?): Boolean =
                     data.isNullOrEmpty()
 
-            override suspend fun createCall(): Flow<ApiResponse<List<PopularTvShowsResponse>>> =
+            override suspend fun createCall(): Flow<ApiResponse<List<TvShowResultResponse>>> =
                     remoteDataSource.getTvShows()
 
-            override suspend fun saveCallResult(data: List<PopularTvShowsResponse>) {
+            override suspend fun saveCallResult(data: List<TvShowResultResponse>) {
                 val tvShowList = DataMapper.mapTvShowsResponseToEntity(data)
                 localDataSource.insertTvShows(tvShowList)
             }
@@ -143,6 +149,16 @@ class ContentRepository private constructor(
     override fun getFavoriteTvShows(): Flow<List<FavoriteTvShowDomain>> =
             localDataSource.getFavoriteTvShows().map { DataMapper.mapFavoriteTvShowEntityToDomain(it) }
 
+    override suspend fun getSearchTvShows(query: String): Resource<List<TvShowDomain>> {
+        return when (val apiResponse = remoteDataSource.getSearchTvShow(query).first()) {
+            is ApiResponse.Success -> {
+                val result = DataMapper.mapTvShowsResponseToDomain(apiResponse.data)
+                Resource.Success(result)
+            }
+            is ApiResponse.Empty -> Resource.Error(apiResponse.toString())
+            is ApiResponse.Error -> Resource.Error(apiResponse.errorMessage)
+        }
+    }
 
     override suspend fun insertFavoriteTvShow(favoriteTvShow: FavoriteTvShowEntity) =
             localDataSource.insertFavoriteTvShow(favoriteTvShow)
@@ -158,9 +174,4 @@ class ContentRepository private constructor(
 
     override suspend fun deleteFavoriteTvShow(favoriteTvShow: FavoriteTvShowEntity) =
             localDataSource.deleteFavoriteTvShow(favoriteTvShow)
-
-
-    override suspend fun deleteAllFavoriteTvShows() =
-            localDataSource.deleteAllFavoriteTvShows()
-
 }

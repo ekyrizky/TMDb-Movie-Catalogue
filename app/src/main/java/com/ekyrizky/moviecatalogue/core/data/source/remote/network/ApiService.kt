@@ -32,4 +32,16 @@ interface ApiService {
         @Path("tv_id") tvShowId: Int,
         @Query("api_key") apiKey: String = BuildConfig.API_KEY
     ) : TvShowDetailResponse
+
+    @GET("search/movie")
+    suspend fun searchMovies(
+        @Query("query") query: String,
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY,
+        ): MoviesResponse
+
+    @GET("search/tv")
+    suspend fun searchTvShows(
+        @Query("query") query: String,
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY,
+    ): TvShowResponse
 }

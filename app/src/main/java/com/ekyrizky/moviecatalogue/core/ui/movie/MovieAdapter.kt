@@ -36,7 +36,7 @@ class MovieAdapter : ListAdapter<MovieDomain, MovieAdapter.MovieViewHolder>(DIFF
         fun bind(movieItems: MovieDomain) {
             with(binding) {
                 tvTitle.text = movieItems.title
-                tvReleaseYear.text = getDateConverted(movieItems.releaseYear)
+                tvReleaseYear.text = movieItems.releaseYear?.let { getDateConverted(it) }
                 Glide.with(itemView.context)
                     .load("$BASE_IMG${movieItems.posterPath}")
                     .apply(RequestOptions.placeholderOf(R.drawable.ic_loading)

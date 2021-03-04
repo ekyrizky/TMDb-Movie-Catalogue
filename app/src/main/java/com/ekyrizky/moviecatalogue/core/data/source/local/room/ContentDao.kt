@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ContentDao {
-
     @RawQuery(observedEntities = [MovieEntity::class])
     fun getMovies(query: SimpleSQLiteQuery): Flow<List<MovieEntity>>
 
@@ -40,9 +39,6 @@ interface ContentDao {
     @Delete
     suspend fun deleteFavoriteMovie(favoriteMoviesEntity: FavoriteMovieEntity)
 
-    @Query("DELETE from favorite_movies")
-    suspend fun deleteAllFavoriteMovies()
-
     @RawQuery(observedEntities = [TvShowEntity::class])
     fun getTvShows(query: SimpleSQLiteQuery): Flow<List<TvShowEntity>>
 
@@ -69,7 +65,4 @@ interface ContentDao {
 
     @Delete
     suspend fun deleteFavoriteTvShow(favoriteShows: FavoriteTvShowEntity)
-
-    @Query("DELETE from favorite_tv_show")
-    suspend fun deleteAllFavoriteTvShows()
 }

@@ -39,8 +39,6 @@ class LocalDataSource (private val mContentDao: ContentDao) {
 
     suspend fun deleteFavoriteMovie(favoriteMovie: FavoriteMovieEntity) = mContentDao.deleteFavoriteMovie(favoriteMovie)
 
-    suspend fun deleteAllFavoriteMovies() = mContentDao.deleteAllFavoriteMovies()
-
     fun getTvShows(sort: String): Flow<List<TvShowEntity>> = mContentDao.getTvShows(getSortedQuery(sort, TV_SHOW))
 
     fun getTvShowById(id: Int): Flow<TvShowDetailEntity> = mContentDao.getTvShowById(id)
@@ -58,6 +56,4 @@ class LocalDataSource (private val mContentDao: ContentDao) {
     suspend fun deleteFavoriteTvShowById(id: Int) = mContentDao.deleteFavoriteTvShowById(id)
 
     suspend fun deleteFavoriteTvShow(favoriteTvShow: FavoriteTvShowEntity) = mContentDao.deleteFavoriteTvShow(favoriteTvShow)
-
-    suspend fun deleteAllFavoriteTvShows() = mContentDao.deleteAllFavoriteTvShows()
 }

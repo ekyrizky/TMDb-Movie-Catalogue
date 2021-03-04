@@ -7,9 +7,9 @@ import com.ekyrizky.moviecatalogue.core.data.source.local.entity.tvshow.Favorite
 import com.ekyrizky.moviecatalogue.core.data.source.local.entity.tvshow.TvShowDetailEntity
 import com.ekyrizky.moviecatalogue.core.data.source.local.entity.tvshow.TvShowEntity
 import com.ekyrizky.moviecatalogue.core.data.source.remote.response.movie.MovieDetailResponse
-import com.ekyrizky.moviecatalogue.core.data.source.remote.response.movie.PopularMoviesResponse
-import com.ekyrizky.moviecatalogue.core.data.source.remote.response.tvshow.PopularTvShowsResponse
+import com.ekyrizky.moviecatalogue.core.data.source.remote.response.movie.MovieResultResponse
 import com.ekyrizky.moviecatalogue.core.data.source.remote.response.tvshow.TvShowDetailResponse
+import com.ekyrizky.moviecatalogue.core.data.source.remote.response.tvshow.TvShowResultResponse
 import com.ekyrizky.moviecatalogue.core.domain.model.movie.FavoriteMovieDomain
 import com.ekyrizky.moviecatalogue.core.domain.model.movie.MovieDetailDomain
 import com.ekyrizky.moviecatalogue.core.domain.model.movie.MovieDomain
@@ -19,7 +19,7 @@ import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.TvShowDomain
 
 object DataMapper {
 
-    fun mapMoviesResponseToEntity(input: List<PopularMoviesResponse>):List<MovieEntity> {
+    fun mapMoviesResponseToEntity(input: List<MovieResultResponse>):List<MovieEntity> {
         val movieList = ArrayList<MovieEntity>()
 
         input.map {
@@ -37,7 +37,7 @@ object DataMapper {
         return movieList
     }
 
-    fun mapTvShowsResponseToEntity(input: List<PopularTvShowsResponse>):List<TvShowEntity> {
+    fun mapTvShowsResponseToEntity(input: List<TvShowResultResponse>):List<TvShowEntity> {
         val tvShowList = ArrayList<TvShowEntity>()
 
         input.map {
@@ -81,6 +81,34 @@ object DataMapper {
                     posterPath = input.posterPath,
                     backdropPath = input.backdropPath,
             )
+
+    fun mapMoviesResponseToDomain(input: List<MovieResultResponse>):List<MovieDomain> {
+        return input.map {
+            MovieDomain(
+                    id = it.id,
+                    title = it.originalTitle,
+                    releaseYear = it.releaseDate,
+                    voteAverage = it.voteAverage,
+                    description = it.overview,
+                    posterPath = it.posterPath,
+                    backdropPath = it.backdropPath,
+            )
+        }
+    }
+
+    fun mapTvShowsResponseToDomain(input: List<TvShowResultResponse>):List<TvShowDomain> {
+        return input.map {
+            TvShowDomain(
+                    id = it.id,
+                    title = it.originalName,
+                    releaseYear = it.firstAirDate,
+                    voteAverage = it.voteAverage,
+                    description = it.overview,
+                    posterPath = it.posterPath,
+                    backdropPath = it.backdropPath,
+            )
+        }
+    }
 
     fun mapMovieEntityToDomain(input: List<MovieEntity>): List<MovieDomain> =
             input.map {

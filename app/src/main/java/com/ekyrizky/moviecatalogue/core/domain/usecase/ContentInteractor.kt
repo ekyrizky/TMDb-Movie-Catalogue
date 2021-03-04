@@ -22,6 +22,9 @@ class ContentInteractor(private val contentRepository: IContentRepository): Cont
     override fun getFavoriteMovies(): Flow<List<FavoriteMovieDomain>> =
             contentRepository.getFavoriteMovies()
 
+    override suspend fun getSearchMovie(query: String): Resource<List<MovieDomain>> =
+            contentRepository.getSearchMovies(query)
+
     override suspend fun insertFavoriteMovie(favoriteMovies: FavoriteMovieEntity) =
             contentRepository.insertFavoriteMovie(favoriteMovies)
 
@@ -34,9 +37,6 @@ class ContentInteractor(private val contentRepository: IContentRepository): Cont
     override suspend fun deleteFavoriteMovie(favoriteMovies: FavoriteMovieEntity) =
             contentRepository.deleteFavoriteMovie(favoriteMovies)
 
-    override suspend fun deleteAllFavoriteMovies() =
-            contentRepository.deleteAllFavoriteMovies()
-
     override fun getTvShows(sort: String): Flow<Resource<List<TvShowDomain>>> =
             contentRepository.getTvShows(sort)
 
@@ -46,6 +46,8 @@ class ContentInteractor(private val contentRepository: IContentRepository): Cont
     override fun getFavoriteTvShows(): Flow<List<FavoriteTvShowDomain>> =
             contentRepository.getFavoriteTvShows()
 
+    override suspend fun getSearchTvShow(query: String): Resource<List<TvShowDomain>> =
+            contentRepository.getSearchTvShows(query)
 
     override suspend fun insertFavoriteTvShow(favoriteTvShow: FavoriteTvShowEntity) =
             contentRepository.insertFavoriteTvShow(favoriteTvShow)
@@ -58,7 +60,4 @@ class ContentInteractor(private val contentRepository: IContentRepository): Cont
 
     override suspend fun deleteFavoriteTvShow(favoriteTvShow: FavoriteTvShowEntity) =
             contentRepository.deleteFavoriteTvShow(favoriteTvShow)
-
-    override suspend fun deleteAllFavoriteTvShows() =
-            contentRepository.deleteAllFavoriteTvShows()
 }
