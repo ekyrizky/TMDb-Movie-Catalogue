@@ -13,6 +13,7 @@ Movie Catalogue app using Android Jetpack Architecture Components
 * Retrofit to request api network from TMDb
 * Glide for load and caching image from url
 * Idling Resources for asynchronous testing
+* Coroutine Flow to handle asynchoronous data stream
 
 ## Dependencies :
 * [Glide](https://github.com/bumptech/glide)
@@ -23,6 +24,7 @@ Movie Catalogue app using Android Jetpack Architecture Components
 * [Gson](https://github.com/google/gson)
 * [OkHttp3](https://github.com/square/okhttp/tree/master/okhttp-logging-interceptor)
 * [Room](https://developer.android.com/training/data-storage/room)
+* [Coroutine Flow](https://github.com/Kotlin/kotlinx.coroutines)
 * [Mockito](https://github.com/mockito/mockito)
 * [Espresso](https://developer.android.com/training/testing/espresso/setup)
 * [Espresso Idling Resource](https://developer.android.com/training/testing/set-up-project)
