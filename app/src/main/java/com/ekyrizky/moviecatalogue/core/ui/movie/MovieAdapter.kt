@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.ekyrizky.moviecatalogue.BuildConfig.BASE_IMG
-import com.ekyrizky.moviecatalogue.ContentCallback
 import com.ekyrizky.moviecatalogue.R
 import com.ekyrizky.moviecatalogue.core.domain.model.movie.MovieDomain
 import com.ekyrizky.moviecatalogue.core.utils.ConvertUtils.getDateConverted
@@ -26,11 +25,7 @@ class MovieAdapter : ListAdapter<MovieDomain, MovieAdapter.MovieViewHolder>(DIFF
         }
     }
 
-    private lateinit var onItemClickCallback: ContentCallback
-
-    fun setOnItemClickCallback(onItemClickCallback: ContentCallback) {
-        this.onItemClickCallback = onItemClickCallback
-    }
+    var onItemClick: ((Int?) -> Unit)? = null
 
     inner class MovieViewHolder(private val binding: ItemsGridBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(movieItems: MovieDomain) {
@@ -42,7 +37,7 @@ class MovieAdapter : ListAdapter<MovieDomain, MovieAdapter.MovieViewHolder>(DIFF
                     .apply(RequestOptions.placeholderOf(R.drawable.ic_loading)
                         .error(R.drawable.ic_error))
                     .into(imgPoster)
-                itemView.setOnClickListener { onItemClickCallback.onItemClicked(movieItems.id.toString()) }
+                root.setOnClickListener { onItemClick?.invoke(movieItems.id) }
             }
         }
     }

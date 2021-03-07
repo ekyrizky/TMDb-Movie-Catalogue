@@ -5,7 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ekyrizky.moviecatalogue.core.di.Injection
 import com.ekyrizky.moviecatalogue.core.domain.usecase.ContentUseCase
-import com.ekyrizky.moviecatalogue.detail.DetailViewModel
+import com.ekyrizky.moviecatalogue.detail.movie.MovieDetailViewModel
+import com.ekyrizky.moviecatalogue.detail.tvshow.TvShowDetailViewModel
 import com.ekyrizky.moviecatalogue.favorite.movie.FavoriteMovieViewModel
 import com.ekyrizky.moviecatalogue.favorite.tvshow.FavoriteTvShowViewModel
 import com.ekyrizky.moviecatalogue.movie.MovieViewModel
@@ -38,8 +39,11 @@ class ViewModelFactory private constructor(private val contentUseCase: ContentUs
             modelClass.isAssignableFrom(TvShowViewModel::class.java) -> {
                 TvShowViewModel(contentUseCase) as T
             }
-            modelClass.isAssignableFrom(DetailViewModel::class.java) -> {
-                DetailViewModel(contentUseCase) as T
+            modelClass.isAssignableFrom(MovieDetailViewModel::class.java) -> {
+                MovieDetailViewModel(contentUseCase) as T
+            }
+            modelClass.isAssignableFrom(TvShowDetailViewModel::class.java) -> {
+                TvShowDetailViewModel(contentUseCase) as T
             }
             modelClass.isAssignableFrom(FavoriteMovieViewModel::class.java) -> {
                 FavoriteMovieViewModel(contentUseCase) as T

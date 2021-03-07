@@ -1,52 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:theme="@style/AppTheme.Home" >
+        android:layout_height="match_parent">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/AppTheme.Home"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:layout_width="96dp"
-            android:layout_height="41dp"
-            android:src="@drawable/ic_logo_appbar"
-            android:contentDescription="@string/logo"
-            android:layout_marginEnd="16dp"
-            />
+            <ImageView
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:contentDescription="@string/logo"
+                android:src="@drawable/ic_logo_appbar" />
+        </androidx.appcompat.widget.Toolbar>
 
-        <TextView
-            android:id="@+id/title_toolbar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/popular_movies"
-            android:textColor="@color/light_blue"
-            android:textStyle="bold"
-            android:textSize="24sp"/>
-    </androidx.appcompat.widget.Toolbar>
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/nav_host_fragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:defaultNavHost="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:navGraph="@navigation/mobile_navigation" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <FrameLayout
-        android:id="@+id/frame_container"
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/nav_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
-        android:layout_above="@+id/bottom_chip" />
-
-    <com.ismaeldivita.chipnavigation.ChipNavigationBar
-        android:id="@+id/bottom_chip"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        app:cnb_radius="10dp"
-        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="4dp"
         android:background="@drawable/bg_bottom_nav"
-        app:cnb_menuResource="@menu/bottom_nav_menu"
-        app:cnb_unselectedColor="@color/light_blue" />
+        app:labelVisibilityMode="selected"
+        app:itemRippleColor="@color/light_blue"
+        app:itemIconTint="@color/color_nav"
+        app:itemTextColor="@color/color_nav"
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
 
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

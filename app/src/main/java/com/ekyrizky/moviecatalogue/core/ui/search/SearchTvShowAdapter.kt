@@ -8,8 +8,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.ekyrizky.moviecatalogue.BuildConfig
 import com.ekyrizky.moviecatalogue.R
 import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.TvShowDomain
-import com.ekyrizky.moviecatalogue.core.utils.ConvertUtils
-import com.ekyrizky.moviecatalogue.databinding.ItemsGridBinding
+import com.ekyrizky.moviecatalogue.core.utils.ConvertUtils.getDateConverted
+import com.ekyrizky.moviecatalogue.databinding.ItemsSearchBinding
 
 class SearchTvShowAdapter : RecyclerView.Adapter<SearchTvShowAdapter.SearchTvShowViewHolder>() {
 
@@ -23,23 +23,26 @@ class SearchTvShowAdapter : RecyclerView.Adapter<SearchTvShowAdapter.SearchTvSho
         }
     }
 
-    inner class SearchTvShowViewHolder(private val binding: ItemsGridBinding) : RecyclerView.ViewHolder(binding.root) {
+    var onItemClick: ((Int?) -> Unit)? = null
+
+    inner class SearchTvShowViewHolder(private val binding: ItemsSearchBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(tvShowItems: TvShowDomain) {
             with(binding) {
                 tvTitle.text = tvShowItems.title
-                tvReleaseYear.text = tvShowItems.releaseYear?.let { ConvertUtils.getDateConverted(it) }
+                tvReleaseYear.text = tvShowItems.releaseYear?.let { getDateConverted(it) }
                 Glide.with(itemView.context)
                     .load("${BuildConfig.BASE_IMG}${tvShowItems.posterPath}")
                     .apply(
                         RequestOptions.placeholderOf(R.drawable.ic_loading)
                             .error(R.drawable.ic_error))
                     .into(imgPoster)
+                root.setOnClickListener { onItemClick?.invoke(tvShowItems.id) }
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchTvShowViewHolder =
-        SearchTvShowViewHolder(ItemsGridBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        SearchTvShowViewHolder(ItemsSearchBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
 
     override fun onBindViewHolder(holder: SearchTvShowViewHolder, position: Int) {

@@ -20,6 +20,7 @@ class FavoriteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _favoriteFragmentBinding = FragmentFavoriteBinding.inflate(layoutInflater, container, false)
+        setHasOptionsMenu(false)
         return binding?.root
     }
 
@@ -42,8 +43,13 @@ class FavoriteFragment : Fragment() {
         }.attach()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onResume() {
+        super.onResume()
+        initViewPager()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
         _favoriteFragmentBinding = null
     }
 }

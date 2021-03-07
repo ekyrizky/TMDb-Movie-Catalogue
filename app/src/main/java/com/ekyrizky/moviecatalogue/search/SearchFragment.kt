@@ -8,7 +8,8 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.navigation.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ekyrizky.moviecatalogue.core.data.Resource
 import com.ekyrizky.moviecatalogue.core.ui.ViewModelFactory
 import com.ekyrizky.moviecatalogue.core.ui.search.SearchMovieAdapter
@@ -37,18 +38,31 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val factory = ViewModelFactory.getInstance(requireActivity())
         viewModel = ViewModelProvider(this, factory)[SearchViewModel::class.java]
 
         movieAdapter = SearchMovieAdapter()
         tvShowAdapter = SearchTvShowAdapter()
 
+        val actionMovie = SearchFragmentDirections.actionNavigationSearchToMovieDetailFragment()
+        val actionTv = SearchFragmentDirections.actionNavigationSearchToTvShowDetailFragment()
+
+        movieAdapter.onItemClick = {
+            actionMovie.movieId = it.toString()
+            view.findNavController().navigate(actionMovie)
+        }
+
+        tvShowAdapter.onItemClick = {
+            actionTv.tvShowId = it.toString()
+            view.findNavController().navigate(actionTv)
+        }
+
         initRecycler()
 
         binding?.searchView?.apply {
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
+                    showLoading()
                     lifecycleScope.launch {
                         if (query != null) {
                             viewModel.queryChannel.send(query)
@@ -59,6 +73,7 @@ class SearchFragment : Fragment() {
                 }
 
                 override fun onQueryTextChange(query: String?): Boolean {
+                    showLoading()
                     lifecycleScope.launch {
                         if (query != null) {
                             viewModel.queryChannel.send(query)
@@ -79,13 +94,13 @@ class SearchFragment : Fragment() {
                 when (it) {
                     is Resource.Loading -> showLoading()
                     is Resource.Success -> {
-                        this?.pbMovie?.visibility = View.GONE
+                        this?.shimmerMovie?.visibility = View.GONE
                         this?.rvMovieSearch?.visibility = View.VISIBLE
                         this?.tvMovie?.visibility = View.VISIBLE
                         movieAdapter.setData(it.data)
                     }
                     is Resource.Error -> {
-                        this?.pbMovie?.visibility = View.INVISIBLE
+                        this?.shimmerMovie?.visibility = View.INVISIBLE
                         this?.rvMovieSearch?.visibility = View.INVISIBLE
                         this?.tvMovie?.visibility = View.INVISIBLE
                     }
@@ -100,13 +115,13 @@ class SearchFragment : Fragment() {
                 when (it) {
                     is Resource.Loading -> showLoading()
                     is Resource.Success -> {
-                        this?.pbMovie?.visibility = View.GONE
+                        this?.shimmerTv?.visibility = View.GONE
                         this?.rvTvshowSearch?.visibility = View.VISIBLE
                         this?.tvTvshow?.visibility = View.VISIBLE
                         tvShowAdapter.setData(it.data)
                     }
                     is Resource.Error -> {
-                        this?.pbMovie?.visibility = View.INVISIBLE
+                        this?.shimmerTv?.visibility = View.INVISIBLE
                         this?.rvTvshowSearch?.visibility = View.INVISIBLE
                         this?.tvTvshow?.visibility = View.INVISIBLE
                     }
@@ -116,7 +131,8 @@ class SearchFragment : Fragment() {
     }
 
     private fun showLoading() {
-        binding?.pbMovie?.visibility = View.VISIBLE
+        binding?.shimmerMovie?.visibility = View.VISIBLE
+        binding?.shimmerTv?.visibility = View.VISIBLE
         binding?.rvMovieSearch?.visibility = View.GONE
         binding?.rvTvshowSearch?.visibility = View.GONE
         binding?.tvMovie?.visibility = View.GONE
@@ -125,15 +141,20 @@ class SearchFragment : Fragment() {
 
     private fun initRecycler() {
         with(binding?.rvMovieSearch) {
-            this?.layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL)
+            this?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             this?.setHasFixedSize(true)
             this?.adapter = movieAdapter
         }
 
         with(binding?.rvTvshowSearch) {
-            this?.layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL)
+            this?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             this?.setHasFixedSize(true)
             this?.adapter = tvShowAdapter
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _fragmentSearchBinding = null
     }
 }

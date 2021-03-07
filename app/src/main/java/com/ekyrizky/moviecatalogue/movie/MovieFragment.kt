@@ -1,6 +1,5 @@
 package com.ekyrizky.moviecatalogue.movie
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -8,27 +7,30 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.ekyrizky.moviecatalogue.ContentCallback
 import com.ekyrizky.moviecatalogue.R
 import com.ekyrizky.moviecatalogue.core.data.Resource
 import com.ekyrizky.moviecatalogue.core.domain.model.movie.MovieDomain
 import com.ekyrizky.moviecatalogue.core.ui.ViewModelFactory
 import com.ekyrizky.moviecatalogue.core.ui.movie.MovieAdapter
+import com.ekyrizky.moviecatalogue.core.utils.SortPreferences
 import com.ekyrizky.moviecatalogue.core.utils.SortUtils.HIGHEST_VOTE
-import com.ekyrizky.moviecatalogue.core.utils.SortUtils.NEWEST
+import com.ekyrizky.moviecatalogue.core.utils.SortUtils.LOWEST_VOTE
+import com.ekyrizky.moviecatalogue.core.utils.SortUtils.TITLE_ASC
+import com.ekyrizky.moviecatalogue.core.utils.SortUtils.TITLE_DESC
 import com.ekyrizky.moviecatalogue.databinding.FragmentMovieBinding
-import com.ekyrizky.moviecatalogue.detail.DetailActivity
-import com.ekyrizky.moviecatalogue.detail.DetailActivity.Companion.EXTRA_MOVIE
 
 
-class MovieFragment : Fragment(), ContentCallback {
+class MovieFragment : Fragment() {
 
     private var _fragmentMovieBinding: FragmentMovieBinding? = null
     private val binding get() = _fragmentMovieBinding
 
     private lateinit var viewModel: MovieViewModel
     private lateinit var movieAdapter: MovieAdapter
+
+    lateinit var sortPreferences: SortPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,11 +46,19 @@ class MovieFragment : Fragment(), ContentCallback {
 
         if (activity != null) {
             showLoading(true)
+            movieAdapter = MovieAdapter()
+
+            movieAdapter.onItemClick = {
+                val action = MovieFragmentDirections.actionNavigationMovieToMovieDetailFragment()
+                action.movieId = it.toString()
+                view.findNavController().navigate(action)
+            }
+
             val factory = ViewModelFactory.getInstance(requireActivity())
             viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
 
-            movieAdapter = MovieAdapter()
-            viewModel.getMovies(NEWEST).observe(viewLifecycleOwner, movieObserver)
+            sortPreferences = SortPreferences(requireContext())
+            sortPreferences.getSortMovie()?.let { viewModel.getMovies(it).observe(viewLifecycleOwner, movieObserver) }
 
             initRecyclerView()
         }
@@ -61,23 +71,14 @@ class MovieFragment : Fragment(), ContentCallback {
                 is Resource.Success -> {
                     showLoading(false)
                     movieAdapter.submitList(movies.data)
-                    movieAdapter.setOnItemClickCallback(this)
                     movieAdapter.notifyDataSetChanged()
                 }
                 is Resource.Error -> {
                     showLoading(false)
-                    Toast.makeText(context, "Terjadi kesalahan", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, R.string.error_msg, Toast.LENGTH_SHORT).show()
                 }
             }
         }
-    }
-
-    override fun onItemClicked(id: String) {
-        val intent = Intent(context, DetailActivity::class.java)
-        intent.putExtra(DetailActivity.EXTRA_ID, id)
-        intent.putExtra(DetailActivity.EXTRA_CONTENT, EXTRA_MOVIE)
-
-        context?.startActivity(intent)
     }
 
     private fun initRecyclerView() {
@@ -89,25 +90,41 @@ class MovieFragment : Fragment(), ContentCallback {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        activity?.menuInflater?.inflate(R.menu.menu_sort, menu)
+        inflater.inflate(R.menu.menu_sort, menu)
+        val activeMenu = menu.getItem(sortPreferences.getMenuMovie())
+        activeMenu.isChecked = true
         return super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         var sort = ""
+        var index = 0
         when (item.itemId) {
-            R.id.action_newest -> {
-                sort = NEWEST
-                Toast.makeText(context, "Sorted by newest", Toast.LENGTH_SHORT).show()
+            R.id.action_title_asc -> {
+                sort = TITLE_ASC
+                index = 0
+                Toast.makeText(context, R.string.sort_title_asc, Toast.LENGTH_SHORT).show()
+            }
+            R.id.action_title_desc -> {
+                sort = TITLE_DESC
+                index = 1
+                Toast.makeText(context, R.string.sort_title_desc, Toast.LENGTH_SHORT).show()
             }
             R.id.action_highest_vote -> {
                 sort = HIGHEST_VOTE
-                Toast.makeText(context, "Sorted by highest vote", Toast.LENGTH_SHORT).show()
+                index = 2
+                Toast.makeText(context, R.string.sort_highest_vote, Toast.LENGTH_SHORT).show()
+            }
+            R.id.action_lowest_vote -> {
+                sort = LOWEST_VOTE
+                index = 3
+                Toast.makeText(context, R.string.sort_lowest_vote, Toast.LENGTH_SHORT).show()
             }
         }
 
         viewModel.getMovies(sort).observe(viewLifecycleOwner, movieObserver)
         item.isChecked = true
+        sortPreferences.setPrefMovie(index, sort)
 
         return super.onOptionsItemSelected(item)
     }
@@ -116,4 +133,10 @@ class MovieFragment : Fragment(), ContentCallback {
         binding?.progressBar?.isVisible = state
         binding?.rvMovie?.isVisible = !state
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _fragmentMovieBinding = null
+    }
+
 }

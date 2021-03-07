@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single" >
-
         <item
-            android:id="@+id/action_newest"
+            android:id="@+id/action_title_asc"
             android:checked="true"
-            android:title="@string/newest" />
+            android:title="@string/title_asc" />
+        <item
+            android:id="@+id/action_title_desc"
+            android:checked="false"
+            android:title="@string/title_desc" />
 
         <item
             android:id="@+id/action_highest_vote"
@@ -13,8 +16,8 @@
             android:title="@string/highest_vote" />
 
         <item
-            android:id="@+id/action_longest_duration"
+            android:id="@+id/action_lowest_vote"
             android:checked="false"
-            android:title="@string/longest_duration" />
+            android:title="@string/lowest_vote" />
     </group>
 </menu>

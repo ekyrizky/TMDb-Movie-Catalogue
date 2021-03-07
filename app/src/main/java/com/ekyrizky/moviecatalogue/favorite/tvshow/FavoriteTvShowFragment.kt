@@ -1,6 +1,5 @@
 package com.ekyrizky.moviecatalogue.favorite.tvshow
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,19 +7,18 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ekyrizky.moviecatalogue.ContentCallback
 import com.ekyrizky.moviecatalogue.R
 import com.ekyrizky.moviecatalogue.core.ui.ViewModelFactory
 import com.ekyrizky.moviecatalogue.core.ui.favorite.tvshow.FavoriteTvShowAdapter
 import com.ekyrizky.moviecatalogue.databinding.FragmentFavoriteTvShowBinding
-import com.ekyrizky.moviecatalogue.detail.DetailActivity
-import com.ekyrizky.moviecatalogue.detail.DetailActivity.Companion.EXTRA_TVSHOW
+import com.ekyrizky.moviecatalogue.favorite.FavoriteFragmentDirections
 import com.google.android.material.snackbar.Snackbar
 
-class FavoriteTvShowFragment : Fragment(), ContentCallback {
+class FavoriteTvShowFragment : Fragment() {
     private var _fragmentTvShowFavoriteBinding: FragmentFavoriteTvShowBinding? = null
     private val binding get() = _fragmentTvShowFavoriteBinding
 
@@ -45,8 +43,11 @@ class FavoriteTvShowFragment : Fragment(), ContentCallback {
             viewModel = ViewModelProvider(this, factory)[FavoriteTvShowViewModel::class.java]
 
             tvShowFavAdapter = FavoriteTvShowAdapter()
-            tvShowFavAdapter.setOnItemClickCallback(this)
-
+            val action = FavoriteFragmentDirections.actionNavigationFavoriteToNavigationTvshowDetail()
+            tvShowFavAdapter.onItemClick = {
+                action.tvShowId = it.toString()
+                view.findNavController().navigate(action)
+            }
             viewModel.getFavoriteTvShow().observe(viewLifecycleOwner, { favTvShow ->
                 if (favTvShow != null) {
                     binding?.rvFavoriteTvshow?.adapter.let { adapter ->
@@ -86,6 +87,7 @@ class FavoriteTvShowFragment : Fragment(), ContentCallback {
                 tvShowDomain?.let { viewModel.deleteFavoriteTvShow(it) }
 
                 val snackBar = Snackbar.make(requireView(), getString(R.string.undo, tvShowDomain?.title), Snackbar.LENGTH_LONG)
+                snackBar.setAnchorView(R.id.nav_view)
                 snackBar.setAction(R.string.ok) { _ ->
                     tvShowDomain?.let { viewModel.insertFavoriteTvShow(it) }
                 }
@@ -102,25 +104,8 @@ class FavoriteTvShowFragment : Fragment(), ContentCallback {
         }
     }
 
-    override fun onItemClicked(id: String) {
-        val intent = Intent(context, DetailActivity::class.java)
-        intent.putExtra(DetailActivity.EXTRA_ID, id)
-        intent.putExtra(DetailActivity.EXTRA_CONTENT, EXTRA_TVSHOW)
-
-        context?.startActivity(intent)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.getFavoriteTvShow().observe(viewLifecycleOwner, { favTvShows ->
-            if (favTvShows != null) {
-                tvShowFavAdapter.submitList(favTvShows)
-            }
-        })
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _fragmentTvShowFavoriteBinding = null
     }
 }

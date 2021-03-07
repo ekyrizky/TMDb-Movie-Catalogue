@@ -1,69 +1,49 @@
 package com.ekyrizky.moviecatalogue
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.ekyrizky.moviecatalogue.databinding.ActivityMainBinding
-import com.ekyrizky.moviecatalogue.favorite.FavoriteFragment
-import com.ekyrizky.moviecatalogue.movie.MovieFragment
-import com.ekyrizky.moviecatalogue.search.SearchFragment
-import com.ekyrizky.moviecatalogue.tvshow.TvShowFragment
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 
-@ExperimentalCoroutinesApi
-@FlowPreview
 class MainActivity : AppCompatActivity() {
 
     private var _activityMainBinding: ActivityMainBinding? = null
     private val binding get() = _activityMainBinding
-    private lateinit var fragment: Fragment
+    private lateinit var navController: NavController
+    private lateinit var navHostFragment: NavHostFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         _activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding?.root)
         setSupportActionBar(binding?.toolbar)
         supportActionBar?.title = null
 
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, MovieFragment())
-                    .commit()
-            binding?.bottomChip?.setItemSelected(R.id.nav_movie)
-        }
+        navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
 
-        setBottomNav()
-    }
 
-    private fun setBottomNav() {
-        binding?.bottomChip?.setOnItemSelectedListener { id ->
-            when (id) {
-                R.id.nav_movie -> {
-                    fragment = MovieFragment()
-                    setToolbarTitle(getString(R.string.popular_movies))
-                }
-                R.id.nav_tvshow -> {
-                    fragment = TvShowFragment()
-                    setToolbarTitle(getString(R.string.popular_tvshows))
-                }
-                R.id.nav_favorite -> {
-                    fragment = FavoriteFragment()
-                    setToolbarTitle(getString(R.string.my_favorite))
-                }
-                R.id.nav_search -> {
-                    fragment = SearchFragment()
-                    setToolbarTitle(getString(R.string.search_yours))
-                }
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.navigation_movie_detail
+                || destination.id == R.id.navigation_tvshow_detail
+            ) {
+                binding?.navView?.visibility = View.GONE
+                binding?.toolbar?.visibility = View.GONE
+            } else {
+                binding?.navView?.visibility = View.VISIBLE
+                binding?.toolbar?.visibility = View.VISIBLE
             }
-
-            supportFragmentManager.beginTransaction().replace(R.id.frame_container, fragment)
-                    .commit()
         }
+
+        binding?.navView?.setupWithNavController(navController)
     }
 
-    private fun setToolbarTitle(title: String) {
-        binding?.titleToolbar?.text = title
+    override fun onDestroy() {
+        super.onDestroy()
+        _activityMainBinding = null
     }
 }

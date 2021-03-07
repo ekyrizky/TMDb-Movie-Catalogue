@@ -3,7 +3,6 @@
     package="com.ekyrizky.moviecatalogue">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_app_launcher"
@@ -11,15 +10,15 @@
         android:roundIcon="@mipmap/ic_app_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MovieCatalogue">
-        <activity android:name=".detail.DetailActivity" />
+        <activity android:name=".MainActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".splash.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <nav-graph android:value="@navigation/mobile_navigation" />
         </activity>
-        <activity android:name=".MainActivity" />
     </application>
-
 </manifest>

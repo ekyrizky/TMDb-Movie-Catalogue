@@ -8,8 +8,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.ekyrizky.moviecatalogue.BuildConfig
 import com.ekyrizky.moviecatalogue.R
 import com.ekyrizky.moviecatalogue.core.domain.model.movie.MovieDomain
-import com.ekyrizky.moviecatalogue.core.utils.ConvertUtils
-import com.ekyrizky.moviecatalogue.databinding.ItemsGridBinding
+import com.ekyrizky.moviecatalogue.core.utils.ConvertUtils.getDateConverted
+import com.ekyrizky.moviecatalogue.databinding.ItemsSearchBinding
 
 class SearchMovieAdapter : RecyclerView.Adapter<SearchMovieAdapter.SearchMovieViewHolder>() {
 
@@ -23,23 +23,26 @@ class SearchMovieAdapter : RecyclerView.Adapter<SearchMovieAdapter.SearchMovieVi
         }
     }
 
-    inner class SearchMovieViewHolder(private val binding: ItemsGridBinding): RecyclerView.ViewHolder(binding.root) {
+    var onItemClick: ((Int?) -> Unit)? = null
+
+    inner class SearchMovieViewHolder(private val binding: ItemsSearchBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(movieItems: MovieDomain) {
             with(binding) {
                 tvTitle.text = movieItems.title
-                tvReleaseYear.text = movieItems.releaseYear?.let { ConvertUtils.getDateConverted(it) }
+                tvReleaseYear.text = movieItems.releaseYear?.let { getDateConverted(it) }
                 Glide.with(itemView.context)
                         .load("${BuildConfig.BASE_IMG}${movieItems.posterPath}")
                         .apply(
                                 RequestOptions.placeholderOf(R.drawable.ic_loading)
                                         .error(R.drawable.ic_error))
                         .into(imgPoster)
+                root.setOnClickListener { onItemClick?.invoke(movieItems.id) }
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchMovieViewHolder =
-        SearchMovieViewHolder(ItemsGridBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        SearchMovieViewHolder(ItemsSearchBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
 
     override fun onBindViewHolder(holder: SearchMovieViewHolder, position: Int) {

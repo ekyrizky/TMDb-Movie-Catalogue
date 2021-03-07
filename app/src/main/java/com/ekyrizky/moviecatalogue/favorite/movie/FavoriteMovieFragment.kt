@@ -1,6 +1,5 @@
 package com.ekyrizky.moviecatalogue.favorite.movie
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,19 +7,18 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ekyrizky.moviecatalogue.ContentCallback
 import com.ekyrizky.moviecatalogue.R
 import com.ekyrizky.moviecatalogue.core.ui.ViewModelFactory
 import com.ekyrizky.moviecatalogue.core.ui.favorite.movie.FavoriteMovieAdapter
 import com.ekyrizky.moviecatalogue.databinding.FragmentFavoriteMovieBinding
-import com.ekyrizky.moviecatalogue.detail.DetailActivity
-import com.ekyrizky.moviecatalogue.detail.DetailActivity.Companion.EXTRA_MOVIE
+import com.ekyrizky.moviecatalogue.favorite.FavoriteFragmentDirections
 import com.google.android.material.snackbar.Snackbar
 
-class FavoriteMovieFragment : Fragment(), ContentCallback {
+class FavoriteMovieFragment : Fragment() {
     private var _fragmentMovieFavoriteBinding: FragmentFavoriteMovieBinding? = null
     private val binding get() = _fragmentMovieFavoriteBinding
 
@@ -45,8 +43,11 @@ class FavoriteMovieFragment : Fragment(), ContentCallback {
             viewModel = ViewModelProvider(this, factory)[FavoriteMovieViewModel::class.java]
 
             movieFavAdapter = FavoriteMovieAdapter()
-            movieFavAdapter.setOnItemClickCallback(this)
-
+            val action = FavoriteFragmentDirections.actionNavigationFavoriteToNavigationMovieDetail()
+            movieFavAdapter.onItemClick = {
+                action.movieId = it.toString()
+                view.findNavController().navigate(action)
+            }
             viewModel.getFavoriteMovies().observe(viewLifecycleOwner, { favMovies ->
                 if (favMovies != null) {
                     binding?.rvFavoriteMovie?.adapter.let { adapter ->
@@ -86,6 +87,7 @@ class FavoriteMovieFragment : Fragment(), ContentCallback {
                 favoriteMovieDomain?.let { viewModel.deleteFavoriteMovie(it) }
 
                 val snackBar = Snackbar.make(requireView(), getString(R.string.undo, favoriteMovieDomain?.title), Snackbar.LENGTH_LONG)
+                snackBar.setAnchorView(R.id.nav_view)
                 snackBar.setAction(R.string.ok) { _ ->
                     favoriteMovieDomain?.let { viewModel.insertFavoriteMovie(it) }
                 }
@@ -102,25 +104,9 @@ class FavoriteMovieFragment : Fragment(), ContentCallback {
         }
     }
 
-    override fun onItemClicked(id: String) {
-        val intent = Intent(context, DetailActivity::class.java)
-        intent.putExtra(DetailActivity.EXTRA_ID, id)
-        intent.putExtra(DetailActivity.EXTRA_CONTENT, EXTRA_MOVIE)
-
-        context?.startActivity(intent)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.getFavoriteMovies().observe(viewLifecycleOwner, { favMovies ->
-            if (favMovies != null) {
-                movieFavAdapter.submitList(favMovies)
-            }
-        })
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding?.rvFavoriteMovie?.adapter = null
         _fragmentMovieFavoriteBinding = null
     }
 }

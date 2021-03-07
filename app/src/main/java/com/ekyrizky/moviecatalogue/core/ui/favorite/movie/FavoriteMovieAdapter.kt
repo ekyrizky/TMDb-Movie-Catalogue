@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.ekyrizky.moviecatalogue.BuildConfig
-import com.ekyrizky.moviecatalogue.ContentCallback
 import com.ekyrizky.moviecatalogue.R
 import com.ekyrizky.moviecatalogue.core.domain.model.movie.FavoriteMovieDomain
 import com.ekyrizky.moviecatalogue.core.utils.ConvertUtils.getDateConverted
@@ -29,11 +28,7 @@ class FavoriteMovieAdapter : ListAdapter<FavoriteMovieDomain, FavoriteMovieAdapt
         }
     }
 
-    private lateinit var onItemClickCallback: ContentCallback
-
-    fun setOnItemClickCallback(onItemClickCallback: ContentCallback) {
-        this.onItemClickCallback = onItemClickCallback
-    }
+    var onItemClick: ((Int?) -> Unit)? = null
 
     fun getSwipedData(swipedPosition: Int): FavoriteMovieDomain? = getItem(swipedPosition)
 
@@ -51,8 +46,7 @@ class FavoriteMovieAdapter : ListAdapter<FavoriteMovieDomain, FavoriteMovieAdapt
                         .error(R.drawable.ic_error))
                     .into(imgPoster)
 
-                cardContent.setOnClickListener { onItemClickCallback.onItemClicked(movieItems.id.toString()) }
-            }
+                root.setOnClickListener { onItemClick?.invoke(movieItems.id) }            }
         }
     }
 

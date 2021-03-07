@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id "androidx.navigation.safeargs"
 }
 
 android {
@@ -10,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "com.ekyrizky.moviecatalogue"
-        minSdkVersion 23
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -61,7 +62,6 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutineVersion"
 
 //    ui
-    implementation "com.ismaeldivita.chipnavigation:chip-navigation-bar:$chipNavVersion"
     implementation "androidx.navigation:navigation-fragment-ktx:$navFragmentVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$navFragmentVersion"
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
@@ -72,6 +72,7 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     implementation "androidx.legacy:legacy-support-v4:$legacySupportVersion"
     implementation "com.ToxicBakery.viewpager.transforms:view-pager-transforms:$viewPagerTransformVersion"
+    implementation "com.facebook.shimmer:shimmer:$shimmerVersion"
 
 //    retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"

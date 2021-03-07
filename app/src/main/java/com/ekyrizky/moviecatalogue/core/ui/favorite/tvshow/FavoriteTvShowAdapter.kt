@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.ekyrizky.moviecatalogue.BuildConfig
-import com.ekyrizky.moviecatalogue.ContentCallback
 import com.ekyrizky.moviecatalogue.R
 import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.FavoriteTvShowDomain
 import com.ekyrizky.moviecatalogue.core.utils.ConvertUtils.getDateConverted
@@ -29,11 +28,7 @@ class FavoriteTvShowAdapter : ListAdapter<FavoriteTvShowDomain, FavoriteTvShowAd
         }
     }
 
-    private lateinit var onItemClickCallback: ContentCallback
-
-    fun setOnItemClickCallback(onItemClickCallback: ContentCallback) {
-        this.onItemClickCallback = onItemClickCallback
-    }
+    var onItemClick: ((Int?) -> Unit)? = null
 
     fun getSwipedData(swipedPosition: Int): FavoriteTvShowDomain? = getItem(swipedPosition)
 
@@ -51,7 +46,7 @@ class FavoriteTvShowAdapter : ListAdapter<FavoriteTvShowDomain, FavoriteTvShowAd
                                         .error(R.drawable.ic_error))
                         .into(imgPoster)
 
-                cardContent.setOnClickListener { onItemClickCallback.onItemClicked(tvShowItems.id.toString()) }
+                root.setOnClickListener { onItemClick?.invoke(tvShowItems.id) }
             }
         }
     }

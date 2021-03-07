@@ -5,10 +5,14 @@ import java.util.*
 
 object ConvertUtils {
     fun getDateConverted(date: String): String {
-        val apiDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val formatDate = SimpleDateFormat("yyyy", Locale.getDefault())
-        val year = apiDate.parse(date)
-        return formatDate.format(year!!)
+        return if (date == "") {
+            date
+        } else {
+            val apiDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val formatDate = SimpleDateFormat("yyyy", Locale.getDefault())
+            val year = apiDate.parse(date)
+            formatDate.format(year!!)
+        }
     }
 
     fun getRuntimeConverted(time: Int): String {
