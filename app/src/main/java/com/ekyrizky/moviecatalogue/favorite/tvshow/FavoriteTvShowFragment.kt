@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,8 +38,8 @@ class FavoriteTvShowFragment : Fragment() {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         _fragmentTvShowFavoriteBinding = FragmentFavoriteTvShowBinding.inflate(layoutInflater, container, false)
         return binding?.root
@@ -53,11 +52,13 @@ class FavoriteTvShowFragment : Fragment() {
 
         if (activity != null) {
             tvShowFavAdapter = FavoriteTvShowAdapter()
+
             val action = FavoriteFragmentDirections.actionNavigationFavoriteToNavigationTvshowDetail()
             tvShowFavAdapter.onItemClick = {
                 action.tvShowId = it.toString()
                 view.findNavController().navigate(action)
             }
+
             viewModel.getFavoriteTvShow().observe(viewLifecycleOwner, { favTvShow ->
                 if (favTvShow != null) {
                     binding?.rvFavoriteTvshow?.adapter.let { adapter ->
@@ -86,7 +87,7 @@ class FavoriteTvShowFragment : Fragment() {
 
     private val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.Callback() {
         override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int =
-                makeMovementFlags(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
+            makeMovementFlags(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
 
         override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean = true
 
@@ -97,10 +98,8 @@ class FavoriteTvShowFragment : Fragment() {
                 tvShowDomain?.let { viewModel.deleteFavoriteTvShow(it) }
 
                 val snackBar = Snackbar.make(requireView(), getString(R.string.undo, tvShowDomain?.title), Snackbar.LENGTH_LONG)
-                snackBar.setAnchorView(R.id.nav_view)
-                snackBar.setAction(R.string.ok) { _ ->
-                    tvShowDomain?.let { viewModel.insertFavoriteTvShow(it) }
-                }
+                    .setAnchorView(R.id.nav_view)
+                    .setAction(R.string.ok) { _ -> tvShowDomain?.let { viewModel.insertFavoriteTvShow(it) } }
                 snackBar.show()
             }
         }

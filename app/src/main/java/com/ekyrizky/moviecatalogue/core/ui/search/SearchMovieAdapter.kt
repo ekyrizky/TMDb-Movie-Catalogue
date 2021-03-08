@@ -44,12 +44,9 @@ class SearchMovieAdapter : RecyclerView.Adapter<SearchMovieAdapter.SearchMovieVi
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchMovieViewHolder =
         SearchMovieViewHolder(ItemsSearchBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
-
     override fun onBindViewHolder(holder: SearchMovieViewHolder, position: Int) {
         holder.bind(movieList[position])
     }
 
     override fun getItemCount(): Int = movieList.size
-
-
 }

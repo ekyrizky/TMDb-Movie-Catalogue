@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,6 +26,7 @@ class FavoriteMovieFragment : Fragment() {
     @Inject
     lateinit var factory: ViewModelFactory
     private val viewModel: FavoriteMovieViewModel by viewModels { factory }
+
     private var _fragmentMovieFavoriteBinding: FragmentFavoriteMovieBinding? = null
     private val binding get() = _fragmentMovieFavoriteBinding
 
@@ -52,11 +52,13 @@ class FavoriteMovieFragment : Fragment() {
 
         if (activity != null) {
             movieFavAdapter = FavoriteMovieAdapter()
+
             val action = FavoriteFragmentDirections.actionNavigationFavoriteToNavigationMovieDetail()
             movieFavAdapter.onItemClick = {
                 action.movieId = it.toString()
                 view.findNavController().navigate(action)
             }
+
             viewModel.getFavoriteMovies().observe(viewLifecycleOwner, { favMovies ->
                 if (favMovies != null) {
                     binding?.rvFavoriteMovie?.adapter.let { adapter ->
@@ -96,10 +98,8 @@ class FavoriteMovieFragment : Fragment() {
                 favoriteMovieDomain?.let { viewModel.deleteFavoriteMovie(it) }
 
                 val snackBar = Snackbar.make(requireView(), getString(R.string.undo, favoriteMovieDomain?.title), Snackbar.LENGTH_LONG)
-                snackBar.setAnchorView(R.id.nav_view)
-                snackBar.setAction(R.string.ok) { _ ->
-                    favoriteMovieDomain?.let { viewModel.insertFavoriteMovie(it) }
-                }
+                    .setAnchorView(R.id.nav_view)
+                    .setAction(R.string.ok) { _ -> favoriteMovieDomain?.let { viewModel.insertFavoriteMovie(it) } }
                 snackBar.show()
             }
         }
@@ -115,7 +115,6 @@ class FavoriteMovieFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding?.rvFavoriteMovie?.adapter = null
         _fragmentMovieFavoriteBinding = null
     }
 }

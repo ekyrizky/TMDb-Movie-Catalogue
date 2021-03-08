@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -42,8 +41,10 @@ class SearchFragment : Fragment() {
         (requireActivity().application as MyApplication).appComponent.inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         _fragmentSearchBinding = FragmentSearchBinding.inflate(layoutInflater, container, false)
         return binding?.root
     }
@@ -78,7 +79,6 @@ class SearchFragment : Fragment() {
                             viewModel.queryChannel.send(query)
                         }
                     }
-
                     return true
                 }
 
@@ -141,12 +141,14 @@ class SearchFragment : Fragment() {
     }
 
     private fun showLoading() {
-        binding?.shimmerMovie?.visibility = View.VISIBLE
-        binding?.shimmerTv?.visibility = View.VISIBLE
-        binding?.rvMovieSearch?.visibility = View.GONE
-        binding?.rvTvshowSearch?.visibility = View.GONE
-        binding?.tvMovie?.visibility = View.GONE
-        binding?.tvTvshow?.visibility = View.GONE
+        binding?.apply {
+            shimmerMovie.visibility = View.VISIBLE
+            shimmerTv.visibility = View.VISIBLE
+            rvMovieSearch.visibility = View.GONE
+            rvTvshowSearch.visibility = View.GONE
+            tvMovie.visibility = View.GONE
+            tvTvshow.visibility = View.GONE
+        }
     }
 
     private fun initRecycler() {

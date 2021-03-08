@@ -11,8 +11,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class FavoriteMovieViewModel @Inject constructor(private val contentUseCase: ContentUseCase): ViewModel() {
-    fun getFavoriteMovies() =
-            contentUseCase.getFavoriteMovies().asLiveData()
+
+    fun getFavoriteMovies() = contentUseCase.getFavoriteMovies().asLiveData()
 
     fun insertFavoriteMovie(movieDetail: FavoriteMovieDomain) {
         val movieValue = DataMapper.mapFavoriteMovieDomainToEntity(movieDetail)
@@ -23,8 +23,7 @@ class FavoriteMovieViewModel @Inject constructor(private val contentUseCase: Con
 
     fun deleteFavoriteMovie(favoriteMovieDomain: FavoriteMovieDomain) {
         viewModelScope.launch(Dispatchers.IO) {
-            val movieEntity =
-                    DataMapper.mapFavoriteMovieDomainToEntity(favoriteMovieDomain)
+            val movieEntity = DataMapper.mapFavoriteMovieDomainToEntity(favoriteMovieDomain)
             contentUseCase.deleteFavoriteMovie(movieEntity)
         }
     }

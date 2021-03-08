@@ -84,14 +84,11 @@ class ContentRepository @Inject constructor(
     override suspend fun insertFavoriteMovie(favoriteMovies: FavoriteMovieEntity) =
             localDataSource.insertFavoriteMovie(favoriteMovies)
 
-
     override suspend fun checkFavoriteMovie(id: Int): Boolean =
             localDataSource.checkFavoriteMovie(id)
 
-
     override suspend fun deleteFavoriteMovieById(id: Int) =
             localDataSource.deleteFavoriteMovieById(id)
-
 
     override suspend fun deleteFavoriteMovie(favoriteMovies: FavoriteMovieEntity) =
             localDataSource.deleteFavoriteMovie(favoriteMovies)
@@ -151,14 +148,11 @@ class ContentRepository @Inject constructor(
     override suspend fun insertFavoriteTvShow(favoriteTvShow: FavoriteTvShowEntity) =
             localDataSource.insertFavoriteTvShow(favoriteTvShow)
 
-
     override suspend fun checkFavoriteTvShow(id: Int): Boolean =
             localDataSource.checkFavoriteTvShow(id)
 
-
     override suspend fun deleteFavoriteTvShowById(id: Int) =
             localDataSource.deleteFavoriteTvShowById(id)
-
 
     override suspend fun deleteFavoriteTvShow(favoriteTvShow: FavoriteTvShowEntity) =
             localDataSource.deleteFavoriteTvShow(favoriteTvShow)

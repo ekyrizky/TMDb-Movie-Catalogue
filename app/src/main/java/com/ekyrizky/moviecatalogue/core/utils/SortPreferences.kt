@@ -25,15 +25,14 @@ class SortPreferences(context: Context) {
     }
 
     fun setPrefTvShow(menuId: Int, sort: String) {
-        editor.putInt(MENU_MOVIE, menuId)
-            .putString(SORT_MOVIE, sort)
+        editor.putInt(MENU_TVSHOW, menuId)
+            .putString(SORT_TVSHOW, sort)
             .apply()
     }
 
     fun getMenuMovie(): Int = preferences.getInt(MENU_MOVIE, 0)
-    fun getMenuTvShow(): Int = preferences.getInt(MENU_MOVIE, 0)
-
+    fun getMenuTvShow(): Int = preferences.getInt(MENU_TVSHOW, 0)
 
     fun getSortMovie(): String? = preferences.getString(SORT_MOVIE, TITLE_ASC)
-    fun getSortTvShow(): String? = preferences.getString(SORT_MOVIE, TITLE_ASC)
+    fun getSortTvShow(): String? = preferences.getString(SORT_TVSHOW, TITLE_ASC)
 }

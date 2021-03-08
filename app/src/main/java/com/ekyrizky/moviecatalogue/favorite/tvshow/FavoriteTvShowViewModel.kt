@@ -11,8 +11,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class FavoriteTvShowViewModel  @Inject constructor(private val contentUseCase: ContentUseCase): ViewModel() {
-    fun getFavoriteTvShow() =
-            contentUseCase.getFavoriteTvShows().asLiveData()
+
+    fun getFavoriteTvShow() = contentUseCase.getFavoriteTvShows().asLiveData()
 
     fun insertFavoriteTvShow(tvShowDetail: FavoriteTvShowDomain) {
         val tvShowValue = DataMapper.mapFavoriteTvShowDomainToEntity(tvShowDetail)
@@ -23,8 +23,7 @@ class FavoriteTvShowViewModel  @Inject constructor(private val contentUseCase: C
 
     fun deleteFavoriteTvShow(favoriteTvShowDomain: FavoriteTvShowDomain) {
         viewModelScope.launch(Dispatchers.IO) {
-            val tvShowEntity =
-                    DataMapper.mapFavoriteTvShowDomainToEntity(favoriteTvShowDomain)
+            val tvShowEntity = DataMapper.mapFavoriteTvShowDomainToEntity(favoriteTvShowDomain)
             contentUseCase.deleteFavoriteTvShow(tvShowEntity)
         }
     }

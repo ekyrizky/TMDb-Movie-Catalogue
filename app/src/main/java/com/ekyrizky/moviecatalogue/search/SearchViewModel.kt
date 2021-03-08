@@ -26,8 +26,7 @@ class SearchViewModel  @Inject constructor(private val contentUseCase: ContentUs
         }
         .mapLatest {
             contentUseCase.getSearchMovie(it)
-        }
-        .asLiveData(viewModelScope.coroutineContext)
+        }.asLiveData(viewModelScope.coroutineContext)
 
     val searchTvShowResult = queryChannel.asFlow()
         .debounce(debounceDuration)
@@ -37,6 +36,5 @@ class SearchViewModel  @Inject constructor(private val contentUseCase: ContentUs
         }
         .mapLatest {
             contentUseCase.getSearchTvShow(it)
-        }
-        .asLiveData(viewModelScope.coroutineContext)
+        }.asLiveData(viewModelScope.coroutineContext)
 }

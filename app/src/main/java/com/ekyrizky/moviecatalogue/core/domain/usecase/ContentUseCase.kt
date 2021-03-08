@@ -44,5 +44,4 @@ interface ContentUseCase {
     suspend fun deleteFavoriteTvShowById(id: Int)
 
     suspend fun deleteFavoriteTvShow(favoriteTvShow: FavoriteTvShowEntity)
-
 }

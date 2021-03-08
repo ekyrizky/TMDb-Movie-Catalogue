@@ -17,13 +17,6 @@ import javax.inject.Singleton
 @Singleton
 class LocalDataSource @Inject constructor(private val mContentDao: ContentDao) {
 
-    companion object {
-        private val INSTANCE: LocalDataSource? = null
-
-        fun getInstance(contentDao: ContentDao): LocalDataSource =
-                INSTANCE ?: LocalDataSource(contentDao)
-    }
-
     fun getMovies(sort: String): Flow<List<MovieEntity>> = mContentDao.getMovies(getSortedQuery(sort, MOVIE))
 
     fun getMovieById(id: Int): Flow<MovieDetailEntity> = mContentDao.getMovieById(id)

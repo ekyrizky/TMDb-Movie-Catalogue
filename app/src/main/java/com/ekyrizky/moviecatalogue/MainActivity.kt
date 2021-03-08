@@ -12,6 +12,7 @@ class MainActivity : AppCompatActivity() {
 
     private var _activityMainBinding: ActivityMainBinding? = null
     private val binding get() = _activityMainBinding
+
     private lateinit var navController: NavController
     private lateinit var navHostFragment: NavHostFragment
 
@@ -22,10 +23,8 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding?.toolbar)
         supportActionBar?.title = null
 
-        navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
-
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.navigation_movie_detail

@@ -44,7 +44,6 @@ class SearchTvShowAdapter : RecyclerView.Adapter<SearchTvShowAdapter.SearchTvSho
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchTvShowViewHolder =
         SearchTvShowViewHolder(ItemsSearchBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
-
     override fun onBindViewHolder(holder: SearchTvShowViewHolder, position: Int) {
         holder.bind(tvShowList[position])
     }

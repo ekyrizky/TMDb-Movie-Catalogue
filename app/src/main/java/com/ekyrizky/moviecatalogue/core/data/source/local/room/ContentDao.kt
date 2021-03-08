@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ContentDao {
+
     @RawQuery(observedEntities = [MovieEntity::class])
     fun getMovies(query: SimpleSQLiteQuery): Flow<List<MovieEntity>>
 

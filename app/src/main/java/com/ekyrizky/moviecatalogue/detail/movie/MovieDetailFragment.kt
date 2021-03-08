@@ -10,7 +10,6 @@ import androidx.core.app.ShareCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -42,8 +41,10 @@ class MovieDetailFragment : Fragment() {
         (requireActivity().application as MyApplication).appComponent.inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         _fragmentMovieDetailBinding = FragmentMovieDetailBinding.inflate(layoutInflater, container, false)
         initActionBar()
         setHasOptionsMenu(true)
@@ -83,26 +84,28 @@ class MovieDetailFragment : Fragment() {
     }
 
     private fun loadMovie(movie: MovieDetailDomain) {
-        binding?.collapsingToolbar?.title = movie.title
-        binding?.tvTitle?.text = movie.title
-        binding?.tvReleaseYear?.text = movie.releaseYear?.let { ConvertUtils.getDateConverted(it) }
-        binding?.tvRuntime?.text = movie.runtime?.let { ConvertUtils.getRuntimeConverted(it) }
-        binding?.tvTagline?.text = movie.tagline
-        binding?.tvVoteAverage?.text = movie.voteAverage.toString()
-        binding?.tvDescription?.text = movie.description
+        binding?.apply {
+            collapsingToolbar.title = movie.title
+            tvTitle.text = movie.title
+            tvReleaseYear.text = movie.releaseYear?.let { ConvertUtils.getDateConverted(it) }
+            tvRuntime.text = movie.runtime?.let { ConvertUtils.getRuntimeConverted(it) }
+            tvTagline.text = movie.tagline
+            tvVoteAverage.text = movie.voteAverage.toString()
+            tvDescription.text = movie.description
+        }
         binding?.imgPoster?.let {
             Glide.with(this)
-                    .load("${BuildConfig.BASE_IMG}${movie.posterPath}")
-                    .apply(RequestOptions.placeholderOf(R.drawable.ic_loading)
-                            .error(R.drawable.ic_error))
-                    .into(it)
+                .load("${BuildConfig.BASE_IMG}${movie.posterPath}")
+                .apply(RequestOptions.placeholderOf(R.drawable.ic_loading)
+                    .error(R.drawable.ic_error))
+                .into(it)
         }
         binding?.imgBackdrop?.let {
             Glide.with(this)
-                    .load("${BuildConfig.BASE_IMG}${movie.backdropPath}")
-                    .apply(RequestOptions.placeholderOf(R.drawable.ic_loading)
-                            .error(R.drawable.ic_error))
-                    .into(it)
+                .load("${BuildConfig.BASE_IMG}${movie.backdropPath}")
+                .apply(RequestOptions.placeholderOf(R.drawable.ic_loading)
+                    .error(R.drawable.ic_error))
+                .into(it)
         }
         showLoading(false)
         binding?.fabFavorite?.setOnClickListener {
@@ -135,18 +138,22 @@ class MovieDetailFragment : Fragment() {
     }
 
     private fun initActionBar() {
-        (activity as AppCompatActivity?)?.setSupportActionBar(binding?.toolbar)
-        (activity as AppCompatActivity?)?.supportActionBar?.elevation = 0f
-        (activity as AppCompatActivity?)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        (activity as AppCompatActivity?)?.apply {
+            setSupportActionBar(binding?.toolbar)
+            supportActionBar?.elevation = 0f
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        }
         binding?.toolbar?.setNavigationOnClickListener{ this.activity?.onBackPressed() }
         binding?.collapsingToolbar?.setExpandedTitleColor(Color.TRANSPARENT)
     }
 
     private fun showLoading(state: Boolean) {
-        binding?.progresBar?.isVisible = state
-        binding?.scrollLayout?.isVisible = !state
-        binding?.appbar?.isVisible = !state
-        binding?.fabFavorite?.isVisible = !state
+        binding?.apply {
+            progresBar.isVisible = state
+            scrollLayout.isVisible = !state
+            appbar.isVisible = !state
+            fabFavorite.isVisible = !state
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -161,7 +168,7 @@ class MovieDetailFragment : Fragment() {
             ShareCompat.IntentBuilder.from(requireActivity())
                 .setType(mimeType)
                 .setChooserTitle(R.string.share_title)
-                .setText("Segera tonton $shareObject di bioskiop kesayangan anda!")
+                .setText("Watch $shareObject in your favorite cinema!")
                 .startChooser()
         }
         return super.onOptionsItemSelected(item)

@@ -8,7 +8,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.ekyrizky.moviecatalogue.MyApplication
@@ -35,7 +34,6 @@ class TvShowFragment : Fragment() {
     private val binding get() = _fragmentTvShowFavoriteBinding
 
     private lateinit var tvShowAdapter: TvShowAdapter
-
     lateinit var sortPreferences: SortPreferences
 
     override fun onAttach(context: Context) {
@@ -141,6 +139,4 @@ class TvShowFragment : Fragment() {
         binding?.progressBar?.isVisible = state
         binding?.rvTvShow?.isVisible = !state
     }
-
-
 }
