@@ -9,8 +9,9 @@ import com.ekyrizky.moviecatalogue.core.utils.DataMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class MovieDetailViewModel(private val contentUseCase: ContentUseCase): ViewModel() {
+class MovieDetailViewModel  @Inject constructor(private val contentUseCase: ContentUseCase): ViewModel() {
 
     fun getMovieDetail(id: String) = contentUseCase.getMovieDetail(id.toInt()).asLiveData()
 

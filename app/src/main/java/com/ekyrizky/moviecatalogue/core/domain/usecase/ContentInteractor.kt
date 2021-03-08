@@ -11,8 +11,9 @@ import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.TvShowDetailDomain
 import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.TvShowDomain
 import com.ekyrizky.moviecatalogue.core.domain.repository.IContentRepository
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class ContentInteractor(private val contentRepository: IContentRepository): ContentUseCase {
+class ContentInteractor @Inject constructor(private val contentRepository: IContentRepository): ContentUseCase {
     override fun getMovies(sort: String): Flow<Resource<List<MovieDomain>>> =
             contentRepository.getMovies(sort)
 

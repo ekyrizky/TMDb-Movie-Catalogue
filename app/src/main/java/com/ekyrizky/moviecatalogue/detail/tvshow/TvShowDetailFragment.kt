@@ -1,5 +1,6 @@
 package com.ekyrizky.moviecatalogue.detail.tvshow
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.*
@@ -8,11 +9,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ShareCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.ekyrizky.moviecatalogue.BuildConfig
+import com.ekyrizky.moviecatalogue.MyApplication
 import com.ekyrizky.moviecatalogue.R
 import com.ekyrizky.moviecatalogue.core.data.Resource
 import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.TvShowDetailDomain
@@ -20,15 +23,23 @@ import com.ekyrizky.moviecatalogue.core.ui.ViewModelFactory
 import com.ekyrizky.moviecatalogue.core.utils.ConvertUtils
 import com.ekyrizky.moviecatalogue.databinding.FragmentTvShowDetailBinding
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class TvShowDetailFragment : Fragment() {
 
+    @Inject
+    lateinit var factory: ViewModelFactory
+    private val viewModel: TvShowDetailViewModel by viewModels { factory }
     private var _fragmentTvShowDetailBinding: FragmentTvShowDetailBinding? = null
     private val binding get() = _fragmentTvShowDetailBinding
 
-    private lateinit var viewModel: TvShowDetailViewModel
     private lateinit var id: String
     private var statusFavorite = false
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().application as MyApplication).appComponent.inject(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -40,9 +51,6 @@ class TvShowDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val factory = ViewModelFactory.getInstance(requireActivity())
-        viewModel = ViewModelProvider(this, factory)[TvShowDetailViewModel::class.java]
 
         id = TvShowDetailFragmentArgs.fromBundle(arguments as Bundle).tvShowId
 

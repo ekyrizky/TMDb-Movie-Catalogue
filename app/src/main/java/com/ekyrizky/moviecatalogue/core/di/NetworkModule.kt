@@ -1,15 +1,20 @@
-package com.ekyrizky.moviecatalogue.core.data.source.remote.network
+package com.ekyrizky.moviecatalogue.core.di
 
 import com.ekyrizky.moviecatalogue.BuildConfig
+import com.ekyrizky.moviecatalogue.core.data.source.remote.network.ApiService
+import dagger.Module
+import dagger.Provides
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-object ApiConfig {
+@Module
+class NetworkModule {
 
-    private fun provideOkHttpClient(): OkHttpClient {
+    @Provides
+    fun provideOkHttpClient(): OkHttpClient {
         val timeOut = 120L
         return OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
@@ -18,6 +23,7 @@ object ApiConfig {
             .build()
     }
 
+    @Provides
     fun provideApiService(): ApiService {
         val retrofit = Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)

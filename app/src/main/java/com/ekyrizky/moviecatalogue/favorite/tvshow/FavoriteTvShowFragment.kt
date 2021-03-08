@@ -1,29 +1,42 @@
 package com.ekyrizky.moviecatalogue.favorite.tvshow
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ekyrizky.moviecatalogue.MyApplication
 import com.ekyrizky.moviecatalogue.R
 import com.ekyrizky.moviecatalogue.core.ui.ViewModelFactory
 import com.ekyrizky.moviecatalogue.core.ui.favorite.tvshow.FavoriteTvShowAdapter
 import com.ekyrizky.moviecatalogue.databinding.FragmentFavoriteTvShowBinding
 import com.ekyrizky.moviecatalogue.favorite.FavoriteFragmentDirections
 import com.google.android.material.snackbar.Snackbar
+import javax.inject.Inject
 
 class FavoriteTvShowFragment : Fragment() {
+
+    @Inject
+    lateinit var factory: ViewModelFactory
+    private val viewModel: FavoriteTvShowViewModel by viewModels { factory }
+
     private var _fragmentTvShowFavoriteBinding: FragmentFavoriteTvShowBinding? = null
     private val binding get() = _fragmentTvShowFavoriteBinding
 
-    private lateinit var viewModel: FavoriteTvShowViewModel
     private lateinit var tvShowFavAdapter: FavoriteTvShowAdapter
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().application as MyApplication).appComponent.inject(this)
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -39,9 +52,6 @@ class FavoriteTvShowFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(binding?.rvFavoriteTvshow)
 
         if (activity != null) {
-            val factory = ViewModelFactory.getInstance(requireActivity())
-            viewModel = ViewModelProvider(this, factory)[FavoriteTvShowViewModel::class.java]
-
             tvShowFavAdapter = FavoriteTvShowAdapter()
             val action = FavoriteFragmentDirections.actionNavigationFavoriteToNavigationTvshowDetail()
             tvShowFavAdapter.onItemClick = {

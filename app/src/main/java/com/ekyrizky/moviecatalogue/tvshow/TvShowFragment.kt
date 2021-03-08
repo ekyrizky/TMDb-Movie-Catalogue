@@ -1,14 +1,17 @@
 package com.ekyrizky.moviecatalogue.tvshow
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.ekyrizky.moviecatalogue.MyApplication
 import com.ekyrizky.moviecatalogue.R
 import com.ekyrizky.moviecatalogue.core.data.Resource
 import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.TvShowDomain
@@ -20,15 +23,25 @@ import com.ekyrizky.moviecatalogue.core.utils.SortUtils.LOWEST_VOTE
 import com.ekyrizky.moviecatalogue.core.utils.SortUtils.TITLE_ASC
 import com.ekyrizky.moviecatalogue.core.utils.SortUtils.TITLE_DESC
 import com.ekyrizky.moviecatalogue.databinding.FragmentTvShowBinding
+import javax.inject.Inject
 
 class TvShowFragment : Fragment() {
+
+    @Inject
+    lateinit var factory: ViewModelFactory
+    private val viewModel: TvShowViewModel by viewModels { factory }
+
     private var _fragmentTvShowFavoriteBinding: FragmentTvShowBinding? = null
     private val binding get() = _fragmentTvShowFavoriteBinding
 
-    private lateinit var viewModel: TvShowViewModel
     private lateinit var tvShowAdapter: TvShowAdapter
 
     lateinit var sortPreferences: SortPreferences
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().application as MyApplication).appComponent.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,9 +64,6 @@ class TvShowFragment : Fragment() {
                 action.tvShowId = it.toString()
                 view.findNavController().navigate(action)
             }
-
-            val factory = ViewModelFactory.getInstance(requireActivity())
-            viewModel = ViewModelProvider(this, factory)[TvShowViewModel::class.java]
 
             sortPreferences = SortPreferences(requireContext())
             sortPreferences.getSortTvShow()?.let { viewModel.getTvShows(it).observe(viewLifecycleOwner, tvShowObserver) }

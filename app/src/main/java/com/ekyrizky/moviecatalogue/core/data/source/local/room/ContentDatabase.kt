@@ -18,17 +18,4 @@ import com.ekyrizky.moviecatalogue.core.data.source.local.entity.tvshow.TvShowEn
         exportSchema = false)
 abstract class ContentDatabase: RoomDatabase() {
     abstract fun contentDao(): ContentDao
-
-    companion object {
-        @Volatile
-        private var INSTANCE: ContentDatabase? = null
-
-        fun getInstance(context: Context): ContentDatabase =
-            INSTANCE ?: synchronized(this) {
-                INSTANCE ?: Room.databaseBuilder(context.applicationContext,
-                    ContentDatabase::class.java,
-                    "Content.db")
-                    .build()
-            }
-    }
 }

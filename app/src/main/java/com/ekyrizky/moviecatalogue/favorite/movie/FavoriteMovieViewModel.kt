@@ -8,8 +8,9 @@ import com.ekyrizky.moviecatalogue.core.domain.usecase.ContentUseCase
 import com.ekyrizky.moviecatalogue.core.utils.DataMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FavoriteMovieViewModel(private val contentUseCase: ContentUseCase): ViewModel() {
+class FavoriteMovieViewModel @Inject constructor(private val contentUseCase: ContentUseCase): ViewModel() {
     fun getFavoriteMovies() =
             contentUseCase.getFavoriteMovies().asLiveData()
 

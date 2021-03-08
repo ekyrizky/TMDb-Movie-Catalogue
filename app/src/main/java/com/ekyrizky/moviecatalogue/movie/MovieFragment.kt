@@ -1,14 +1,17 @@
 package com.ekyrizky.moviecatalogue.movie
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.ekyrizky.moviecatalogue.MyApplication
 import com.ekyrizky.moviecatalogue.R
 import com.ekyrizky.moviecatalogue.core.data.Resource
 import com.ekyrizky.moviecatalogue.core.domain.model.movie.MovieDomain
@@ -20,17 +23,26 @@ import com.ekyrizky.moviecatalogue.core.utils.SortUtils.LOWEST_VOTE
 import com.ekyrizky.moviecatalogue.core.utils.SortUtils.TITLE_ASC
 import com.ekyrizky.moviecatalogue.core.utils.SortUtils.TITLE_DESC
 import com.ekyrizky.moviecatalogue.databinding.FragmentMovieBinding
+import javax.inject.Inject
 
 
 class MovieFragment : Fragment() {
 
+    @Inject
+    lateinit var factory: ViewModelFactory
+    private val viewModel: MovieViewModel by viewModels { factory }
+
     private var _fragmentMovieBinding: FragmentMovieBinding? = null
     private val binding get() = _fragmentMovieBinding
 
-    private lateinit var viewModel: MovieViewModel
     private lateinit var movieAdapter: MovieAdapter
 
     lateinit var sortPreferences: SortPreferences
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().application as MyApplication).appComponent.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,9 +65,6 @@ class MovieFragment : Fragment() {
                 action.movieId = it.toString()
                 view.findNavController().navigate(action)
             }
-
-            val factory = ViewModelFactory.getInstance(requireActivity())
-            viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
 
             sortPreferences = SortPreferences(requireContext())
             sortPreferences.getSortMovie()?.let { viewModel.getMovies(it).observe(viewLifecycleOwner, movieObserver) }

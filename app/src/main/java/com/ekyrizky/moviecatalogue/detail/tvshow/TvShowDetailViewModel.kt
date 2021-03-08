@@ -9,8 +9,9 @@ import com.ekyrizky.moviecatalogue.core.utils.DataMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class TvShowDetailViewModel(private val contentUseCase: ContentUseCase): ViewModel() {
+class TvShowDetailViewModel  @Inject constructor(private val contentUseCase: ContentUseCase): ViewModel() {
 
     fun getTvShowDetail(id: String) = contentUseCase.getTvShowDetail(id.toInt()).asLiveData()
 

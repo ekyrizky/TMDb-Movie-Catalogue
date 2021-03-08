@@ -16,30 +16,18 @@ import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.FavoriteTvShowDomain
 import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.TvShowDetailDomain
 import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.TvShowDomain
 import com.ekyrizky.moviecatalogue.core.domain.repository.IContentRepository
-import com.ekyrizky.moviecatalogue.core.utils.AppExecutors
 import com.ekyrizky.moviecatalogue.core.utils.DataMapper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ContentRepository private constructor(
+@Singleton
+class ContentRepository @Inject constructor(
         private val remoteDataSource: RemoteDataSource,
         private val localDataSource: LocalDataSource,
-        private val appExecutors: AppExecutors
 ): IContentRepository {
-
-    companion object {
-        @Volatile
-        private var INSTANCE: ContentRepository? = null
-
-        fun getInstance(remoteDataSource: RemoteDataSource,
-                        localDataSource: LocalDataSource,
-                        appExecutors: AppExecutors
-        ): ContentRepository =
-                INSTANCE ?: synchronized(this) {
-                    INSTANCE ?: ContentRepository(remoteDataSource, localDataSource, appExecutors)
-                }
-    }
 
     override fun getMovies(sort: String): Flow<Resource<List<MovieDomain>>> {
         return object : NetworkBoundResource<List<MovieDomain>, List<MovieResultResponse>>() {

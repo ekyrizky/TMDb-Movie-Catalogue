@@ -9,10 +9,11 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
+import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class SearchViewModel(private val contentUseCase: ContentUseCase) : ViewModel() {
+class SearchViewModel  @Inject constructor(private val contentUseCase: ContentUseCase) : ViewModel() {
     private var debounceDuration = 500L
 
     val queryChannel = BroadcastChannel<String>(Channel.CONFLATED)

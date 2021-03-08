@@ -1,15 +1,18 @@
 package com.ekyrizky.moviecatalogue.search
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ekyrizky.moviecatalogue.MyApplication
 import com.ekyrizky.moviecatalogue.core.data.Resource
 import com.ekyrizky.moviecatalogue.core.ui.ViewModelFactory
 import com.ekyrizky.moviecatalogue.core.ui.search.SearchMovieAdapter
@@ -18,17 +21,26 @@ import com.ekyrizky.moviecatalogue.databinding.FragmentSearchBinding
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
 class SearchFragment : Fragment() {
 
+    @Inject
+    lateinit var factory: ViewModelFactory
+    private val viewModel: SearchViewModel by viewModels { factory }
+
     private var _fragmentSearchBinding: FragmentSearchBinding? = null
     private val binding get() = _fragmentSearchBinding
 
-    private lateinit var viewModel: SearchViewModel
     private lateinit var movieAdapter: SearchMovieAdapter
     private lateinit var tvShowAdapter: SearchTvShowAdapter
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().application as MyApplication).appComponent.inject(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -38,8 +50,6 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val factory = ViewModelFactory.getInstance(requireActivity())
-        viewModel = ViewModelProvider(this, factory)[SearchViewModel::class.java]
 
         movieAdapter = SearchMovieAdapter()
         tvShowAdapter = SearchTvShowAdapter()

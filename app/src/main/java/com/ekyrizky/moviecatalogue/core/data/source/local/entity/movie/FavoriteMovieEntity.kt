@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "favorite_movies")
 class FavoriteMovieEntity(
+
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "id")
@@ -35,4 +36,4 @@ class FavoriteMovieEntity(
 
     @ColumnInfo(name = "backdrop_path")
     var backdropPath: String?,
-    )
+)

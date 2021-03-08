@@ -1,29 +1,41 @@
 package com.ekyrizky.moviecatalogue.favorite.movie
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ekyrizky.moviecatalogue.MyApplication
 import com.ekyrizky.moviecatalogue.R
 import com.ekyrizky.moviecatalogue.core.ui.ViewModelFactory
 import com.ekyrizky.moviecatalogue.core.ui.favorite.movie.FavoriteMovieAdapter
 import com.ekyrizky.moviecatalogue.databinding.FragmentFavoriteMovieBinding
 import com.ekyrizky.moviecatalogue.favorite.FavoriteFragmentDirections
 import com.google.android.material.snackbar.Snackbar
+import javax.inject.Inject
 
 class FavoriteMovieFragment : Fragment() {
+
+    @Inject
+    lateinit var factory: ViewModelFactory
+    private val viewModel: FavoriteMovieViewModel by viewModels { factory }
     private var _fragmentMovieFavoriteBinding: FragmentFavoriteMovieBinding? = null
     private val binding get() = _fragmentMovieFavoriteBinding
 
-    private lateinit var viewModel: FavoriteMovieViewModel
     private lateinit var movieFavAdapter: FavoriteMovieAdapter
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().application as MyApplication).appComponent.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,9 +51,6 @@ class FavoriteMovieFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(binding?.rvFavoriteMovie)
 
         if (activity != null) {
-            val factory = ViewModelFactory.getInstance(requireActivity())
-            viewModel = ViewModelProvider(this, factory)[FavoriteMovieViewModel::class.java]
-
             movieFavAdapter = FavoriteMovieAdapter()
             val action = FavoriteFragmentDirections.actionNavigationFavoriteToNavigationMovieDetail()
             movieFavAdapter.onItemClick = {

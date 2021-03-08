@@ -11,8 +11,11 @@ import com.ekyrizky.moviecatalogue.core.utils.SortUtils.MOVIE
 import com.ekyrizky.moviecatalogue.core.utils.SortUtils.TV_SHOW
 import com.ekyrizky.moviecatalogue.core.utils.SortUtils.getSortedQuery
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class LocalDataSource (private val mContentDao: ContentDao) {
+@Singleton
+class LocalDataSource @Inject constructor(private val mContentDao: ContentDao) {
 
     companion object {
         private val INSTANCE: LocalDataSource? = null
