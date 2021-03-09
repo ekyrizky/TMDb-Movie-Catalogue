@@ -10,7 +10,9 @@ import com.ekyrizky.moviecatalogue.databinding.FragmentFavoriteBinding
 import com.ekyrizky.moviecatalogue.favorite.movie.FavoriteMovieFragment
 import com.ekyrizky.moviecatalogue.favorite.tvshow.FavoriteTvShowFragment
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FavoriteFragment : Fragment() {
     private var _favoriteFragmentBinding: FragmentFavoriteBinding? = null
     private val binding get() = _favoriteFragmentBinding

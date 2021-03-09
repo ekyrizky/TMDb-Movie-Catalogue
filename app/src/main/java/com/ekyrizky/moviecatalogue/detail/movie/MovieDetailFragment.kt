@@ -19,17 +19,16 @@ import com.ekyrizky.core.utils.ConvertUtils
 import com.ekyrizky.moviecatalogue.MyApplication
 import com.ekyrizky.moviecatalogue.R
 import com.ekyrizky.moviecatalogue.databinding.FragmentMovieDetailBinding
-import com.ekyrizky.moviecatalogue.di.ViewModelFactory
 import com.ekyrizky.moviecatalogue.model.movie.MovieDetail
 import com.ekyrizky.moviecatalogue.utils.DataMapper
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class MovieDetailFragment : Fragment() {
 
-    @Inject
-    lateinit var factory: ViewModelFactory
-    private val viewModel: MovieDetailViewModel by viewModels { factory }
+    private val viewModel: MovieDetailViewModel by viewModels()
 
     private var _fragmentMovieDetailBinding: FragmentMovieDetailBinding? = null
     private val binding get() = _fragmentMovieDetailBinding
@@ -37,10 +36,6 @@ class MovieDetailFragment : Fragment() {
     private lateinit var id: String
     private var statusFavorite = false
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (requireActivity().application as MyApplication).appComponent.inject(this)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

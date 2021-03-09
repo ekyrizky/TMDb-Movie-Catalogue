@@ -1,5 +1,6 @@
 package com.ekyrizky.moviecatalogue.detail.movie
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.ekyrizky.core.data.Resource
 import com.ekyrizky.core.domain.model.movie.MovieDetailDomain
@@ -11,7 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class MovieDetailViewModel  @Inject constructor(private val contentUseCase: ContentUseCase): ViewModel() {
+class MovieDetailViewModel  @ViewModelInject constructor(private val contentUseCase: ContentUseCase): ViewModel() {
 
     fun getMovieDetail(id: String): LiveData<Resource<MovieDetail>> {
         return contentUseCase.getMovieDetail(id.toInt()).asLiveData().map { resource ->

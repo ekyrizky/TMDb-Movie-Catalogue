@@ -16,8 +16,8 @@ import com.ekyrizky.core.ui.search.SearchMovieAdapter
 import com.ekyrizky.core.ui.search.SearchTvShowAdapter
 import com.ekyrizky.moviecatalogue.MyApplication
 import com.ekyrizky.moviecatalogue.databinding.FragmentSearchBinding
-import com.ekyrizky.moviecatalogue.di.ViewModelFactory
 import com.ekyrizky.moviecatalogue.utils.DataMapper
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
@@ -25,22 +25,16 @@ import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
+@AndroidEntryPoint
 class SearchFragment : Fragment() {
 
-    @Inject
-    lateinit var factory: ViewModelFactory
-    private val viewModel: SearchViewModel by viewModels { factory }
+    private val viewModel: SearchViewModel by viewModels()
 
     private var _fragmentSearchBinding: FragmentSearchBinding? = null
     private val binding get() = _fragmentSearchBinding
 
     private lateinit var movieAdapter: SearchMovieAdapter
     private lateinit var tvShowAdapter: SearchTvShowAdapter
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (requireActivity().application as MyApplication).appComponent.inject(this)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

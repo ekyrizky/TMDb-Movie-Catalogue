@@ -1,5 +1,6 @@
 package com.ekyrizky.moviecatalogue.search
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
@@ -16,7 +17,7 @@ import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class SearchViewModel  @Inject constructor(private val contentUseCase: ContentUseCase) : ViewModel() {
+class SearchViewModel  @ViewModelInject constructor(private val contentUseCase: ContentUseCase) : ViewModel() {
     private var debounceDuration = 500L
 
     val queryChannel = BroadcastChannel<String>(Channel.CONFLATED)

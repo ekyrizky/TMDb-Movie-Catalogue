@@ -16,27 +16,20 @@ import com.ekyrizky.core.ui.favorite.movie.FavoriteMovieAdapter
 import com.ekyrizky.moviecatalogue.MyApplication
 import com.ekyrizky.moviecatalogue.R
 import com.ekyrizky.moviecatalogue.databinding.FragmentFavoriteMovieBinding
-import com.ekyrizky.moviecatalogue.di.ViewModelFactory
 import com.ekyrizky.moviecatalogue.favorite.FavoriteFragmentDirections
 import com.ekyrizky.moviecatalogue.utils.DataMapper
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-
+@AndroidEntryPoint
 class FavoriteMovieFragment : Fragment() {
 
-    @Inject
-    lateinit var factory: ViewModelFactory
-    private val viewModel: FavoriteMovieViewModel by viewModels { factory }
+    private val viewModel: FavoriteMovieViewModel by viewModels()
 
     private var _fragmentMovieFavoriteBinding: FragmentFavoriteMovieBinding? = null
     private val binding get() = _fragmentMovieFavoriteBinding
 
     private lateinit var movieFavAdapter: FavoriteMovieAdapter
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (requireActivity().application as MyApplication).appComponent.inject(this)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

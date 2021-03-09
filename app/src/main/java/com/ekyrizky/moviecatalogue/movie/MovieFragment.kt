@@ -20,27 +20,21 @@ import com.ekyrizky.core.utils.SortUtils.TITLE_DESC
 import com.ekyrizky.moviecatalogue.MyApplication
 import com.ekyrizky.moviecatalogue.R
 import com.ekyrizky.moviecatalogue.databinding.FragmentMovieBinding
-import com.ekyrizky.moviecatalogue.di.ViewModelFactory
 import com.ekyrizky.moviecatalogue.model.movie.Movie
 import com.ekyrizky.moviecatalogue.utils.DataMapper
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class MovieFragment : Fragment() {
 
-    @Inject
-    lateinit var factory: ViewModelFactory
-    private val viewModel: MovieViewModel by viewModels { factory }
+    private val viewModel: MovieViewModel by viewModels()
 
     private var _fragmentMovieBinding: FragmentMovieBinding? = null
     private val binding get() = _fragmentMovieBinding
 
     private lateinit var movieAdapter: MovieAdapter
     lateinit var sortPreferences: SortPreferences
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (requireActivity().application as MyApplication).appComponent.inject(this)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

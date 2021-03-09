@@ -16,27 +16,21 @@ import com.ekyrizky.core.ui.favorite.tvshow.FavoriteTvShowAdapter
 import com.ekyrizky.moviecatalogue.MyApplication
 import com.ekyrizky.moviecatalogue.R
 import com.ekyrizky.moviecatalogue.databinding.FragmentFavoriteTvShowBinding
-import com.ekyrizky.moviecatalogue.di.ViewModelFactory
 import com.ekyrizky.moviecatalogue.favorite.FavoriteFragmentDirections
 import com.ekyrizky.moviecatalogue.utils.DataMapper
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class FavoriteTvShowFragment : Fragment() {
 
-    @Inject
-    lateinit var factory: ViewModelFactory
-    private val viewModel: FavoriteTvShowViewModel by viewModels { factory }
+    private val viewModel: FavoriteTvShowViewModel by viewModels()
 
     private var _fragmentTvShowFavoriteBinding: FragmentFavoriteTvShowBinding? = null
     private val binding get() = _fragmentTvShowFavoriteBinding
 
     private lateinit var tvShowFavAdapter: FavoriteTvShowAdapter
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (requireActivity().application as MyApplication).appComponent.inject(this)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

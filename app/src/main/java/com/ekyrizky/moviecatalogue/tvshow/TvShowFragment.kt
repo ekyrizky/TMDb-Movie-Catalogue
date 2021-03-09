@@ -20,27 +20,21 @@ import com.ekyrizky.core.utils.SortUtils.TITLE_DESC
 import com.ekyrizky.moviecatalogue.MyApplication
 import com.ekyrizky.moviecatalogue.R
 import com.ekyrizky.moviecatalogue.databinding.FragmentTvShowBinding
-import com.ekyrizky.moviecatalogue.di.ViewModelFactory
 import com.ekyrizky.moviecatalogue.model.tvshow.TvShow
 import com.ekyrizky.moviecatalogue.utils.DataMapper
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class TvShowFragment : Fragment() {
 
-    @Inject
-    lateinit var factory: ViewModelFactory
-    private val viewModel: TvShowViewModel by viewModels { factory }
+    private val viewModel: TvShowViewModel by viewModels()
 
     private var _fragmentTvShowFavoriteBinding: FragmentTvShowBinding? = null
     private val binding get() = _fragmentTvShowFavoriteBinding
 
     private lateinit var tvShowAdapter: TvShowAdapter
     private lateinit var sortPreferences: SortPreferences
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (requireActivity().application as MyApplication).appComponent.inject(this)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

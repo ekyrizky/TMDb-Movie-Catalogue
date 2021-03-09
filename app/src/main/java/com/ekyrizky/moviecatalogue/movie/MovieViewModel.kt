@@ -1,5 +1,6 @@
 package com.ekyrizky.moviecatalogue.movie
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -10,7 +11,7 @@ import com.ekyrizky.moviecatalogue.model.movie.Movie
 import com.ekyrizky.moviecatalogue.utils.DataMapper
 import javax.inject.Inject
 
-class MovieViewModel  @Inject constructor(private val contentUseCase: ContentUseCase) : ViewModel() {
+class MovieViewModel  @ViewModelInject constructor(private val contentUseCase: ContentUseCase) : ViewModel() {
     fun getMovies(sort: String): LiveData<Resource<List<Movie>>> {
         return contentUseCase.getMovies(sort).asLiveData().map { resource ->
             when (resource) {
