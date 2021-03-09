@@ -11,12 +11,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ekyrizky.core.data.Resource
+import com.ekyrizky.core.ui.search.SearchMovieAdapter
+import com.ekyrizky.core.ui.search.SearchTvShowAdapter
 import com.ekyrizky.moviecatalogue.MyApplication
-import com.ekyrizky.moviecatalogue.core.data.Resource
-import com.ekyrizky.moviecatalogue.core.ui.ViewModelFactory
-import com.ekyrizky.moviecatalogue.core.ui.search.SearchMovieAdapter
-import com.ekyrizky.moviecatalogue.core.ui.search.SearchTvShowAdapter
 import com.ekyrizky.moviecatalogue.databinding.FragmentSearchBinding
+import com.ekyrizky.moviecatalogue.di.ViewModelFactory
+import com.ekyrizky.moviecatalogue.utils.DataMapper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
@@ -107,7 +108,8 @@ class SearchFragment : Fragment() {
                         this?.shimmerMovie?.visibility = View.GONE
                         this?.rvMovieSearch?.visibility = View.VISIBLE
                         this?.tvMovie?.visibility = View.VISIBLE
-                        movieAdapter.setData(it.data)
+                        val movieList = DataMapper.mapMovieToMovieDomain(it.data)
+                        movieAdapter.setData(movieList)
                     }
                     is Resource.Error -> {
                         this?.shimmerMovie?.visibility = View.INVISIBLE
@@ -128,7 +130,8 @@ class SearchFragment : Fragment() {
                         this?.shimmerTv?.visibility = View.GONE
                         this?.rvTvshowSearch?.visibility = View.VISIBLE
                         this?.tvTvshow?.visibility = View.VISIBLE
-                        tvShowAdapter.setData(it.data)
+                        val tvShowList = DataMapper.mapTvShowToTvShowDomain(it.data)
+                        tvShowAdapter.setData(tvShowList)
                     }
                     is Resource.Error -> {
                         this?.shimmerTv?.visibility = View.INVISIBLE

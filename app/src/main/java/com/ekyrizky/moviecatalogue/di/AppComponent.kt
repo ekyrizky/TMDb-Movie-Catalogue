@@ -1,6 +1,6 @@
 package com.ekyrizky.moviecatalogue.di
 
-import com.ekyrizky.moviecatalogue.core.di.CoreComponent
+import com.ekyrizky.core.di.CoreComponent
 import com.ekyrizky.moviecatalogue.detail.movie.MovieDetailFragment
 import com.ekyrizky.moviecatalogue.detail.tvshow.TvShowDetailFragment
 import com.ekyrizky.moviecatalogue.favorite.movie.FavoriteMovieFragment

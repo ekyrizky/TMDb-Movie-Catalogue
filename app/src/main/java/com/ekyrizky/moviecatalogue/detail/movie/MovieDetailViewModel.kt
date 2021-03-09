@@ -1,11 +1,11 @@
 package com.ekyrizky.moviecatalogue.detail.movie
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
-import com.ekyrizky.moviecatalogue.core.domain.model.movie.MovieDetailDomain
-import com.ekyrizky.moviecatalogue.core.domain.usecase.ContentUseCase
-import com.ekyrizky.moviecatalogue.core.utils.DataMapper
+import androidx.lifecycle.*
+import com.ekyrizky.core.data.Resource
+import com.ekyrizky.core.domain.model.movie.MovieDetailDomain
+import com.ekyrizky.core.domain.usecase.ContentUseCase
+import com.ekyrizky.core.utils.DataMapper
+import com.ekyrizky.moviecatalogue.model.movie.MovieDetail
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -13,7 +13,18 @@ import javax.inject.Inject
 
 class MovieDetailViewModel  @Inject constructor(private val contentUseCase: ContentUseCase): ViewModel() {
 
-    fun getMovieDetail(id: String) = contentUseCase.getMovieDetail(id.toInt()).asLiveData()
+    fun getMovieDetail(id: String): LiveData<Resource<MovieDetail>> {
+        return contentUseCase.getMovieDetail(id.toInt()).asLiveData().map { resource ->
+            when (resource) {
+                is Resource.Loading -> Resource.Loading()
+                is Resource.Success -> {
+                    val movies = com.ekyrizky.moviecatalogue.utils.DataMapper.mapMovieDetailDomainToMovieDetail(resource.data)
+                    Resource.Success(movies)
+                }
+                is Resource.Error -> Resource.Error(resource.message.toString())
+            }
+        }
+    }
 
     fun insertFavoriteMovie(movieDetail: MovieDetailDomain) {
         val movieValue = DataMapper.mapDetailMovieDomainToFavoriteEntity(movieDetail)

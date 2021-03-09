@@ -13,14 +13,15 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.ekyrizky.moviecatalogue.BuildConfig
+import com.ekyrizky.core.BuildConfig.BASE_IMG
+import com.ekyrizky.core.data.Resource
+import com.ekyrizky.core.utils.ConvertUtils
 import com.ekyrizky.moviecatalogue.MyApplication
 import com.ekyrizky.moviecatalogue.R
-import com.ekyrizky.moviecatalogue.core.data.Resource
-import com.ekyrizky.moviecatalogue.core.domain.model.movie.MovieDetailDomain
-import com.ekyrizky.moviecatalogue.core.ui.ViewModelFactory
-import com.ekyrizky.moviecatalogue.core.utils.ConvertUtils
 import com.ekyrizky.moviecatalogue.databinding.FragmentMovieDetailBinding
+import com.ekyrizky.moviecatalogue.di.ViewModelFactory
+import com.ekyrizky.moviecatalogue.model.movie.MovieDetail
+import com.ekyrizky.moviecatalogue.utils.DataMapper
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -65,44 +66,42 @@ class MovieDetailFragment : Fragment() {
     }
 
     private fun observeMovie() {
-        viewModel.getMovieDetail(id).observe(viewLifecycleOwner, { detail ->
+        viewModel.getMovieDetail(id).observe(viewLifecycleOwner) { detail ->
             when (detail) {
                 is Resource.Loading -> showLoading(true)
                 is Resource.Success -> {
-                    if (detail.data != null) {
-                        showLoading(false)
-                        loadMovie(detail.data)
-                        setFavoriteState(statusFavorite)
-                    }
+                    showLoading(false)
+                    loadMovie(detail.data)
+                    setFavoriteState(statusFavorite)
                 }
                 is Resource.Error -> {
                     showLoading(false)
                     Toast.makeText(context, R.string.error_msg, Toast.LENGTH_SHORT).show()
                 }
             }
-        })
+        }
     }
 
-    private fun loadMovie(movie: MovieDetailDomain) {
+    private fun loadMovie(movie: MovieDetail?) {
         binding?.apply {
-            collapsingToolbar.title = movie.title
-            tvTitle.text = movie.title
-            tvReleaseYear.text = movie.releaseYear?.let { ConvertUtils.getDateConverted(it) }
-            tvRuntime.text = movie.runtime?.let { ConvertUtils.getRuntimeConverted(it) }
-            tvTagline.text = movie.tagline
-            tvVoteAverage.text = movie.voteAverage.toString()
-            tvDescription.text = movie.description
+            collapsingToolbar.title = movie?.title
+            tvTitle.text = movie?.title
+            tvReleaseYear.text = movie?.releaseYear?.let { ConvertUtils.getDateConverted(it) }
+            tvRuntime.text = movie?.runtime?.let { ConvertUtils.getRuntimeConverted(it) }
+            tvTagline.text = movie?.tagline
+            tvVoteAverage.text = movie?.voteAverage.toString()
+            tvDescription.text = movie?.description
         }
         binding?.imgPoster?.let {
             Glide.with(this)
-                .load("${BuildConfig.BASE_IMG}${movie.posterPath}")
+                .load("${BASE_IMG}${movie?.posterPath}")
                 .apply(RequestOptions.placeholderOf(R.drawable.ic_loading)
                     .error(R.drawable.ic_error))
                 .into(it)
         }
         binding?.imgBackdrop?.let {
             Glide.with(this)
-                .load("${BuildConfig.BASE_IMG}${movie.backdropPath}")
+                .load("${BASE_IMG}${movie?.backdropPath}")
                 .apply(RequestOptions.placeholderOf(R.drawable.ic_loading)
                     .error(R.drawable.ic_error))
                 .into(it)
@@ -113,14 +112,15 @@ class MovieDetailFragment : Fragment() {
         }
     }
 
-    private fun setFavoriteMovie(movie: MovieDetailDomain?) {
+    private fun setFavoriteMovie(movie: MovieDetail?) {
         if (movie != null){
             if (statusFavorite) {
                 movie.id?.let { viewModel.deleteFavoriteMovieById(it) }
                 Toast.makeText(context, R.string.remove_favorite, Toast.LENGTH_SHORT).show()
                 setFavoriteState(!statusFavorite)
             } else {
-                viewModel.insertFavoriteMovie(movie)
+                val movieDomain = DataMapper.mapMovieDetailToMovieDetailDomain(movie)
+                viewModel.insertFavoriteMovie(movieDomain)
                 Toast.makeText(context, R.string.add_favorite, Toast.LENGTH_SHORT).show()
                 setFavoriteState(!statusFavorite)
             }

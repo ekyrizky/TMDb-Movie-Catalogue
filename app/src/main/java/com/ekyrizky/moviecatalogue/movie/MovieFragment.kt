@@ -10,20 +10,20 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.ekyrizky.core.data.Resource
+import com.ekyrizky.core.ui.movie.MovieAdapter
+import com.ekyrizky.core.utils.SortPreferences
+import com.ekyrizky.core.utils.SortUtils.HIGHEST_VOTE
+import com.ekyrizky.core.utils.SortUtils.LOWEST_VOTE
+import com.ekyrizky.core.utils.SortUtils.TITLE_ASC
+import com.ekyrizky.core.utils.SortUtils.TITLE_DESC
 import com.ekyrizky.moviecatalogue.MyApplication
 import com.ekyrizky.moviecatalogue.R
-import com.ekyrizky.moviecatalogue.core.data.Resource
-import com.ekyrizky.moviecatalogue.core.domain.model.movie.MovieDomain
-import com.ekyrizky.moviecatalogue.core.ui.ViewModelFactory
-import com.ekyrizky.moviecatalogue.core.ui.movie.MovieAdapter
-import com.ekyrizky.moviecatalogue.core.utils.SortPreferences
-import com.ekyrizky.moviecatalogue.core.utils.SortUtils.HIGHEST_VOTE
-import com.ekyrizky.moviecatalogue.core.utils.SortUtils.LOWEST_VOTE
-import com.ekyrizky.moviecatalogue.core.utils.SortUtils.TITLE_ASC
-import com.ekyrizky.moviecatalogue.core.utils.SortUtils.TITLE_DESC
 import com.ekyrizky.moviecatalogue.databinding.FragmentMovieBinding
+import com.ekyrizky.moviecatalogue.di.ViewModelFactory
+import com.ekyrizky.moviecatalogue.model.movie.Movie
+import com.ekyrizky.moviecatalogue.utils.DataMapper
 import javax.inject.Inject
-
 
 class MovieFragment : Fragment() {
 
@@ -71,13 +71,14 @@ class MovieFragment : Fragment() {
         }
     }
 
-    private val movieObserver = Observer<Resource<List<MovieDomain>>> { movies ->
+    private val movieObserver = Observer<Resource<List<Movie>>> { movies ->
         if (movies != null) {
             when (movies) {
                 is Resource.Loading -> showLoading(true)
                 is Resource.Success -> {
                     showLoading(false)
-                    movieAdapter.submitList(movies.data)
+                    val movieList = DataMapper.mapMovieToMovieDomain(movies.data)
+                    movieAdapter.submitList(movieList)
                     movieAdapter.notifyDataSetChanged()
                 }
                 is Resource.Error -> {

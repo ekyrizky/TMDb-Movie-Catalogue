@@ -1,7 +1,7 @@
 package com.ekyrizky.moviecatalogue.di
 
-import com.ekyrizky.moviecatalogue.core.domain.usecase.ContentInteractor
-import com.ekyrizky.moviecatalogue.core.domain.usecase.ContentUseCase
+import com.ekyrizky.core.domain.usecase.ContentInteractor
+import com.ekyrizky.core.domain.usecase.ContentUseCase
 import dagger.Binds
 import dagger.Module
 

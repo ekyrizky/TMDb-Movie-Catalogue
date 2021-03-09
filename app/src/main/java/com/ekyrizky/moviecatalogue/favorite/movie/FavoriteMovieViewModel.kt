@@ -1,21 +1,25 @@
 package com.ekyrizky.moviecatalogue.favorite.movie
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
-import com.ekyrizky.moviecatalogue.core.domain.model.movie.FavoriteMovieDomain
-import com.ekyrizky.moviecatalogue.core.domain.usecase.ContentUseCase
-import com.ekyrizky.moviecatalogue.core.utils.DataMapper
+import androidx.lifecycle.*
+import com.ekyrizky.core.domain.model.movie.FavoriteMovieDomain
+import com.ekyrizky.core.domain.usecase.ContentUseCase
+import com.ekyrizky.moviecatalogue.model.movie.FavoriteMovie
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.ekyrizky.core.utils.DataMapper as DataMapperCore
+import com.ekyrizky.moviecatalogue.utils.DataMapper as DataMapperApp
 
 class FavoriteMovieViewModel @Inject constructor(private val contentUseCase: ContentUseCase): ViewModel() {
 
-    fun getFavoriteMovies() = contentUseCase.getFavoriteMovies().asLiveData()
+    fun getFavoriteMovies(): LiveData<List<FavoriteMovie>> {
+        return contentUseCase.getFavoriteMovies().asLiveData().map { resource ->
+            DataMapperApp.mapFavoriteMovieDomainToFavoriteMovie(resource)
+        }
+    }
 
     fun insertFavoriteMovie(movieDetail: FavoriteMovieDomain) {
-        val movieValue = DataMapper.mapFavoriteMovieDomainToEntity(movieDetail)
+        val movieValue = DataMapperCore.mapFavoriteMovieDomainToEntity(movieDetail)
         viewModelScope.launch(Dispatchers.IO) {
             contentUseCase.insertFavoriteMovie(movieValue)
         }
@@ -23,7 +27,7 @@ class FavoriteMovieViewModel @Inject constructor(private val contentUseCase: Con
 
     fun deleteFavoriteMovie(favoriteMovieDomain: FavoriteMovieDomain) {
         viewModelScope.launch(Dispatchers.IO) {
-            val movieEntity = DataMapper.mapFavoriteMovieDomainToEntity(favoriteMovieDomain)
+            val movieEntity = DataMapperCore.mapFavoriteMovieDomainToEntity(favoriteMovieDomain)
             contentUseCase.deleteFavoriteMovie(movieEntity)
         }
     }

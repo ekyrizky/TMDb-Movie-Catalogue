@@ -1,8 +1,8 @@
 package com.ekyrizky.moviecatalogue
 
 import android.app.Application
-import com.ekyrizky.moviecatalogue.core.di.CoreComponent
-import com.ekyrizky.moviecatalogue.core.di.DaggerCoreComponent
+import com.ekyrizky.core.di.CoreComponent
+import com.ekyrizky.core.di.DaggerCoreComponent
 import com.ekyrizky.moviecatalogue.di.AppComponent
 import com.ekyrizky.moviecatalogue.di.DaggerAppComponent
 

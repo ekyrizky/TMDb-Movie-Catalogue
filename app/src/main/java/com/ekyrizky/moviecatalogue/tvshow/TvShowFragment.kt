@@ -10,18 +10,19 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.ekyrizky.core.data.Resource
+import com.ekyrizky.core.ui.tvshow.TvShowAdapter
+import com.ekyrizky.core.utils.SortPreferences
+import com.ekyrizky.core.utils.SortUtils.HIGHEST_VOTE
+import com.ekyrizky.core.utils.SortUtils.LOWEST_VOTE
+import com.ekyrizky.core.utils.SortUtils.TITLE_ASC
+import com.ekyrizky.core.utils.SortUtils.TITLE_DESC
 import com.ekyrizky.moviecatalogue.MyApplication
 import com.ekyrizky.moviecatalogue.R
-import com.ekyrizky.moviecatalogue.core.data.Resource
-import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.TvShowDomain
-import com.ekyrizky.moviecatalogue.core.ui.ViewModelFactory
-import com.ekyrizky.moviecatalogue.core.ui.tvshow.TvShowAdapter
-import com.ekyrizky.moviecatalogue.core.utils.SortPreferences
-import com.ekyrizky.moviecatalogue.core.utils.SortUtils.HIGHEST_VOTE
-import com.ekyrizky.moviecatalogue.core.utils.SortUtils.LOWEST_VOTE
-import com.ekyrizky.moviecatalogue.core.utils.SortUtils.TITLE_ASC
-import com.ekyrizky.moviecatalogue.core.utils.SortUtils.TITLE_DESC
 import com.ekyrizky.moviecatalogue.databinding.FragmentTvShowBinding
+import com.ekyrizky.moviecatalogue.di.ViewModelFactory
+import com.ekyrizky.moviecatalogue.model.tvshow.TvShow
+import com.ekyrizky.moviecatalogue.utils.DataMapper
 import javax.inject.Inject
 
 class TvShowFragment : Fragment() {
@@ -34,7 +35,7 @@ class TvShowFragment : Fragment() {
     private val binding get() = _fragmentTvShowFavoriteBinding
 
     private lateinit var tvShowAdapter: TvShowAdapter
-    lateinit var sortPreferences: SortPreferences
+    private lateinit var sortPreferences: SortPreferences
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -70,13 +71,14 @@ class TvShowFragment : Fragment() {
         }
     }
 
-    private val tvShowObserver = Observer<Resource<List<TvShowDomain>>> { tvShow ->
+    private val tvShowObserver = Observer<Resource<List<TvShow>>> { tvShow ->
         if (tvShow != null) {
             when (tvShow) {
                 is Resource.Loading -> showLoading(true)
                 is Resource.Success -> {
                     showLoading(false)
-                    tvShowAdapter.submitList(tvShow.data)
+                    val tvShowList = DataMapper.mapTvShowToTvShowDomain(tvShow.data)
+                    tvShowAdapter.submitList(tvShowList)
                     tvShowAdapter.notifyDataSetChanged()
                 }
                 is Resource.Error -> {

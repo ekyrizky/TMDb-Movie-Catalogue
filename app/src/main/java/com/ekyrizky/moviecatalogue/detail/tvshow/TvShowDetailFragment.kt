@@ -13,14 +13,15 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.ekyrizky.moviecatalogue.BuildConfig
+import com.ekyrizky.core.BuildConfig.BASE_IMG
+import com.ekyrizky.core.data.Resource
+import com.ekyrizky.core.utils.ConvertUtils
 import com.ekyrizky.moviecatalogue.MyApplication
 import com.ekyrizky.moviecatalogue.R
-import com.ekyrizky.moviecatalogue.core.data.Resource
-import com.ekyrizky.moviecatalogue.core.domain.model.tvshow.TvShowDetailDomain
-import com.ekyrizky.moviecatalogue.core.ui.ViewModelFactory
-import com.ekyrizky.moviecatalogue.core.utils.ConvertUtils
 import com.ekyrizky.moviecatalogue.databinding.FragmentTvShowDetailBinding
+import com.ekyrizky.moviecatalogue.di.ViewModelFactory
+import com.ekyrizky.moviecatalogue.model.tvshow.TvShowDetail
+import com.ekyrizky.moviecatalogue.utils.DataMapper
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -69,11 +70,9 @@ class TvShowDetailFragment : Fragment() {
             when (detail) {
                 is Resource.Loading -> showLoading(true)
                 is Resource.Success -> {
-                    if (detail.data != null) {
-                        showLoading(false)
-                        loadTvShow(detail.data)
-                        setFavoriteState(statusFavorite)
-                    }
+                    showLoading(false)
+                    loadTvShow(detail.data)
+                    setFavoriteState(statusFavorite)
                 }
                 is Resource.Error -> {
                     showLoading(false)
@@ -83,26 +82,26 @@ class TvShowDetailFragment : Fragment() {
         })
     }
 
-    private fun loadTvShow(tvShow: TvShowDetailDomain) {
+    private fun loadTvShow(tvShow: TvShowDetail?) {
         binding?.apply {
-            collapsingToolbar.title = tvShow.title
-            tvTitle.text = tvShow.title
-            tvReleaseYear.text = tvShow.releaseYear?.let { ConvertUtils.getDateConverted(it) }
-            tvRuntime.text = tvShow.runtime?.let { ConvertUtils.getRuntimeConverted(it) }
-            tvTagline.text = tvShow.tagline
-            tvVoteAverage.text = tvShow.voteAverage.toString()
-            tvDescription.text = tvShow.description
+            collapsingToolbar.title = tvShow?.title
+            tvTitle.text = tvShow?.title
+            tvReleaseYear.text = tvShow?.releaseYear?.let { ConvertUtils.getDateConverted(it) }
+            tvRuntime.text = tvShow?.runtime?.let { ConvertUtils.getRuntimeConverted(it) }
+            tvTagline.text = tvShow?.tagline
+            tvVoteAverage.text = tvShow?.voteAverage.toString()
+            tvDescription.text = tvShow?.description
         }
         binding?.imgPoster?.let {
             Glide.with(this)
-                .load("${BuildConfig.BASE_IMG}${tvShow.posterPath}")
+                .load("${BASE_IMG}${tvShow?.posterPath}")
                 .apply(RequestOptions.placeholderOf(R.drawable.ic_loading)
                     .error(R.drawable.ic_error))
                 .into(it)
         }
         binding?.imgBackdrop?.let {
             Glide.with(this)
-                .load("${BuildConfig.BASE_IMG}${tvShow.backdropPath}")
+                .load("${BASE_IMG}${tvShow?.backdropPath}")
                 .apply(RequestOptions.placeholderOf(R.drawable.ic_loading)
                     .error(R.drawable.ic_error))
                 .into(it)
@@ -113,14 +112,15 @@ class TvShowDetailFragment : Fragment() {
         }
     }
 
-    private fun setFavoriteTvShow(movie: TvShowDetailDomain?) {
-        if (movie != null){
+    private fun setFavoriteTvShow(tvshow: TvShowDetail?) {
+        if (tvshow != null){
             if (statusFavorite) {
-                movie.id?.let { viewModel.deleteFavoriteTvShowById(it) }
+                tvshow.id?.let { viewModel.deleteFavoriteTvShowById(it) }
                 Toast.makeText(context, R.string.remove_favorite, Toast.LENGTH_SHORT).show()
                 setFavoriteState(!statusFavorite)
             } else {
-                viewModel.insertFavoriteTvShow(movie)
+                val tvShowDomain = DataMapper.mapTvShowDetailToTvShowDetailDomain(tvshow)
+                viewModel.insertFavoriteTvShow(tvShowDomain)
                 Toast.makeText(context, R.string.add_favorite, Toast.LENGTH_SHORT).show()
                 setFavoriteState(!statusFavorite)
             }

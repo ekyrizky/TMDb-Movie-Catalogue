@@ -2,8 +2,11 @@ package com.ekyrizky.moviecatalogue.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import com.ekyrizky.moviecatalogue.core.domain.usecase.ContentUseCase
+import com.ekyrizky.core.data.Resource
+import com.ekyrizky.core.domain.usecase.ContentUseCase
+import com.ekyrizky.moviecatalogue.utils.DataMapper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BroadcastChannel
@@ -26,7 +29,16 @@ class SearchViewModel  @Inject constructor(private val contentUseCase: ContentUs
         }
         .mapLatest {
             contentUseCase.getSearchMovie(it)
-        }.asLiveData(viewModelScope.coroutineContext)
+        }.asLiveData(viewModelScope.coroutineContext).map { resource ->
+            when (resource) {
+                is Resource.Loading -> Resource.Loading()
+                is Resource.Success -> {
+                    val movies = DataMapper.mapMovieDomainToMovie(resource.data)
+                    Resource.Success(movies)
+                }
+                is Resource.Error -> Resource.Error(resource.message.toString())
+            }
+        }
 
     val searchTvShowResult = queryChannel.asFlow()
         .debounce(debounceDuration)
@@ -36,5 +48,14 @@ class SearchViewModel  @Inject constructor(private val contentUseCase: ContentUs
         }
         .mapLatest {
             contentUseCase.getSearchTvShow(it)
-        }.asLiveData(viewModelScope.coroutineContext)
+        }.asLiveData(viewModelScope.coroutineContext).map { resource ->
+            when (resource) {
+                is Resource.Loading -> Resource.Loading()
+                is Resource.Success -> {
+                    val tvshows = DataMapper.mapTvShowDomainToTvShow(resource.data)
+                    Resource.Success(tvshows)
+                }
+                is Resource.Error -> Resource.Error(resource.message.toString())
+            }
+        }
 }

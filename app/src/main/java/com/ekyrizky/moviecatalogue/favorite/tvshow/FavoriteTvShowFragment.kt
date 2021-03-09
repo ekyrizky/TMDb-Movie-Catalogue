@@ -12,12 +12,13 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ekyrizky.core.ui.favorite.tvshow.FavoriteTvShowAdapter
 import com.ekyrizky.moviecatalogue.MyApplication
 import com.ekyrizky.moviecatalogue.R
-import com.ekyrizky.moviecatalogue.core.ui.ViewModelFactory
-import com.ekyrizky.moviecatalogue.core.ui.favorite.tvshow.FavoriteTvShowAdapter
 import com.ekyrizky.moviecatalogue.databinding.FragmentFavoriteTvShowBinding
+import com.ekyrizky.moviecatalogue.di.ViewModelFactory
 import com.ekyrizky.moviecatalogue.favorite.FavoriteFragmentDirections
+import com.ekyrizky.moviecatalogue.utils.DataMapper
 import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 
@@ -59,7 +60,7 @@ class FavoriteTvShowFragment : Fragment() {
                 view.findNavController().navigate(action)
             }
 
-            viewModel.getFavoriteTvShow().observe(viewLifecycleOwner, { favTvShow ->
+            viewModel.getFavoriteTvShow().observe(viewLifecycleOwner) { favTvShow ->
                 if (favTvShow != null) {
                     binding?.rvFavoriteTvshow?.adapter.let { adapter ->
                         when (adapter) {
@@ -72,14 +73,15 @@ class FavoriteTvShowFragment : Fragment() {
                                     binding?.rvFavoriteTvshow?.isVisible = true
                                     binding?.imgEmpty?.isVisible = false
                                     binding?.tvEmpty?.isVisible = false
-                                    adapter.submitList(favTvShow)
+                                    val favoriteTvShow = DataMapper.mapFavoriteTvShowToFavoriteTvShowDomain(favTvShow)
+                                    adapter.submitList(favoriteTvShow)
                                     adapter.notifyDataSetChanged()
                                 }
                             }
                         }
                     }
                 }
-            })
+            }
 
             initRecyclerView()
         }

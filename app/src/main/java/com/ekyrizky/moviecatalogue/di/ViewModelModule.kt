@@ -2,7 +2,6 @@ package com.ekyrizky.moviecatalogue.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ekyrizky.moviecatalogue.core.ui.ViewModelFactory
 import com.ekyrizky.moviecatalogue.detail.movie.MovieDetailViewModel
 import com.ekyrizky.moviecatalogue.detail.tvshow.TvShowDetailViewModel
 import com.ekyrizky.moviecatalogue.favorite.movie.FavoriteMovieViewModel
