@@ -1,4 +1,4 @@
-package com.ekyrizky.moviecatalogue.favorite.movie
+package com.ekyrizky.favorite.movie
 
 import android.content.Context
 import android.os.Bundle
@@ -13,23 +13,42 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ekyrizky.core.ui.favorite.movie.FavoriteMovieAdapter
-import com.ekyrizky.moviecatalogue.MyApplication
+import com.ekyrizky.favorite.FavoriteFragmentDirections
+import com.ekyrizky.favorite.ViewModelFactory
+import com.ekyrizky.favorite.databinding.FragmentFavoriteMovieBinding
+import com.ekyrizky.favorite.di.DaggerFavoriteComponent
 import com.ekyrizky.moviecatalogue.R
-import com.ekyrizky.moviecatalogue.databinding.FragmentFavoriteMovieBinding
-import com.ekyrizky.moviecatalogue.favorite.FavoriteFragmentDirections
+import com.ekyrizky.moviecatalogue.di.FavoriteModuleDependencies
 import com.ekyrizky.moviecatalogue.utils.DataMapper
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.EntryPointAccessors
 import javax.inject.Inject
-@AndroidEntryPoint
+
 class FavoriteMovieFragment : Fragment() {
 
-    private val viewModel: FavoriteMovieViewModel by viewModels()
+    @Inject
+    lateinit var factory: ViewModelFactory
+    private val viewModel: FavoriteMovieViewModel by viewModels { factory }
 
     private var _fragmentMovieFavoriteBinding: FragmentFavoriteMovieBinding? = null
     private val binding get() = _fragmentMovieFavoriteBinding
 
     private lateinit var movieFavAdapter: FavoriteMovieAdapter
+
+    override fun onAttach(context: Context) {
+        DaggerFavoriteComponent.builder()
+            .context(context)
+            .appDependencies(
+                EntryPointAccessors.fromApplication(
+                    context.applicationContext,
+                    FavoriteModuleDependencies::class.java
+                )
+            )
+            .build()
+            .inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

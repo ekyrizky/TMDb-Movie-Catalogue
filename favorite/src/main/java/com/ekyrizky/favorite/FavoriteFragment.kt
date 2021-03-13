@@ -1,18 +1,17 @@
-package com.ekyrizky.moviecatalogue.favorite
+package com.ekyrizky.favorite
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.ekyrizky.favorite.databinding.FragmentFavoriteBinding
+import com.ekyrizky.favorite.movie.FavoriteMovieFragment
+import com.ekyrizky.favorite.tvshow.FavoriteTvShowFragment
 import com.ekyrizky.moviecatalogue.R
-import com.ekyrizky.moviecatalogue.databinding.FragmentFavoriteBinding
-import com.ekyrizky.moviecatalogue.favorite.movie.FavoriteMovieFragment
-import com.ekyrizky.moviecatalogue.favorite.tvshow.FavoriteTvShowFragment
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class FavoriteFragment : Fragment() {
     private var _favoriteFragmentBinding: FragmentFavoriteBinding? = null
     private val binding get() = _favoriteFragmentBinding

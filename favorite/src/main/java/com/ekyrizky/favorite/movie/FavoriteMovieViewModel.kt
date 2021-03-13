@@ -1,4 +1,4 @@
-package com.ekyrizky.moviecatalogue.favorite.movie
+package com.ekyrizky.favorite.movie
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
@@ -11,7 +11,7 @@ import javax.inject.Inject
 import com.ekyrizky.core.utils.DataMapper as DataMapperCore
 import com.ekyrizky.moviecatalogue.utils.DataMapper as DataMapperApp
 
-class FavoriteMovieViewModel @ViewModelInject constructor(private val contentUseCase: ContentUseCase): ViewModel() {
+class FavoriteMovieViewModel @Inject constructor(private val contentUseCase: ContentUseCase): ViewModel() {
 
     fun getFavoriteMovies(): LiveData<List<FavoriteMovie>> {
         return contentUseCase.getFavoriteMovies().asLiveData().map { resource ->

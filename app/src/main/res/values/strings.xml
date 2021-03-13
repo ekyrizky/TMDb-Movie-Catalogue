@@ -23,7 +23,7 @@
     <string name="highest_vote">Highest Vote</string>
     <string name="title_asc">Title (A-Z)</string>
     <string name="title_desc">Title (Z-A)</string>
-    <string name="tv_search">Search</string>
+    <string name="tv_search">Search</string>z
     <string name="search_yours">Search Movie / TvShow</string>
     <string name="lowest_vote">Lowest Vote</string>
     <string name="sort_title_asc">Sorted by Title (A-Z)</string>
@@ -33,4 +33,5 @@
     <string name="add_favorite">Added to Favorite</string>
     <string name="remove_favorite">Remove from Favorite</string>
     <string name="error_msg">Error</string>
+    <string name="title_favorite">Favorite</string>
 </resources>

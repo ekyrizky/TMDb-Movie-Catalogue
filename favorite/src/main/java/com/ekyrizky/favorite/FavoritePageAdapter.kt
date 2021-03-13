@@ -1,4 +1,4 @@
-package com.ekyrizky.moviecatalogue.favorite
+package com.ekyrizky.favorite
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

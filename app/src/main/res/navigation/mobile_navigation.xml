@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/navigation_favorite"
-        android:name="com.ekyrizky.moviecatalogue.favorite.FavoriteFragment"
+        android:name="com.ekyrizky.favorite.FavoriteFragment"
         tools:layout="@layout/fragment_favorite" >
         <action
             android:id="@+id/action_navigation_favorite_to_navigation_movie_detail"
