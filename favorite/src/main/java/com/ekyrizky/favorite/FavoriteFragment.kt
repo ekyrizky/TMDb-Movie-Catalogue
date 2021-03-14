@@ -10,7 +10,6 @@ import com.ekyrizky.favorite.movie.FavoriteMovieFragment
 import com.ekyrizky.favorite.tvshow.FavoriteTvShowFragment
 import com.ekyrizky.moviecatalogue.R
 import com.google.android.material.tabs.TabLayoutMediator
-import dagger.hilt.android.AndroidEntryPoint
 
 class FavoriteFragment : Fragment() {
     private var _favoriteFragmentBinding: FragmentFavoriteBinding? = null

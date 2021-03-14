@@ -14,14 +14,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ekyrizky.core.ui.favorite.movie.FavoriteMovieAdapter
 import com.ekyrizky.favorite.FavoriteFragmentDirections
-import com.ekyrizky.favorite.ViewModelFactory
+import com.ekyrizky.favorite.R
+import com.ekyrizky.favorite.utils.ViewModelFactory
 import com.ekyrizky.favorite.databinding.FragmentFavoriteMovieBinding
 import com.ekyrizky.favorite.di.DaggerFavoriteComponent
-import com.ekyrizky.moviecatalogue.R
+import com.ekyrizky.favorite.utils.DataMapper
 import com.ekyrizky.moviecatalogue.di.FavoriteModuleDependencies
-import com.ekyrizky.moviecatalogue.utils.DataMapper
 import com.google.android.material.snackbar.Snackbar
-import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
 import javax.inject.Inject
 
@@ -112,7 +111,7 @@ class FavoriteMovieFragment : Fragment() {
                 favoriteMovieDomain?.let { viewModel.deleteFavoriteMovie(it) }
 
                 val snackBar = Snackbar.make(requireView(), getString(R.string.undo, favoriteMovieDomain?.title), Snackbar.LENGTH_LONG)
-                    .setAnchorView(R.id.nav_view)
+                    .setAnchorView(com.ekyrizky.moviecatalogue.R.id.nav_view)
                     .setAction(R.string.ok) { _ -> favoriteMovieDomain?.let { viewModel.insertFavoriteMovie(it) } }
                 snackBar.show()
             }

@@ -1,9 +1,9 @@
 package com.ekyrizky.favorite.tvshow
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.ekyrizky.core.domain.model.tvshow.FavoriteTvShowDomain
 import com.ekyrizky.core.domain.usecase.ContentUseCase
+import com.ekyrizky.favorite.utils.DataMapper
 import com.ekyrizky.moviecatalogue.model.tvshow.FavoriteTvShow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,7 +15,7 @@ class FavoriteTvShowViewModel  @Inject constructor(private val contentUseCase: C
 
     fun getFavoriteTvShow(): LiveData<List<FavoriteTvShow>> {
         return contentUseCase.getFavoriteTvShows().asLiveData().map { resource ->
-            DataMapperApp.mapFavoriteTvShowDomainToFavoriteTvShow(resource)
+            DataMapper.mapFavoriteTvShowDomainToFavoriteTvShow(resource)
         }
     }
 

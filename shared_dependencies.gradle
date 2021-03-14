@@ -23,15 +23,6 @@ dependencies {
 
     //    testing
     testImplementation "junit:junit:$junit_version"
-    testImplementation "org.mockito:mockito-core:$mockito_version"
-    testImplementation "org.mockito:mockito-inline:$mockito_version"
-    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito_kotlin_version"
-    testImplementation "androidx.arch.core:core-testing:$core_testing_version"
-    androidTestImplementation "junit:junit:$junit_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
-    androidTestImplementation "androidx.test:runner:$android_test_version"
-    androidTestImplementation "androidx.test:rules:$android_test_version"
     androidTestImplementation "androidx.test.ext:junit:$junit_ext_version"
-    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
-    implementation "androidx.test.espresso:espresso-idling-resource:$idle_resource_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 }

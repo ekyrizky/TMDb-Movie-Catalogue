@@ -14,12 +14,7 @@
     <string name="description">Description</string>
     <string name="share_title">Share Now</string>
     <string name="fab">Favorite Button</string>
-    <string name="tab_movie">MOVIES</string>
-    <string name="tab_tv_show">TV SHOWS</string>
     <string name="favorite">Favorites</string>
-    <string name="undo">Undo to remove %s</string>
-    <string name="ok">OK</string>
-    <string name="empty_favorite">Favorite is Empty</string>
     <string name="highest_vote">Highest Vote</string>
     <string name="title_asc">Title (A-Z)</string>
     <string name="title_desc">Title (Z-A)</string>
@@ -33,5 +28,4 @@
     <string name="add_favorite">Added to Favorite</string>
     <string name="remove_favorite">Remove from Favorite</string>
     <string name="error_msg">Error</string>
-    <string name="title_favorite">Favorite</string>
 </resources>

@@ -13,7 +13,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
-import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi

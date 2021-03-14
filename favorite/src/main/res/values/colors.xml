@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="blue_500">#0d253f</color>
+    <color name="blue_500_alpha">#ee0d253f</color>
+    <color name="light_blue">#64e6ff</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

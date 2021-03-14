@@ -1,6 +1,5 @@
 package com.ekyrizky.moviecatalogue.search
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,14 +13,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ekyrizky.core.data.Resource
 import com.ekyrizky.core.ui.search.SearchMovieAdapter
 import com.ekyrizky.core.ui.search.SearchTvShowAdapter
-import com.ekyrizky.moviecatalogue.MyApplication
 import com.ekyrizky.moviecatalogue.databinding.FragmentSearchBinding
 import com.ekyrizky.moviecatalogue.utils.DataMapper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi

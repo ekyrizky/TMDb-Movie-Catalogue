@@ -2,7 +2,7 @@ package com.ekyrizky.favorite.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ekyrizky.favorite.ViewModelFactory
+import com.ekyrizky.favorite.utils.ViewModelFactory
 import com.ekyrizky.favorite.movie.FavoriteMovieViewModel
 import com.ekyrizky.favorite.tvshow.FavoriteTvShowViewModel
 import dagger.Binds

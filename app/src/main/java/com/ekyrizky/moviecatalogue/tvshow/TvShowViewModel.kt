@@ -9,7 +9,6 @@ import com.ekyrizky.core.data.Resource
 import com.ekyrizky.core.domain.usecase.ContentUseCase
 import com.ekyrizky.moviecatalogue.model.tvshow.TvShow
 import com.ekyrizky.moviecatalogue.utils.DataMapper
-import javax.inject.Inject
 
 class TvShowViewModel  @ViewModelInject constructor(private val contentUseCase: ContentUseCase): ViewModel() {
     fun getTvShows(sort: String): LiveData<Resource<List<TvShow>>> {

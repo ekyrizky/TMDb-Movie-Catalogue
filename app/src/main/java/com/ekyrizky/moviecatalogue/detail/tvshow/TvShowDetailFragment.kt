@@ -1,6 +1,5 @@
 package com.ekyrizky.moviecatalogue.detail.tvshow
 
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.*
@@ -16,14 +15,12 @@ import com.bumptech.glide.request.RequestOptions
 import com.ekyrizky.core.BuildConfig.BASE_IMG
 import com.ekyrizky.core.data.Resource
 import com.ekyrizky.core.utils.ConvertUtils
-import com.ekyrizky.moviecatalogue.MyApplication
 import com.ekyrizky.moviecatalogue.R
 import com.ekyrizky.moviecatalogue.databinding.FragmentTvShowDetailBinding
 import com.ekyrizky.moviecatalogue.model.tvshow.TvShowDetail
 import com.ekyrizky.moviecatalogue.utils.DataMapper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class TvShowDetailFragment : Fragment() {

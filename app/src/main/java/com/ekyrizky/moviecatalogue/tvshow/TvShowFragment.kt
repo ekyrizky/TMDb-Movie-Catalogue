@@ -1,6 +1,5 @@
 package com.ekyrizky.moviecatalogue.tvshow
 
-import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -17,13 +16,11 @@ import com.ekyrizky.core.utils.SortUtils.HIGHEST_VOTE
 import com.ekyrizky.core.utils.SortUtils.LOWEST_VOTE
 import com.ekyrizky.core.utils.SortUtils.TITLE_ASC
 import com.ekyrizky.core.utils.SortUtils.TITLE_DESC
-import com.ekyrizky.moviecatalogue.MyApplication
 import com.ekyrizky.moviecatalogue.R
 import com.ekyrizky.moviecatalogue.databinding.FragmentTvShowBinding
 import com.ekyrizky.moviecatalogue.model.tvshow.TvShow
 import com.ekyrizky.moviecatalogue.utils.DataMapper
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class TvShowFragment : Fragment() {

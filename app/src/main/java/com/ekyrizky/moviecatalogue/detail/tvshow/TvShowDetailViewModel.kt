@@ -10,7 +10,6 @@ import com.ekyrizky.moviecatalogue.model.tvshow.TvShowDetail
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 class TvShowDetailViewModel  @ViewModelInject constructor(private val contentUseCase: ContentUseCase): ViewModel() {
 

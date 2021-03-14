@@ -1,4 +1,4 @@
-package com.ekyrizky.favorite
+package com.ekyrizky.favorite.utils
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
