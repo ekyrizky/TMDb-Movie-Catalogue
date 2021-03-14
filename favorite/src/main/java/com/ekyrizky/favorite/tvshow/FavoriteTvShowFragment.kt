@@ -15,10 +15,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ekyrizky.core.ui.favorite.tvshow.FavoriteTvShowAdapter
 import com.ekyrizky.favorite.FavoriteFragmentDirections
 import com.ekyrizky.favorite.R
-import com.ekyrizky.favorite.utils.ViewModelFactory
 import com.ekyrizky.favorite.databinding.FragmentFavoriteTvShowBinding
 import com.ekyrizky.favorite.di.DaggerFavoriteComponent
 import com.ekyrizky.favorite.utils.DataMapper
+import com.ekyrizky.favorite.utils.ViewModelFactory
 import com.ekyrizky.moviecatalogue.di.FavoriteModuleDependencies
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.EntryPointAccessors

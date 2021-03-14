@@ -6,7 +6,8 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.ekyrizky.core.data.Resource
-import com.ekyrizky.core.domain.usecase.ContentUseCase
+import com.ekyrizky.core.domain.usecase.MovieUseCase
+import com.ekyrizky.core.domain.usecase.TvShowUseCase
 import com.ekyrizky.moviecatalogue.utils.DataMapper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -16,7 +17,10 @@ import kotlinx.coroutines.flow.*
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class SearchViewModel  @ViewModelInject constructor(private val contentUseCase: ContentUseCase) : ViewModel() {
+class SearchViewModel  @ViewModelInject constructor(
+    private val movieUseCase: MovieUseCase,
+    private val tvShowUseCase: TvShowUseCase,
+) : ViewModel() {
     private var debounceDuration = 500L
 
     val queryChannel = BroadcastChannel<String>(Channel.CONFLATED)
@@ -28,7 +32,7 @@ class SearchViewModel  @ViewModelInject constructor(private val contentUseCase: 
             it.trim().isNotEmpty()
         }
         .mapLatest {
-            contentUseCase.getSearchMovie(it)
+            movieUseCase.getSearchMovie(it)
         }.asLiveData(viewModelScope.coroutineContext).map { resource ->
             when (resource) {
                 is Resource.Loading -> Resource.Loading()
@@ -47,7 +51,7 @@ class SearchViewModel  @ViewModelInject constructor(private val contentUseCase: 
             it.trim().isNotEmpty()
         }
         .mapLatest {
-            contentUseCase.getSearchTvShow(it)
+            tvShowUseCase.getSearchTvShow(it)
         }.asLiveData(viewModelScope.coroutineContext).map { resource ->
             when (resource) {
                 is Resource.Loading -> Resource.Loading()

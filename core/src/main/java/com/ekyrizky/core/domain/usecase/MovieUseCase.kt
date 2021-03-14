@@ -2,16 +2,12 @@ package com.ekyrizky.core.domain.usecase
 
 import com.ekyrizky.core.data.Resource
 import com.ekyrizky.core.data.source.local.entity.movie.FavoriteMovieEntity
-import com.ekyrizky.core.data.source.local.entity.tvshow.FavoriteTvShowEntity
 import com.ekyrizky.core.domain.model.movie.FavoriteMovieDomain
 import com.ekyrizky.core.domain.model.movie.MovieDetailDomain
 import com.ekyrizky.core.domain.model.movie.MovieDomain
-import com.ekyrizky.core.domain.model.tvshow.FavoriteTvShowDomain
-import com.ekyrizky.core.domain.model.tvshow.TvShowDetailDomain
-import com.ekyrizky.core.domain.model.tvshow.TvShowDomain
 import kotlinx.coroutines.flow.Flow
 
-interface ContentUseCase {
+interface MovieUseCase {
 
     fun getMovies(sort: String): Flow<Resource<List<MovieDomain>>>
 
@@ -28,20 +24,4 @@ interface ContentUseCase {
     suspend fun deleteFavoriteMovieById(id: Int)
 
     suspend fun deleteFavoriteMovie(favoriteMovies: FavoriteMovieEntity)
-
-    fun getTvShows(sort: String): Flow<Resource<List<TvShowDomain>>>
-
-    fun getTvShowDetail(tvShowId: Int): Flow<Resource<TvShowDetailDomain>>
-
-    fun getFavoriteTvShows(): Flow<List<FavoriteTvShowDomain>>
-
-    suspend fun getSearchTvShow(query: String): Resource<List<TvShowDomain>>
-
-    suspend fun insertFavoriteTvShow(favoriteTvShow: FavoriteTvShowEntity)
-
-    suspend fun checkFavoriteTvShow(id: Int): Boolean
-
-    suspend fun deleteFavoriteTvShowById(id: Int)
-
-    suspend fun deleteFavoriteTvShow(favoriteTvShow: FavoriteTvShowEntity)
 }

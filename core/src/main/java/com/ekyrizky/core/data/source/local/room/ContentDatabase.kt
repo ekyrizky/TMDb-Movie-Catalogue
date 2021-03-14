@@ -15,5 +15,7 @@ import com.ekyrizky.core.data.source.local.entity.tvshow.TvShowEntity
         version = 1,
         exportSchema = false)
 abstract class ContentDatabase: RoomDatabase() {
-    abstract fun contentDao(): ContentDao
+    abstract fun movieDao(): MovieDao
+
+    abstract fun tvShowDao(): TvShowDao
 }

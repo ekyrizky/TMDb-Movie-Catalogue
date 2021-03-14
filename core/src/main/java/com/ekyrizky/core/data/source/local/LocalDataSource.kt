@@ -6,7 +6,8 @@ import com.ekyrizky.core.data.source.local.entity.movie.MovieEntity
 import com.ekyrizky.core.data.source.local.entity.tvshow.FavoriteTvShowEntity
 import com.ekyrizky.core.data.source.local.entity.tvshow.TvShowDetailEntity
 import com.ekyrizky.core.data.source.local.entity.tvshow.TvShowEntity
-import com.ekyrizky.core.data.source.local.room.ContentDao
+import com.ekyrizky.core.data.source.local.room.MovieDao
+import com.ekyrizky.core.data.source.local.room.TvShowDao
 import com.ekyrizky.core.utils.SortUtils.MOVIE
 import com.ekyrizky.core.utils.SortUtils.TV_SHOW
 import com.ekyrizky.core.utils.SortUtils.getSortedQuery
@@ -15,41 +16,44 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class LocalDataSource @Inject constructor(private val mContentDao: ContentDao) {
+class LocalDataSource @Inject constructor(
+    private val mMovieDao: MovieDao,
+    private val mTvShowDao: TvShowDao,
+) {
 
-    fun getMovies(sort: String): Flow<List<MovieEntity>> = mContentDao.getMovies(getSortedQuery(sort, MOVIE))
+    fun getMovies(sort: String): Flow<List<MovieEntity>> = mMovieDao.getMovies(getSortedQuery(sort, MOVIE))
 
-    fun getMovieById(id: Int): Flow<MovieDetailEntity> = mContentDao.getMovieById(id)
+    fun getMovieById(id: Int): Flow<MovieDetailEntity> = mMovieDao.getMovieById(id)
 
-    fun getFavoriteMovies(): Flow<List<FavoriteMovieEntity>> = mContentDao.getFavoriteMovies()
+    fun getFavoriteMovies(): Flow<List<FavoriteMovieEntity>> = mMovieDao.getFavoriteMovies()
 
-    suspend fun insertMovies(movies: List<MovieEntity>) = mContentDao.insertMovies(movies)
+    suspend fun insertMovies(movies: List<MovieEntity>) = mMovieDao.insertMovies(movies)
 
-    suspend fun insertMovieDetail(movies: MovieDetailEntity) = mContentDao.insertMovieDetail(movies)
+    suspend fun insertMovieDetail(movies: MovieDetailEntity) = mMovieDao.insertMovieDetail(movies)
 
-    suspend fun insertFavoriteMovie(movies: FavoriteMovieEntity) = mContentDao.insertFavoriteMovie(movies)
+    suspend fun insertFavoriteMovie(movies: FavoriteMovieEntity) = mMovieDao.insertFavoriteMovie(movies)
 
-    suspend fun checkFavoriteMovie(id: Int): Boolean = mContentDao.checkFavoriteMovie(id)
+    suspend fun checkFavoriteMovie(id: Int): Boolean = mMovieDao.checkFavoriteMovie(id)
 
-    suspend fun deleteFavoriteMovieById(id: Int) = mContentDao.deleteFavoriteMovieById(id)
+    suspend fun deleteFavoriteMovieById(id: Int) = mMovieDao.deleteFavoriteMovieById(id)
 
-    suspend fun deleteFavoriteMovie(favoriteMovie: FavoriteMovieEntity) = mContentDao.deleteFavoriteMovie(favoriteMovie)
+    suspend fun deleteFavoriteMovie(favoriteMovie: FavoriteMovieEntity) = mMovieDao.deleteFavoriteMovie(favoriteMovie)
 
-    fun getTvShows(sort: String): Flow<List<TvShowEntity>> = mContentDao.getTvShows(getSortedQuery(sort, TV_SHOW))
+    fun getTvShows(sort: String): Flow<List<TvShowEntity>> = mTvShowDao.getTvShows(getSortedQuery(sort, TV_SHOW))
 
-    fun getTvShowById(id: Int): Flow<TvShowDetailEntity> = mContentDao.getTvShowById(id)
+    fun getTvShowById(id: Int): Flow<TvShowDetailEntity> = mTvShowDao.getTvShowById(id)
 
-    fun getFavoriteTvShows(): Flow<List<FavoriteTvShowEntity>> = mContentDao.getFavoriteTvShows()
+    fun getFavoriteTvShows(): Flow<List<FavoriteTvShowEntity>> = mTvShowDao.getFavoriteTvShows()
 
-    suspend fun insertTvShows(tvShows: List<TvShowEntity>) = mContentDao.insertTvShows(tvShows)
+    suspend fun insertTvShows(tvShows: List<TvShowEntity>) = mTvShowDao.insertTvShows(tvShows)
 
-    suspend fun insertTvShowDetail(tvShows: TvShowDetailEntity) = mContentDao.insertTvShowDetail(tvShows)
+    suspend fun insertTvShowDetail(tvShows: TvShowDetailEntity) = mTvShowDao.insertTvShowDetail(tvShows)
 
-    suspend fun insertFavoriteTvShow(tvShows: FavoriteTvShowEntity) = mContentDao.insertFavoriteTvShow(tvShows)
+    suspend fun insertFavoriteTvShow(tvShows: FavoriteTvShowEntity) = mTvShowDao.insertFavoriteTvShow(tvShows)
 
-    suspend fun checkFavoriteTvShow(id: Int): Boolean = mContentDao.checkFavoriteTvShow(id)
+    suspend fun checkFavoriteTvShow(id: Int): Boolean = mTvShowDao.checkFavoriteTvShow(id)
 
-    suspend fun deleteFavoriteTvShowById(id: Int) = mContentDao.deleteFavoriteTvShowById(id)
+    suspend fun deleteFavoriteTvShowById(id: Int) = mTvShowDao.deleteFavoriteTvShowById(id)
 
-    suspend fun deleteFavoriteTvShow(favoriteTvShow: FavoriteTvShowEntity) = mContentDao.deleteFavoriteTvShow(favoriteTvShow)
+    suspend fun deleteFavoriteTvShow(favoriteTvShow: FavoriteTvShowEntity) = mTvShowDao.deleteFavoriteTvShow(favoriteTvShow)
 }

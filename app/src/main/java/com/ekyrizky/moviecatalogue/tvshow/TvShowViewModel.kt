@@ -6,13 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
 import com.ekyrizky.core.data.Resource
-import com.ekyrizky.core.domain.usecase.ContentUseCase
+import com.ekyrizky.core.domain.usecase.TvShowUseCase
 import com.ekyrizky.moviecatalogue.model.tvshow.TvShow
 import com.ekyrizky.moviecatalogue.utils.DataMapper
 
-class TvShowViewModel  @ViewModelInject constructor(private val contentUseCase: ContentUseCase): ViewModel() {
+class TvShowViewModel  @ViewModelInject constructor(private val tvShowUseCase: TvShowUseCase): ViewModel() {
     fun getTvShows(sort: String): LiveData<Resource<List<TvShow>>> {
-        return contentUseCase.getTvShows(sort).asLiveData().map { resource ->
+        return tvShowUseCase.getTvShows(sort).asLiveData().map { resource ->
             when (resource) {
                 is Resource.Loading -> Resource.Loading()
                 is Resource.Success -> {

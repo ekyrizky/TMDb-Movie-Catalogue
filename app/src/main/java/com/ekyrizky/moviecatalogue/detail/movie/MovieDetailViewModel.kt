@@ -4,17 +4,17 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.ekyrizky.core.data.Resource
 import com.ekyrizky.core.domain.model.movie.MovieDetailDomain
-import com.ekyrizky.core.domain.usecase.ContentUseCase
+import com.ekyrizky.core.domain.usecase.MovieUseCase
 import com.ekyrizky.core.utils.DataMapper
 import com.ekyrizky.moviecatalogue.model.movie.MovieDetail
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MovieDetailViewModel  @ViewModelInject constructor(private val contentUseCase: ContentUseCase): ViewModel() {
+class MovieDetailViewModel  @ViewModelInject constructor(private val movieUseCase: MovieUseCase): ViewModel() {
 
     fun getMovieDetail(id: String): LiveData<Resource<MovieDetail>> {
-        return contentUseCase.getMovieDetail(id.toInt()).asLiveData().map { resource ->
+        return movieUseCase.getMovieDetail(id.toInt()).asLiveData().map { resource ->
             when (resource) {
                 is Resource.Loading -> Resource.Loading()
                 is Resource.Success -> {
@@ -29,19 +29,19 @@ class MovieDetailViewModel  @ViewModelInject constructor(private val contentUseC
     fun insertFavoriteMovie(movieDetail: MovieDetailDomain) {
         val movieValue = DataMapper.mapDetailMovieDomainToFavoriteEntity(movieDetail)
         viewModelScope.launch(Dispatchers.IO) {
-            contentUseCase.insertFavoriteMovie(movieValue)
+            movieUseCase.insertFavoriteMovie(movieValue)
         }
     }
 
     suspend fun checkFavoriteMovie(id: Int): Boolean {
         return withContext(Dispatchers.IO) {
-            contentUseCase.checkFavoriteMovie(id)
+            movieUseCase.checkFavoriteMovie(id)
         }
     }
 
     fun deleteFavoriteMovieById(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            contentUseCase.deleteFavoriteMovieById(id)
+            movieUseCase.deleteFavoriteMovieById(id)
         }
     }
 }

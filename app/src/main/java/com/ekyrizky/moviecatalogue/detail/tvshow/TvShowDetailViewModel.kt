@@ -4,17 +4,17 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.ekyrizky.core.data.Resource
 import com.ekyrizky.core.domain.model.tvshow.TvShowDetailDomain
-import com.ekyrizky.core.domain.usecase.ContentUseCase
+import com.ekyrizky.core.domain.usecase.TvShowUseCase
 import com.ekyrizky.core.utils.DataMapper
 import com.ekyrizky.moviecatalogue.model.tvshow.TvShowDetail
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class TvShowDetailViewModel  @ViewModelInject constructor(private val contentUseCase: ContentUseCase): ViewModel() {
+class TvShowDetailViewModel  @ViewModelInject constructor(private val tvShowUseCase: TvShowUseCase): ViewModel() {
 
     fun getTvShowDetail(id: String): LiveData<Resource<TvShowDetail>> {
-        return contentUseCase.getTvShowDetail(id.toInt()).asLiveData().map { resource ->
+        return tvShowUseCase.getTvShowDetail(id.toInt()).asLiveData().map { resource ->
             when (resource) {
                 is Resource.Loading -> Resource.Loading()
                 is Resource.Success -> {
@@ -29,19 +29,19 @@ class TvShowDetailViewModel  @ViewModelInject constructor(private val contentUse
     fun insertFavoriteTvShow(tvShowDetail: TvShowDetailDomain) {
         val tvShowValue = DataMapper.mapDetailTvShowDomainToFavoriteEntity(tvShowDetail)
         viewModelScope.launch(Dispatchers.IO) {
-            contentUseCase.insertFavoriteTvShow(tvShowValue)
+            tvShowUseCase.insertFavoriteTvShow(tvShowValue)
         }
     }
 
     suspend fun checkFavoriteTvShow(id: Int): Boolean {
         return withContext(Dispatchers.IO) {
-            contentUseCase.checkFavoriteTvShow(id)
+            tvShowUseCase.checkFavoriteTvShow(id)
         }
     }
 
     fun deleteFavoriteTvShowById(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            contentUseCase.deleteFavoriteTvShowById(id)
+            tvShowUseCase.deleteFavoriteTvShowById(id)
         }
     }
 }

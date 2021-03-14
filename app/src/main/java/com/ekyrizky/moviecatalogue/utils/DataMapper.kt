@@ -1,15 +1,11 @@
 package com.ekyrizky.moviecatalogue.utils
 
-import com.ekyrizky.core.domain.model.movie.FavoriteMovieDomain
 import com.ekyrizky.core.domain.model.movie.MovieDetailDomain
 import com.ekyrizky.core.domain.model.movie.MovieDomain
-import com.ekyrizky.core.domain.model.tvshow.FavoriteTvShowDomain
 import com.ekyrizky.core.domain.model.tvshow.TvShowDetailDomain
 import com.ekyrizky.core.domain.model.tvshow.TvShowDomain
-import com.ekyrizky.moviecatalogue.model.movie.FavoriteMovie
 import com.ekyrizky.moviecatalogue.model.movie.Movie
 import com.ekyrizky.moviecatalogue.model.movie.MovieDetail
-import com.ekyrizky.moviecatalogue.model.tvshow.FavoriteTvShow
 import com.ekyrizky.moviecatalogue.model.tvshow.TvShow
 import com.ekyrizky.moviecatalogue.model.tvshow.TvShowDetail
 

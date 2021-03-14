@@ -1,7 +1,9 @@
 package com.ekyrizky.moviecatalogue.di
 
-import com.ekyrizky.core.domain.usecase.ContentInteractor
-import com.ekyrizky.core.domain.usecase.ContentUseCase
+import com.ekyrizky.core.domain.usecase.MovieInteractor
+import com.ekyrizky.core.domain.usecase.MovieUseCase
+import com.ekyrizky.core.domain.usecase.TvShowInteractor
+import com.ekyrizky.core.domain.usecase.TvShowUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -12,5 +14,8 @@ import dagger.hilt.android.components.ApplicationComponent
 abstract class AppModule {
 
     @Binds
-    abstract fun provideContentUseCase(contentInteractor: ContentInteractor): ContentUseCase
+    abstract fun provideMovieUseCase(movieInteractor: MovieInteractor): MovieUseCase
+
+    @Binds
+    abstract fun provideTvShowUseCase(tvShowInteractor: TvShowInteractor): TvShowUseCase
 }
