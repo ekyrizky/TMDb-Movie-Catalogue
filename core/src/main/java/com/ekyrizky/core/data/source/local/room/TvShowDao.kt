@@ -3,6 +3,7 @@ package com.ekyrizky.core.data.source.local.room
 import androidx.room.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.ekyrizky.core.data.source.local.entity.tvshow.FavoriteTvShowEntity
+import com.ekyrizky.core.data.source.local.entity.tvshow.PopularTvShowEntity
 import com.ekyrizky.core.data.source.local.entity.tvshow.TvShowDetailEntity
 import com.ekyrizky.core.data.source.local.entity.tvshow.TvShowEntity
 import kotlinx.coroutines.flow.Flow
@@ -13,6 +14,9 @@ interface TvShowDao {
     @RawQuery(observedEntities = [TvShowEntity::class])
     fun getTvShows(query: SimpleSQLiteQuery): Flow<List<TvShowEntity>>
 
+    @Query("SELECT * FROM popular_tv_shows")
+    fun getPopularTvShows(): Flow<List<PopularTvShowEntity>>
+
     @Query("SELECT * FROM tv_show_detail WHERE id = :id")
     fun getTvShowById(id: Int): Flow<TvShowDetailEntity>
 
@@ -21,6 +25,9 @@ interface TvShowDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTvShows(shows: List<TvShowEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPopularTvShows(shows: List<PopularTvShowEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTvShowDetail(detailShows: TvShowDetailEntity)

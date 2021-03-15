@@ -42,6 +42,25 @@ class MovieRepository @Inject constructor(
         }.asFlow()
     }
 
+    override fun getPopularMovies(): Flow<Resource<List<MovieDomain>>> {
+        return object : NetworkBoundResource<List<MovieDomain>, List<MovieResultResponse>>() {
+            override fun loadFromDB(): Flow<List<MovieDomain>> {
+                return localDataSource.getPopularMovies().map { DataMapper.mapPopularMovieEntityToDomain(it) }
+            }
+
+            override fun shouldFetch(data: List<MovieDomain>?): Boolean =
+                    data.isNullOrEmpty()
+
+            override suspend fun createCall(): Flow<ApiResponse<List<MovieResultResponse>>> =
+                    remoteDataSource.getPopularMovies()
+
+            override suspend fun saveCallResult(data: List<MovieResultResponse>) {
+                val movieList = DataMapper.mapMoviesResponseToPopularMovieEntity(data)
+                localDataSource.insertPopularMovies(movieList)
+            }
+        }.asFlow()
+    }
+
     override fun getMovieDetail(movieId: Int): Flow<Resource<MovieDetailDomain>> {
         return object : NetworkBoundResource<MovieDetailDomain, MovieDetailResponse>() {
             override fun loadFromDB(): Flow<MovieDetailDomain> {

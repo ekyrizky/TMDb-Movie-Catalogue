@@ -18,6 +18,23 @@ class RemoteDataSource @Inject constructor(private val apiService: ApiService) {
     suspend fun getMovies(): Flow<ApiResponse<List<MovieResultResponse>>> {
         return flow {
             try {
+                val response = apiService.getNowPlayingMovies()
+                val dataArray = response.results
+                if (dataArray.isNotEmpty()) {
+                    emit(ApiResponse.Success(dataArray))
+                } else {
+                    emit(ApiResponse.Empty)
+                }
+            } catch (e: Exception) {
+                emit(ApiResponse.Error(e.toString()))
+                Log.e("RemoteDataSource ", e.toString())
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun getPopularMovies(): Flow<ApiResponse<List<MovieResultResponse>>> {
+        return flow {
+            try {
                 val response = apiService.getPopularMovies()
                 val dataArray = response.results
                 if (dataArray.isNotEmpty()) {
@@ -45,6 +62,23 @@ class RemoteDataSource @Inject constructor(private val apiService: ApiService) {
     }
 
     suspend fun getTvShows(): Flow<ApiResponse<List<TvShowResultResponse>>> {
+        return flow {
+            try {
+                val response = apiService.getOnTheAirTvShows()
+                val dataArray = response.results
+                if (dataArray.isNotEmpty()) {
+                    emit(ApiResponse.Success(dataArray))
+                } else {
+                    emit(ApiResponse.Empty)
+                }
+            } catch (e: Exception) {
+                emit(ApiResponse.Error(e.toString()))
+                Log.e("RemoteDataSource ", e.toString())
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun getPopularTvShows(): Flow<ApiResponse<List<TvShowResultResponse>>> {
         return flow {
             try {
                 val response = apiService.getPopularTvShows()

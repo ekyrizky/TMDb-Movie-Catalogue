@@ -5,6 +5,7 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import com.ekyrizky.core.data.source.local.entity.movie.FavoriteMovieEntity
 import com.ekyrizky.core.data.source.local.entity.movie.MovieDetailEntity
 import com.ekyrizky.core.data.source.local.entity.movie.MovieEntity
+import com.ekyrizky.core.data.source.local.entity.movie.PopularMovieEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -12,6 +13,9 @@ interface MovieDao {
 
     @RawQuery(observedEntities = [MovieEntity::class])
     fun getMovies(query: SimpleSQLiteQuery): Flow<List<MovieEntity>>
+
+    @Query("SELECT * FROM popular_movies")
+    fun getPopularMovies(): Flow<List<PopularMovieEntity>>
 
     @Query("SELECT * FROM movie_detail WHERE id = :id")
     fun getMovieById(id: Int): Flow<MovieDetailEntity>
@@ -21,6 +25,9 @@ interface MovieDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovies(movies: List<MovieEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPopularMovies(movies: List<PopularMovieEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovieDetail(movies: MovieDetailEntity)

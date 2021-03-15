@@ -11,7 +11,6 @@ import com.ekyrizky.core.BuildConfig.BASE_IMG
 import com.ekyrizky.core.R
 import com.ekyrizky.core.databinding.ItemsGridBinding
 import com.ekyrizky.core.domain.model.movie.MovieDomain
-import com.ekyrizky.core.utils.ConvertUtils.getDateConverted
 
 class MovieAdapter : ListAdapter<MovieDomain, MovieAdapter.MovieViewHolder>(DIFF_CALLBACK) {
 
@@ -30,8 +29,7 @@ class MovieAdapter : ListAdapter<MovieDomain, MovieAdapter.MovieViewHolder>(DIFF
     inner class MovieViewHolder(private val binding: ItemsGridBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(movieItems: MovieDomain) {
             with(binding) {
-                tvTitle.text = movieItems.title
-                tvReleaseYear.text = movieItems.releaseYear?.let { getDateConverted(it) }
+
                 Glide.with(itemView.context)
                     .load("$BASE_IMG${movieItems.posterPath}")
                     .apply(RequestOptions.placeholderOf(R.drawable.ic_loading)

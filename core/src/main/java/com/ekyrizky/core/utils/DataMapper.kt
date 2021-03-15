@@ -3,7 +3,9 @@ package com.ekyrizky.core.utils
 import com.ekyrizky.core.data.source.local.entity.movie.FavoriteMovieEntity
 import com.ekyrizky.core.data.source.local.entity.movie.MovieDetailEntity
 import com.ekyrizky.core.data.source.local.entity.movie.MovieEntity
+import com.ekyrizky.core.data.source.local.entity.movie.PopularMovieEntity
 import com.ekyrizky.core.data.source.local.entity.tvshow.FavoriteTvShowEntity
+import com.ekyrizky.core.data.source.local.entity.tvshow.PopularTvShowEntity
 import com.ekyrizky.core.data.source.local.entity.tvshow.TvShowDetailEntity
 import com.ekyrizky.core.data.source.local.entity.tvshow.TvShowEntity
 import com.ekyrizky.core.data.source.remote.response.movie.MovieDetailResponse
@@ -37,6 +39,24 @@ object DataMapper {
         return movieList
     }
 
+    fun mapMoviesResponseToPopularMovieEntity(input: List<MovieResultResponse>):List<PopularMovieEntity> {
+        val movieList = ArrayList<PopularMovieEntity>()
+
+        input.map {
+            val movies = PopularMovieEntity(
+                    id = it.id,
+                    title = it.originalTitle,
+                    releaseYear = it.releaseDate,
+                    voteAverage = it.voteAverage,
+                    description = it.overview,
+                    posterPath = it.posterPath,
+                    backdropPath = it.backdropPath,
+            )
+            movieList.add(movies)
+        }
+        return movieList
+    }
+
     fun mapTvShowsResponseToEntity(input: List<TvShowResultResponse>):List<TvShowEntity> {
         val tvShowList = ArrayList<TvShowEntity>()
 
@@ -49,6 +69,24 @@ object DataMapper {
                 description = it.overview,
                 posterPath = it.posterPath,
                 backdropPath = it.backdropPath,
+            )
+            tvShowList.add(tvShow)
+        }
+        return tvShowList
+    }
+
+    fun mapTvShowsResponseToPopularTvShowEntity(input: List<TvShowResultResponse>):List<PopularTvShowEntity> {
+        val tvShowList = ArrayList<PopularTvShowEntity>()
+
+        input.map {
+            val tvShow = PopularTvShowEntity(
+                    id = it.id,
+                    title = it.originalName,
+                    releaseYear = it.firstAirDate,
+                    voteAverage = it.voteAverage,
+                    description = it.overview,
+                    posterPath = it.posterPath,
+                    backdropPath = it.backdropPath,
             )
             tvShowList.add(tvShow)
         }
@@ -128,6 +166,19 @@ object DataMapper {
             )
         }
 
+    fun mapPopularMovieEntityToDomain(input: List<PopularMovieEntity>): List<MovieDomain> =
+            input.map {
+                MovieDomain(
+                        id = it.id,
+                        title = it.title,
+                        releaseYear = it.releaseYear,
+                        voteAverage = it.voteAverage,
+                        description = it.description,
+                        posterPath = it.posterPath,
+                        backdropPath = it.backdropPath,
+                )
+            }
+
     fun mapTvShowEntityToDomain(input: List<TvShowEntity>): List<TvShowDomain> =
         input.map {
             TvShowDomain(
@@ -140,6 +191,19 @@ object DataMapper {
                 backdropPath = it.backdropPath,
             )
         }
+
+    fun mapPopularTvShowEntityToDomain(input: List<PopularTvShowEntity>): List<TvShowDomain> =
+            input.map {
+                TvShowDomain(
+                        id = it.id,
+                        title = it.title,
+                        releaseYear = it.releaseYear,
+                        voteAverage = it.voteAverage,
+                        description = it.description,
+                        posterPath = it.posterPath,
+                        backdropPath = it.backdropPath,
+                )
+            }
 
     fun mapMovieDetailEntityToDomain(input: MovieDetailEntity?): MovieDetailDomain =
         MovieDetailDomain(

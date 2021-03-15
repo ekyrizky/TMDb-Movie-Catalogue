@@ -42,6 +42,25 @@ class TvShowRepository @Inject constructor(
         }.asFlow()
     }
 
+    override fun getPopularTvShows(): Flow<Resource<List<TvShowDomain>>> {
+        return object : NetworkBoundResource<List<TvShowDomain>, List<TvShowResultResponse>>() {
+            override fun loadFromDB(): Flow<List<TvShowDomain>> {
+                return localDataSource.getPopularTvShows().map { DataMapper.mapPopularTvShowEntityToDomain(it) }
+            }
+
+            override fun shouldFetch(data: List<TvShowDomain>?): Boolean =
+                    data.isNullOrEmpty()
+
+            override suspend fun createCall(): Flow<ApiResponse<List<TvShowResultResponse>>> =
+                    remoteDataSource.getPopularTvShows()
+
+            override suspend fun saveCallResult(data: List<TvShowResultResponse>) {
+                val tvShowList = DataMapper.mapTvShowsResponseToPopularTvShowEntity(data)
+                localDataSource.insertPopularTvShows(tvShowList)
+            }
+        }.asFlow()
+    }
+
     override fun getTvShowDetail(tvShowId: Int): Flow<Resource<TvShowDetailDomain>> {
         return object : NetworkBoundResource<TvShowDetailDomain, TvShowDetailResponse>() {
             override fun loadFromDB(): Flow<TvShowDetailDomain> {

@@ -8,9 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.ekyrizky.core.data.Resource
 import com.ekyrizky.core.ui.movie.MovieAdapter
+import com.ekyrizky.core.ui.movie.PopularMovieAdapter
 import com.ekyrizky.core.utils.SortPreferences
 import com.ekyrizky.core.utils.SortUtils.HIGHEST_VOTE
 import com.ekyrizky.core.utils.SortUtils.LOWEST_VOTE
@@ -30,8 +32,9 @@ class MovieFragment : Fragment() {
     private var _fragmentMovieBinding: FragmentMovieBinding? = null
     private val binding get() = _fragmentMovieBinding
 
+    private lateinit var popularMovieAdapter: PopularMovieAdapter
     private lateinit var movieAdapter: MovieAdapter
-    lateinit var sortPreferences: SortPreferences
+    private lateinit var sortPreferences: SortPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,18 +50,43 @@ class MovieFragment : Fragment() {
 
         if (activity != null) {
             showLoading(true)
+            popularMovieAdapter = PopularMovieAdapter()
             movieAdapter = MovieAdapter()
 
+            popularMovieAdapter.onItemClick = {
+                val action = MovieFragmentDirections.actionNavigationMovieToMovieDetailFragment()
+                action.movieId = it.toString()
+                view.findNavController().navigate(action)
+            }
             movieAdapter.onItemClick = {
                 val action = MovieFragmentDirections.actionNavigationMovieToMovieDetailFragment()
                 action.movieId = it.toString()
                 view.findNavController().navigate(action)
             }
 
+            viewModel.getPopularMovies().observe(viewLifecycleOwner, popularMovieObserver)
+
             sortPreferences = SortPreferences(requireContext())
             sortPreferences.getSortMovie()?.let { viewModel.getMovies(it).observe(viewLifecycleOwner, movieObserver) }
 
             initRecyclerView()
+        }
+    }
+
+    private val popularMovieObserver = Observer<Resource<List<Movie>>> { movies ->
+        if (movies != null) {
+            when (movies) {
+                is Resource.Loading -> showLoading(true)
+                is Resource.Success -> {
+                    showLoading(false)
+                    val movieList = DataMapper.mapMovieToMovieDomain(movies.data)
+                    popularMovieAdapter.setData(movieList)
+                }
+                is Resource.Error -> {
+                    showLoading(false)
+                    Toast.makeText(context, R.string.error_msg, Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -81,6 +109,12 @@ class MovieFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
+        with(binding?.rvPopularMovie) {
+            this?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            this?.setHasFixedSize(true)
+            this?.adapter = popularMovieAdapter
+        }
+
         with(binding?.rvMovie) {
             this?.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
             this?.setHasFixedSize(true)
@@ -92,7 +126,7 @@ class MovieFragment : Fragment() {
         inflater.inflate(R.menu.menu_sort, menu)
         val activeMenu = menu.getItem(sortPreferences.getMenuMovie())
         activeMenu.isChecked = true
-        return super.onCreateOptionsMenu(menu, inflater)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -129,8 +163,13 @@ class MovieFragment : Fragment() {
     }
 
     private fun showLoading(state: Boolean) {
-        binding?.progressBar?.isVisible = state
-        binding?.rvMovie?.isVisible = !state
+        binding?.apply {
+            progressBar.isVisible = state
+            rvPopularMovie.isVisible = !state
+            rvMovie.isVisible = !state
+            tvPopularMovie.isVisible = !state
+            tvPlayingMovie.isVisible = !state
+        }
     }
 
     override fun onDestroyView() {

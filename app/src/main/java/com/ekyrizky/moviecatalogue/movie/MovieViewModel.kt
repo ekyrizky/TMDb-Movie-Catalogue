@@ -23,4 +23,17 @@ class MovieViewModel  @ViewModelInject constructor(private val movieUseCase: Mov
             }
         }
     }
+
+    fun getPopularMovies(): LiveData<Resource<List<Movie>>> {
+        return movieUseCase.getPopularMovies().asLiveData().map { resource ->
+            when (resource) {
+                is Resource.Loading -> Resource.Loading()
+                is Resource.Success -> {
+                    val movies = DataMapper.mapMovieDomainToMovie(resource.data)
+                    Resource.Success(movies)
+                }
+                is Resource.Error -> Resource.Error(resource.message.toString())
+            }
+        }
+    }
 }

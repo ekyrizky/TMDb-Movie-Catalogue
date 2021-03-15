@@ -1,6 +1,7 @@
 package com.ekyrizky.favorite.movie
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ekyrizky.core.domain.model.movie.FavoriteMovieDomain
 import com.ekyrizky.core.ui.favorite.movie.FavoriteMovieAdapter
 import com.ekyrizky.favorite.FavoriteFragmentDirections
 import com.ekyrizky.favorite.R
@@ -109,11 +111,7 @@ class FavoriteMovieFragment : Fragment() {
                 val swipedPosition = viewHolder.adapterPosition
                 val favoriteMovieDomain = movieFavAdapter.getSwipedData(swipedPosition)
                 favoriteMovieDomain?.let { viewModel.deleteFavoriteMovie(it) }
-
-                val snackBar = Snackbar.make(requireView(), getString(R.string.undo, favoriteMovieDomain?.title), Snackbar.LENGTH_LONG)
-                    .setAnchorView(com.ekyrizky.moviecatalogue.R.id.nav_view)
-                    .setAction(R.string.ok) { _ -> favoriteMovieDomain?.let { viewModel.insertFavoriteMovie(it) } }
-                snackBar.show()
+                showSnackbar(favoriteMovieDomain)
             }
         }
     })
@@ -123,6 +121,17 @@ class FavoriteMovieFragment : Fragment() {
             this?.layoutManager = LinearLayoutManager(context)
             this?.setHasFixedSize(true)
             this?.adapter = movieFavAdapter
+        }
+    }
+
+    private fun showSnackbar(favMovie: FavoriteMovieDomain?) {
+        val snackBar = Snackbar.make(requireView(), getString(R.string.undo, favMovie?.title), Snackbar.LENGTH_LONG)
+
+        snackBar.apply {
+            setAnchorView(com.ekyrizky.moviecatalogue.R.id.nav_view)
+            setAction(R.string.ok) { _ -> favMovie?.let { viewModel.insertFavoriteMovie(it) } }
+            setActionTextColor(Color.parseColor("#FFFFFF"))
+            show()
         }
     }
 

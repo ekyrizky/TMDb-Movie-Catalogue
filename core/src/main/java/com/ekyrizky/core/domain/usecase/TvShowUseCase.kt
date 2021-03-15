@@ -11,6 +11,8 @@ interface TvShowUseCase {
 
     fun getTvShows(sort: String): Flow<Resource<List<TvShowDomain>>>
 
+    fun getPopularTvShows(): Flow<Resource<List<TvShowDomain>>>
+
     fun getTvShowDetail(tvShowId: Int): Flow<Resource<TvShowDetailDomain>>
 
     fun getFavoriteTvShows(): Flow<List<FavoriteTvShowDomain>>

@@ -28,4 +28,7 @@
     <string name="add_favorite">Added to Favorite</string>
     <string name="remove_favorite">Remove from Favorite</string>
     <string name="error_msg">Error</string>
+    <string name="popular_movies">Popular Movies</string>
+    <string name="now_playing">Now Playing</string>
+    <string name="popular_tv_show">Popular Tv Shows</string>
 </resources>

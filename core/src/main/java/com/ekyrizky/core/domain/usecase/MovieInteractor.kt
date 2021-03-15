@@ -14,6 +14,9 @@ class MovieInteractor @Inject constructor(private val movieRepository: IMovieRep
     override fun getMovies(sort: String): Flow<Resource<List<MovieDomain>>> =
             movieRepository.getMovies(sort)
 
+    override fun getPopularMovies(): Flow<Resource<List<MovieDomain>>> =
+            movieRepository.getPopularMovies()
+
     override fun getMovieDetail(movieId: Int): Flow<Resource<MovieDetailDomain>> =
             movieRepository.getMovieDetail(movieId)
 

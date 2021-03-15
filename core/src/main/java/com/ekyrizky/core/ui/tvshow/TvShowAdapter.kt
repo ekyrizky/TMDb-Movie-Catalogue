@@ -11,7 +11,6 @@ import com.ekyrizky.core.BuildConfig.BASE_IMG
 import com.ekyrizky.core.R
 import com.ekyrizky.core.databinding.ItemsGridBinding
 import com.ekyrizky.core.domain.model.tvshow.TvShowDomain
-import com.ekyrizky.core.utils.ConvertUtils.getDateConverted
 
 class TvShowAdapter : ListAdapter<TvShowDomain, TvShowAdapter.TvShowViewHolder>(DIFF_CALLBACK) {
 
@@ -30,8 +29,6 @@ class TvShowAdapter : ListAdapter<TvShowDomain, TvShowAdapter.TvShowViewHolder>(
     inner class TvShowViewHolder(private val binding: ItemsGridBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(tvShowItems: TvShowDomain) {
             with(binding) {
-                tvTitle.text = tvShowItems.title
-                tvReleaseYear.text = tvShowItems.releaseYear?.let { getDateConverted(it) }
                 Glide.with(itemView.context)
                         .load("$BASE_IMG${tvShowItems.posterPath}")
                         .apply(RequestOptions.placeholderOf(R.drawable.ic_loading)

@@ -23,4 +23,17 @@ class TvShowViewModel  @ViewModelInject constructor(private val tvShowUseCase: T
             }
         }
     }
+
+    fun getPopularTvShows(): LiveData<Resource<List<TvShow>>> {
+        return tvShowUseCase.getPopularTvShows().asLiveData().map { resource ->
+            when (resource) {
+                is Resource.Loading -> Resource.Loading()
+                is Resource.Success -> {
+                    val tvshows = DataMapper.mapTvShowDomainToTvShow(resource.data)
+                    Resource.Success(tvshows)
+                }
+                is Resource.Error -> Resource.Error(resource.message.toString())
+            }
+        }
+    }
 }

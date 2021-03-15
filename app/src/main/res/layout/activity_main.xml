@@ -3,11 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/blue_500">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -48,7 +50,7 @@
         android:layout_margin="4dp"
         android:background="@drawable/bg_bottom_nav"
         app:labelVisibilityMode="selected"
-        app:itemRippleColor="@color/light_blue"
+        app:itemRippleColor="@color/blue_500"
         app:itemIconTint="@color/color_nav"
         app:itemTextColor="@color/color_nav"
         app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"

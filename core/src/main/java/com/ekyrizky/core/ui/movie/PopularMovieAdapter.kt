@@ -1,4 +1,4 @@
-package com.ekyrizky.core.ui.search
+package com.ekyrizky.core.ui.movie
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,7 +10,7 @@ import com.ekyrizky.core.R
 import com.ekyrizky.core.databinding.ItemsGridHorizontalBinding
 import com.ekyrizky.core.domain.model.movie.MovieDomain
 
-class SearchMovieAdapter : RecyclerView.Adapter<SearchMovieAdapter.SearchMovieViewHolder>() {
+class PopularMovieAdapter : RecyclerView.Adapter<PopularMovieAdapter.PopularMovieViewHolder>() {
 
     private var movieList = ArrayList<MovieDomain>()
 
@@ -24,7 +24,7 @@ class SearchMovieAdapter : RecyclerView.Adapter<SearchMovieAdapter.SearchMovieVi
 
     var onItemClick: ((Int?) -> Unit)? = null
 
-    inner class SearchMovieViewHolder(private val binding: ItemsGridHorizontalBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class PopularMovieViewHolder(private val binding: ItemsGridHorizontalBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(movieItems: MovieDomain) {
             with(binding) {
                 Glide.with(itemView.context)
@@ -38,12 +38,11 @@ class SearchMovieAdapter : RecyclerView.Adapter<SearchMovieAdapter.SearchMovieVi
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchMovieViewHolder =
-        SearchMovieViewHolder(ItemsGridHorizontalBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PopularMovieViewHolder =
+            PopularMovieViewHolder(ItemsGridHorizontalBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
-    override fun onBindViewHolder(holder: SearchMovieViewHolder, position: Int) =
-        holder.bind(movieList[position])
-
+    override fun onBindViewHolder(holder: PopularMovieViewHolder, position: Int) =
+            holder.bind(movieList[position])
 
     override fun getItemCount(): Int = movieList.size
 }

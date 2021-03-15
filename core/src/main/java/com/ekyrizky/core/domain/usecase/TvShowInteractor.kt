@@ -14,6 +14,9 @@ class TvShowInteractor @Inject constructor(private val tvShowRepository: TvShowR
     override fun getTvShows(sort: String): Flow<Resource<List<TvShowDomain>>> =
         tvShowRepository.getTvShows(sort)
 
+    override fun getPopularTvShows(): Flow<Resource<List<TvShowDomain>>> =
+            tvShowRepository.getPopularTvShows()
+
     override fun getTvShowDetail(tvShowId: Int): Flow<Resource<TvShowDetailDomain>> =
         tvShowRepository.getTvShowDetail(tvShowId)
 
