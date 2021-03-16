@@ -15,30 +15,31 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/items_list" />
 
-    <ImageView
+    <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/img_empty"
-        android:layout_width="180dp"
-        android:layout_height="180dp"
-        android:contentDescription="@string/empty_favorite"
-        android:src="@drawable/ic_empty"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="emptybox.json"
+        app:lottie_loop="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/tv_empty"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/empty_favorite"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@id/tv_empty"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/empty_favorite"
-        android:textAlignment="center"
-        android:textSize="24sp"
-        android:textColor="@color/blue_500"
-        android:textStyle="bold"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_empty" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

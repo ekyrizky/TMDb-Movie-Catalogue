@@ -8,15 +8,14 @@
     android:fitsSystemWindows="true"
     android:background="@color/blue_500">
 
-    <ProgressBar
+    <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/progres_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="center"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="loading_spinner.json"
+        app:lottie_loop="true"/>
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
