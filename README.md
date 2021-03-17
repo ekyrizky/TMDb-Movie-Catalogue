@@ -32,3 +32,6 @@ Movie Catalogue app using Android Jetpack Architecture Components
 
 ## Demo :
 ![App Demo](https://user-images.githubusercontent.com/27962017/111483418-59a07000-8767-11eb-8333-89ffb9150da3.mp4)
+
+## CircleCI :
+[![ekyrizky](https://circleci.com/gh/ekyrizky/TMDb-Movie-Catalogue.svg?style=svg)](https://app.circleci.com/pipelines/github/ekyrizky/TMDb-Movie-Catalogue)
