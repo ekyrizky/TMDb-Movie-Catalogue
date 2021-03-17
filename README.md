@@ -1,10 +1,11 @@
 # TMDb-Movie-Catalogue
 Movie Catalogue app using Android Jetpack Architecture Components
 
-## Apps Feature  :
-* Show Popular Movie & TV Show
+## Feature  :
+* Show Popular and Now Playing Movie and TV Show
 * Add Favorite Movie & TV Show
-* Sort Popular Movie & TV Show
+* Search Movie & TV Show
+* Sort Movie & TV Show
 
 ## Feature  :
 * Android Jetpack Architecture Components
@@ -15,27 +16,19 @@ Movie Catalogue app using Android Jetpack Architecture Components
 * Idling Resources for asynchronous testing
 * Coroutine Flow to handle asynchoronous data stream
 
-## Dependencies :
-* [Glide](https://github.com/bumptech/glide)
-* [View Pager Transform](https://github.com/ToxicBakery/ViewPagerTransforms)
-* [Recycler View](https://developer.android.com/jetpack/androidx/releases/recyclerview)
-* [Coroutines](https://github.com/Kotlin/kotlinx.coroutines)
-* [Retrofit](https://square.github.io/retrofit/)
-* [Gson](https://github.com/google/gson)
-* [OkHttp3](https://github.com/square/okhttp/tree/master/okhttp-logging-interceptor)
-* [Room](https://developer.android.com/training/data-storage/room)
-* [Coroutine Flow](https://github.com/Kotlin/kotlinx.coroutines)
-* [Mockito](https://github.com/mockito/mockito)
-* [Espresso](https://developer.android.com/training/testing/espresso/setup)
-* [Espresso Idling Resource](https://developer.android.com/training/testing/set-up-project)
+## API From TMDb  :
+[The Movie Database API](https://developers.themoviedb.org/3)
 
-## Screenshot : 
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/27962017/109411967-ff1dba80-79d7-11eb-8c2c-d45ba57c6a2f.png" width="240" height="426">
-  <img src="https://user-images.githubusercontent.com/27962017/109411976-0e046d00-79d8-11eb-884e-373373d91c5b.png" width="240" height="426">
-  <img src="https://user-images.githubusercontent.com/27962017/109411991-1f4d7980-79d8-11eb-8f63-4a9de45f99f8.png" width="240" height="426">
-  <img src="https://user-images.githubusercontent.com/27962017/109412023-5e7bca80-79d8-11eb-9a6e-90c634dc65e7.png" width="240" height="426">
-  <img src="https://user-images.githubusercontent.com/27962017/109412076-8a974b80-79d8-11eb-9edb-eee46bd40c91.png" width="240" height="426">
-  <img src="https://user-images.githubusercontent.com/27962017/109412107-ac90ce00-79d8-11eb-8bc0-bbf809f4feea.png" width="240" height="426">
-  <img src="https://user-images.githubusercontent.com/27962017/109412120-bfa39e00-79d8-11eb-90cb-a3eabf2bbcc2.png" width="240" height="426">
-</p>
+## Dependencies :
+* [Glide](https://github.com/bumptech/glide) for load and caching image
+* [Shimmer](https://facebook.github.io/shimmer-android/) for shimmereffect
+* [Lottie](https://github.com/airbnb/lottie-android) for animation
+* [Retrofit](https://square.github.io/retrofit/) to request api network from TMDb
+* [Gson](https://github.com/google/gson) to convert JSON strings to Java objects
+* [OkHttp3](https://github.com/square/okhttp/tree/master/okhttp-logging-interceptor) for monitor request and response
+* [Room](https://developer.android.com/training/data-storage/room) to handle local database
+* [Coroutine Flow](https://github.com/Kotlin/kotlinx.coroutines) to handle asynchronous data stream
+* [Hilt](https://developer.android.com/jetpack/androidx/releases/hilt) for dependency injection
+
+## Demo :
+![App Demo](https://user-images.githubusercontent.com/27962017/111483418-59a07000-8767-11eb-8333-89ffb9150da3.mp4)
