@@ -17,7 +17,7 @@ class SplashActivity : AppCompatActivity() {
         val delay: Long = 2000
 
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+            startActivity(Intent(this, MainActivity::class.java))
             finish()
         }, delay)
     }
