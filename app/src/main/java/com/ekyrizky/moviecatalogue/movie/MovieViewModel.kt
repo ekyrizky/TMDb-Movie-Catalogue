@@ -11,8 +11,8 @@ import com.ekyrizky.moviecatalogue.model.movie.Movie
 import com.ekyrizky.moviecatalogue.utils.DataMapper
 
 class MovieViewModel  @ViewModelInject constructor(private val movieUseCase: MovieUseCase) : ViewModel() {
-    fun getMovies(sort: String): LiveData<Resource<List<Movie>>> {
-        return movieUseCase.getMovies(sort).asLiveData().map { resource ->
+    fun getMovies(): LiveData<Resource<List<Movie>>> {
+        return movieUseCase.getMovies().asLiveData().map { resource ->
             when (resource) {
                 is Resource.Loading -> Resource.Loading()
                 is Resource.Success -> {

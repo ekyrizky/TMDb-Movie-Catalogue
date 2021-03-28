@@ -11,8 +11,8 @@ import javax.inject.Inject
 
 class MovieInteractor @Inject constructor(private val movieRepository: IMovieRepository): MovieUseCase {
 
-    override fun getMovies(sort: String): Flow<Resource<List<MovieDomain>>> =
-            movieRepository.getMovies(sort)
+    override fun getMovies(): Flow<Resource<List<MovieDomain>>> =
+            movieRepository.getMovies()
 
     override fun getPopularMovies(): Flow<Resource<List<MovieDomain>>> =
             movieRepository.getPopularMovies()

@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface IMovieRepository {
 
-    fun getMovies(sort: String): Flow<Resource<List<MovieDomain>>>
+    fun getMovies(): Flow<Resource<List<MovieDomain>>>
 
     fun getPopularMovies(): Flow<Resource<List<MovieDomain>>>
 

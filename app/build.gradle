@@ -28,9 +28,12 @@ android {
     }
 
     buildTypes {
-
         release {
-            minifyEnabled false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -48,5 +51,6 @@ android {
 
 dependencies {
     implementation project(":core")
+    implementation 'androidx.navigation:navigation-dynamic-features-fragment:2.3.4'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }

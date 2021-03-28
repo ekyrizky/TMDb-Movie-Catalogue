@@ -23,10 +23,10 @@ class MovieRepository @Inject constructor(
     private val localDataSource: LocalDataSource,
 ): IMovieRepository {
 
-    override fun getMovies(sort: String): Flow<Resource<List<MovieDomain>>> {
+    override fun getMovies(): Flow<Resource<List<MovieDomain>>> {
         return object : NetworkBoundResource<List<MovieDomain>, List<MovieResultResponse>>() {
             override fun loadFromDB(): Flow<List<MovieDomain>> {
-                return localDataSource.getMovies(sort).map { DataMapper.mapMovieEntityToDomain(it) }
+                return localDataSource.getMovies().map { DataMapper.mapMovieEntityToDomain(it) }
             }
 
             override fun shouldFetch(data: List<MovieDomain>?): Boolean =

@@ -28,10 +28,6 @@ class FavoriteMovieAdapter : ListAdapter<FavoriteMovieDomain, FavoriteMovieAdapt
         }
     }
 
-    var onItemClick: ((Int?) -> Unit)? = null
-
-    fun getSwipedData(swipedPosition: Int): FavoriteMovieDomain? = getItem(swipedPosition)
-
     inner class ListViewHolder(private val binding: ItemsListBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(movieItems: FavoriteMovieDomain) {
             with(binding) {
@@ -46,7 +42,7 @@ class FavoriteMovieAdapter : ListAdapter<FavoriteMovieDomain, FavoriteMovieAdapt
                         .error(R.drawable.ic_error))
                     .into(imgPoster)
 
-                root.setOnClickListener { onItemClick?.invoke(movieItems.id) }
+                root.setOnClickListener { onItemClickListener?.let { it(movieItems.id.toString()) } }
             }
         }
     }
@@ -59,5 +55,11 @@ class FavoriteMovieAdapter : ListAdapter<FavoriteMovieDomain, FavoriteMovieAdapt
         if (movie != null) {
             holder.bind(movie)
         }
+    }
+
+    private var onItemClickListener: ((String) -> Unit)? = null
+
+    fun setOnItemClickListener(listener: (String) -> Unit) {
+        onItemClickListener = listener
     }
 }

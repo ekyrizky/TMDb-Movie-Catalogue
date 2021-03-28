@@ -6,10 +6,6 @@
         android:icon="@drawable/ic_movie"
         android:title="@string/movie" />
     <item
-        android:id="@+id/navigation_tvshow"
-        android:icon="@drawable/ic_tvshow"
-        android:title="@string/tv_show" />
-    <item
         android:id="@+id/navigation_favorite"
         android:icon="@drawable/ic_favorite"
         android:title="@string/favorite" />

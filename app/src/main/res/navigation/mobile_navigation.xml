@@ -8,40 +8,12 @@
     <fragment
         android:id="@+id/navigation_movie"
         android:name="com.ekyrizky.moviecatalogue.movie.MovieFragment"
-        tools:layout="@layout/fragment_movie" >
-        <action
-            android:id="@+id/action_navigation_movie_to_movieDetailFragment"
-            app:destination="@id/navigation_movie_detail" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/navigation_tvshow"
-        android:name="com.ekyrizky.moviecatalogue.tvshow.TvShowFragment"
-        tools:layout="@layout/fragment_tv_show" >
-        <action
-            android:id="@+id/action_navigation_tvshow_to_tvShowDetailFragment"
-            app:destination="@id/navigation_tvshow_detail" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/navigation_favorite"
-        android:name="com.ekyrizky.favorite.FavoriteFragment"
-        tools:layout="@layout/fragment_favorite" >
-        <action
-            android:id="@+id/action_navigation_favorite_to_navigation_movie_detail"
-            app:destination="@id/navigation_movie_detail" />
-        <action
-            android:id="@+id/action_navigation_favorite_to_navigation_tvshow_detail"
-            app:destination="@id/navigation_tvshow_detail" />
-    </fragment>
+        tools:layout="@layout/fragment_movie" />
 
     <fragment
         android:id="@+id/navigation_search"
         android:name="com.ekyrizky.moviecatalogue.search.SearchFragment"
         tools:layout="@layout/fragment_search" >
-        <action
-            android:id="@+id/action_navigation_search_to_tvShowDetailFragment"
-            app:destination="@id/navigation_tvshow_detail" />
         <action
             android:id="@+id/action_navigation_search_to_movieDetailFragment"
             app:destination="@id/navigation_movie_detail" />
@@ -54,16 +26,23 @@
         <argument
             android:name="movieId"
             android:defaultValue="0"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true"/>
+        <deepLink
+            android:id="@+id/deepLinkDetail"
+            app:uri="moviecatalogue://detail/{movieId}" />
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_tvshow_detail"
-        android:name="com.ekyrizky.moviecatalogue.detail.tvshow.TvShowDetailFragment"
-        tools:layout="@layout/fragment_tv_show_detail">
-        <argument
-            android:name="tvShowId"
-            app:argType="string"
-            android:defaultValue="0" />
+        android:id="@+id/navigation_favorite"
+        android:name="com.ekyrizky.favorite.movie.FavoriteMovieFragment"
+        android:label="fragment_favorite_movie"
+        app:moduleName="MovieCatalogue.favorite"
+        tools:layout="@layout/fragment_favorite_movie">
+
+        <deepLink
+            android:id="@+id/deepLinkFavorite"
+            app:uri="moviecatalogue://favorite" />
     </fragment>
+
 </navigation>

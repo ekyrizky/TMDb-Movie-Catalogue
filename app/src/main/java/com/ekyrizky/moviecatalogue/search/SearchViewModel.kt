@@ -7,7 +7,6 @@ import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.ekyrizky.core.data.Resource
 import com.ekyrizky.core.domain.usecase.MovieUseCase
-import com.ekyrizky.core.domain.usecase.TvShowUseCase
 import com.ekyrizky.moviecatalogue.utils.DataMapper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -19,7 +18,6 @@ import kotlinx.coroutines.flow.*
 @ExperimentalCoroutinesApi
 class SearchViewModel  @ViewModelInject constructor(
     private val movieUseCase: MovieUseCase,
-    private val tvShowUseCase: TvShowUseCase,
 ) : ViewModel() {
     private var debounceDuration = 500L
 
@@ -39,25 +37,6 @@ class SearchViewModel  @ViewModelInject constructor(
                 is Resource.Success -> {
                     val movies = DataMapper.mapMovieDomainToMovie(resource.data)
                     Resource.Success(movies)
-                }
-                is Resource.Error -> Resource.Error(resource.message.toString())
-            }
-        }
-
-    val searchTvShowResult = queryChannel.asFlow()
-        .debounce(debounceDuration)
-        .distinctUntilChanged()
-        .filter {
-            it.trim().isNotEmpty()
-        }
-        .mapLatest {
-            tvShowUseCase.getSearchTvShow(it)
-        }.asLiveData(viewModelScope.coroutineContext).map { resource ->
-            when (resource) {
-                is Resource.Loading -> Resource.Loading()
-                is Resource.Success -> {
-                    val tvshows = DataMapper.mapTvShowDomainToTvShow(resource.data)
-                    Resource.Success(tvshows)
                 }
                 is Resource.Error -> Resource.Error(resource.message.toString())
             }

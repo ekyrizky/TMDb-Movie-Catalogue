@@ -2,8 +2,6 @@ package com.ekyrizky.core.ui.movie
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -12,19 +10,17 @@ import com.ekyrizky.core.R
 import com.ekyrizky.core.databinding.ItemsGridBinding
 import com.ekyrizky.core.domain.model.movie.MovieDomain
 
-class MovieAdapter : ListAdapter<MovieDomain, MovieAdapter.MovieViewHolder>(DIFF_CALLBACK) {
+class MovieAdapter : RecyclerView.Adapter< MovieAdapter.MovieViewHolder>() {
 
-    companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<MovieDomain>() {
-            override fun areItemsTheSame(oldItem: MovieDomain, newItem: MovieDomain): Boolean =
-                oldItem.id == newItem.id
+    private var movieList = ArrayList<MovieDomain>()
 
-            override fun areContentsTheSame(oldItem: MovieDomain, newItem: MovieDomain): Boolean =
-                oldItem == newItem
+    fun setData(newList: List<MovieDomain>?) {
+        if (newList != null) {
+            movieList.clear()
+            movieList.addAll(newList)
+            notifyDataSetChanged()
         }
     }
-
-    var onItemClick: ((Int?) -> Unit)? = null
 
     inner class MovieViewHolder(private val binding: ItemsGridBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(movieItems: MovieDomain) {
@@ -35,7 +31,7 @@ class MovieAdapter : ListAdapter<MovieDomain, MovieAdapter.MovieViewHolder>(DIFF
                     .apply(RequestOptions.placeholderOf(R.drawable.ic_loading)
                         .error(R.drawable.ic_error))
                     .into(imgPoster)
-                root.setOnClickListener { onItemClick?.invoke(movieItems.id) }
+                root.setOnClickListener { onItemClickListener?.let { it(movieItems.id.toString()) } }
             }
         }
     }
@@ -43,10 +39,14 @@ class MovieAdapter : ListAdapter<MovieDomain, MovieAdapter.MovieViewHolder>(DIFF
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder =
         MovieViewHolder(ItemsGridBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
-    override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        val movie = getItem(position)
-        if (movie != null) {
-            holder.bind(movie)
-        }
+    override fun onBindViewHolder(holder: MovieViewHolder, position: Int) =
+            holder.bind(movieList[position])
+
+    override fun getItemCount(): Int = movieList.size
+
+    private var onItemClickListener: ((String) -> Unit)? = null
+
+    fun setOnItemClickListener(listener: (String) -> Unit) {
+        onItemClickListener = listener
     }
 }

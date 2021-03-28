@@ -8,11 +8,10 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.ekyrizky.core.data.Resource
 import com.ekyrizky.core.ui.search.SearchMovieAdapter
-import com.ekyrizky.core.ui.search.SearchTvShowAdapter
 import com.ekyrizky.moviecatalogue.databinding.FragmentSearchBinding
 import com.ekyrizky.moviecatalogue.utils.DataMapper
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,13 +24,26 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
 
-    private val viewModel: SearchViewModel by viewModels()
-
     private var _fragmentSearchBinding: FragmentSearchBinding? = null
     private val binding get() = _fragmentSearchBinding
 
-    private lateinit var movieAdapter: SearchMovieAdapter
-    private lateinit var tvShowAdapter: SearchTvShowAdapter
+    private val viewModel: SearchViewModel by viewModels()
+
+    private var _movieAdapter: SearchMovieAdapter? = null
+    private val movieAdapter get() = _movieAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        _movieAdapter = SearchMovieAdapter()
+
+        val actionMovie = SearchFragmentDirections.actionNavigationSearchToMovieDetailFragment()
+
+        movieAdapter?.setOnItemClickListener {
+            actionMovie.movieId = it
+            findNavController().navigate(actionMovie)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,22 +55,6 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        movieAdapter = SearchMovieAdapter()
-        tvShowAdapter = SearchTvShowAdapter()
-
-        val actionMovie = SearchFragmentDirections.actionNavigationSearchToMovieDetailFragment()
-        val actionTv = SearchFragmentDirections.actionNavigationSearchToTvShowDetailFragment()
-
-        movieAdapter.onItemClick = {
-            actionMovie.movieId = it.toString()
-            view.findNavController().navigate(actionMovie)
-        }
-
-        tvShowAdapter.onItemClick = {
-            actionTv.tvShowId = it.toString()
-            view.findNavController().navigate(actionTv)
-        }
 
         initRecycler()
 
@@ -87,7 +83,6 @@ class SearchFragment : Fragment() {
         }
 
         observeMovie()
-        observeTvShow()
     }
 
     private fun observeMovie() {
@@ -98,69 +93,41 @@ class SearchFragment : Fragment() {
                     is Resource.Success -> {
                         this?.shimmerMovie?.visibility = View.GONE
                         this?.rvMovieSearch?.visibility = View.VISIBLE
-                        this?.tvMovie?.visibility = View.VISIBLE
                         val movieList = DataMapper.mapMovieToMovieDomain(it.data)
-                        movieAdapter.setData(movieList)
+                        movieAdapter?.setData(movieList)
                     }
                     is Resource.Error -> {
                         this?.shimmerMovie?.visibility = View.INVISIBLE
                         this?.rvMovieSearch?.visibility = View.INVISIBLE
-                        this?.tvMovie?.visibility = View.INVISIBLE
                     }
                 }
             })
         }
     }
 
-    private fun observeTvShow() {
-        with(binding) {
-            viewModel.searchTvShowResult.observe(viewLifecycleOwner, {
-                when (it) {
-                    is Resource.Loading -> showLoading()
-                    is Resource.Success -> {
-                        this?.shimmerTv?.visibility = View.GONE
-                        this?.rvTvshowSearch?.visibility = View.VISIBLE
-                        this?.tvTvshow?.visibility = View.VISIBLE
-                        val tvShowList = DataMapper.mapTvShowToTvShowDomain(it.data)
-                        tvShowAdapter.setData(tvShowList)
-                    }
-                    is Resource.Error -> {
-                        this?.shimmerTv?.visibility = View.INVISIBLE
-                        this?.rvTvshowSearch?.visibility = View.INVISIBLE
-                        this?.tvTvshow?.visibility = View.INVISIBLE
-                    }
-                }
-            })
-        }
-    }
 
     private fun showLoading() {
         binding?.apply {
             shimmerMovie.visibility = View.VISIBLE
-            shimmerTv.visibility = View.VISIBLE
             rvMovieSearch.visibility = View.GONE
-            rvTvshowSearch.visibility = View.GONE
-            tvMovie.visibility = View.GONE
-            tvTvshow.visibility = View.GONE
         }
     }
 
     private fun initRecycler() {
         with(binding?.rvMovieSearch) {
-            this?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            this?.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
             this?.setHasFixedSize(true)
             this?.adapter = movieAdapter
-        }
-
-        with(binding?.rvTvshowSearch) {
-            this?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            this?.setHasFixedSize(true)
-            this?.adapter = tvShowAdapter
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        with(binding?.rvMovieSearch) {
+            if (this?.adapter != null) {
+                this.adapter = null
+            }
+        }
         _fragmentSearchBinding = null
     }
 }

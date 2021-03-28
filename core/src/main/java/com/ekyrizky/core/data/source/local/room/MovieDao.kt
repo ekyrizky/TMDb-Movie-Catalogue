@@ -1,7 +1,6 @@
 package com.ekyrizky.core.data.source.local.room
 
 import androidx.room.*
-import androidx.sqlite.db.SimpleSQLiteQuery
 import com.ekyrizky.core.data.source.local.entity.movie.FavoriteMovieEntity
 import com.ekyrizky.core.data.source.local.entity.movie.MovieDetailEntity
 import com.ekyrizky.core.data.source.local.entity.movie.MovieEntity
@@ -11,8 +10,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface MovieDao {
 
-    @RawQuery(observedEntities = [MovieEntity::class])
-    fun getMovies(query: SimpleSQLiteQuery): Flow<List<MovieEntity>>
+    @Query("SELECT * FROM movies")
+    fun getMovies(): Flow<List<MovieEntity>>
 
     @Query("SELECT * FROM popular_movies")
     fun getPopularMovies(): Flow<List<PopularMovieEntity>>

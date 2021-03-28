@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
     app:cardBackgroundColor="@color/placeholder"
     app:cardCornerRadius="14dp">
 
@@ -21,40 +20,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:background="@color/placeholder_darker" />
-
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="4dp"
-            android:text="@string/tv_title"
-            android:ellipsize="end"
-            android:lines="2"
-            android:maxWidth="180dp"
-            android:background="@color/placeholder_darker"
-            android:textColor="@color/placeholder"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:fontFamily="monospace"
-            android:textAlignment="center"
-            app:layout_constraintTop_toBottomOf="@id/img_poster"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_release_year"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="4dp"
-            android:text="@string/tv_release_year"
-            android:background="@color/placeholder_darker"
-            android:textColor="@color/placeholder"
-            android:textSize="12sp"
-            android:fontFamily="monospace"
-            android:textAlignment="center"
-            app:layout_constraintTop_toBottomOf="@id/tv_title"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

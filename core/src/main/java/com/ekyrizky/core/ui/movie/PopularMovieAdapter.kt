@@ -22,8 +22,6 @@ class PopularMovieAdapter : RecyclerView.Adapter<PopularMovieAdapter.PopularMovi
         }
     }
 
-    var onItemClick: ((Int?) -> Unit)? = null
-
     inner class PopularMovieViewHolder(private val binding: ItemsGridHorizontalBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(movieItems: MovieDomain) {
             with(binding) {
@@ -33,7 +31,7 @@ class PopularMovieAdapter : RecyclerView.Adapter<PopularMovieAdapter.PopularMovi
                                 RequestOptions.placeholderOf(R.drawable.ic_loading)
                                         .error(R.drawable.ic_error))
                         .into(imgPoster)
-                root.setOnClickListener { onItemClick?.invoke(movieItems.id) }
+                root.setOnClickListener { onItemClickListener?.let { it(movieItems.id.toString()) } }
             }
         }
     }
@@ -45,4 +43,10 @@ class PopularMovieAdapter : RecyclerView.Adapter<PopularMovieAdapter.PopularMovi
             holder.bind(movieList[position])
 
     override fun getItemCount(): Int = movieList.size
+
+    private var onItemClickListener: ((String) -> Unit)? = null
+
+    fun setOnItemClickListener(listener: (String) -> Unit) {
+        onItemClickListener = listener
+    }
 }
